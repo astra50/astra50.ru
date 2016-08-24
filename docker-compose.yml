@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  app:
+      build:
+          dockerfile: Dockerfile_dev
+          context: .
+      hostname: astra50.local
+      container_name: astra50
+      volumes:
+          - ./:/usr/local/app
+      depends_on:
+          - mysql
+
+  mysql:
+      image: mariadb
+      hostname: mysql.astra50.local
+      container_name: astra50_mysql
+      volumes:
+          - mysql-db:/var/lib/mysql
+      environment:
+          MYSQL_DATABASE: db
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+
+volumes:
+  mysql-db:
+    driver: local
