@@ -56,7 +56,7 @@ deploy:
         url: $$RANCHER_URL
         access_key: $$RANCHER_ACCESS_KEY
         secret_key: $$RANCHER_SECRET_KEY
-        service: $$RANCHER_STACH/$$RANCHER_SERVICE
+        service: $$RANCHER_STACK/$$RANCHER_SERVICE
         confirm: true
         start_first: true
         docker_image: $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
