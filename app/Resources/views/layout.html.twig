@@ -1,0 +1,19 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+
+        <div class="masthead">
+            <img src="{{ asset('assets/img/astra_logo.png') }}" width="200" alt="СНТ Астра"> Подольский район, Московская область
+            <nav>
+                {{ knp_menu_render('main') }}
+            </nav>
+        </div>
+
+        {% block content %}{% endblock %}
+
+        <footer class="footer">
+            <p>&copy; 2016 СНТ Астра</p>
+        </footer>
+    </div>
+{% endblock %}

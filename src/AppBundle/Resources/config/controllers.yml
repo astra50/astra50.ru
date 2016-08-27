@@ -1,1 +1,9 @@
 services:
+    app.controller.base:
+        class: AppBundle\Controller\Controller
+        calls:
+            - ['setContainer', ['@service_container']]
+
+    app.controller.home:
+        class: AppBundle\Controller\HomeController
+        parent: app.controller.base

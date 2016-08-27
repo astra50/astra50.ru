@@ -22,3 +22,9 @@ vkontakte_login:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
+
+under_construction:
+    path: /underconstruction
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: under_construction.html.twig

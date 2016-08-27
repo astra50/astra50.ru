@@ -98,3 +98,7 @@ hwi_oauth:
 
     connect:
         confirmation: false
+
+knp_menu:
+    twig:
+        template: knp_menu.html.twig

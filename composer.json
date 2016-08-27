@@ -27,7 +27,8 @@
         "pagerfanta/pagerfanta": "^1",
         "stof/doctrine-extensions-bundle": "^1.2",
         "friendsofsymfony/user-bundle": "dev-master",
-        "hwi/oauth-bundle": "dev-master"
+        "hwi/oauth-bundle": "dev-master",
+        "knplabs/knp-menu-bundle": "^2.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
