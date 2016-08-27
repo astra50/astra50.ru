@@ -13,7 +13,8 @@ ENV PATH ${APP_DIR}/bin:${PATH}
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
-    && apk --no-cache add \
+    && apk add --no-cache \
+        git \
         icu-dev \
         zlib-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \

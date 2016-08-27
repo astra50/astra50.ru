@@ -26,7 +26,7 @@ framework:
     session:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file
-        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+        save_path:   "%kernel.cache_dir%/sessions/%kernel.environment%"
     fragments:       ~
     http_method_override: true
     assets: ~
@@ -39,6 +39,8 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
+        types:
+            uuid_binary: Ramsey\Uuid\Doctrine\UuidBinaryType
         driver:   pdo_mysql
         host:     "%database_host%"
         port:     "%database_port%"
@@ -65,3 +67,34 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+stof_doctrine_extensions:
+    default_locale: ru_RU
+    orm:
+        default:
+            sluggable: true
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+
+hwi_oauth:
+    firewall_names: [main]
+    resource_owners:
+        google:
+            type:                google
+            client_id:           '%google_oauth_id%'
+            client_secret:       '%google_oauth_secret%'
+            scope:                "email profile"
+        vkontakte:
+            type:                vkontakte
+            client_id:           '%vkontakte_oauth_id%'
+            client_secret:       '%vkontakte_oauth_secret%'
+    fosub:
+        properties:
+            google: googleId
+            vkontakte: vkontakteId
+
+    connect:
+        confirmation: false

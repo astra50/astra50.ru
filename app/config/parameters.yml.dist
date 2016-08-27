@@ -17,3 +17,9 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    google_oauth_id: ~
+    google_oauth_secret: ~
+
+    vkontakte_oauth_id: ~
+    vkontakte_oauth_secret: ~
