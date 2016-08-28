@@ -60,7 +60,7 @@ deploy:
         confirm: true
         start_first: true
         docker_image: $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
-        timeout: 60
+        timeout: 120
         when:
             branch: master
 
