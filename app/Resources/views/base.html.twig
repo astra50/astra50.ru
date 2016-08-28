@@ -37,6 +37,7 @@
 {#<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->#}
 <script src="{{ asset('assets/js/ie10-viewport-bug-workaround.js') }}"></script>
 
+{% if 'prod' == app.environment %}
 {#<!-- Google Tag Manager -->#}
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PRNZTX"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -46,6 +47,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-PRNZTX');</script>
 {#<!-- End Google Tag Manager -->#}
+{% endif %}
 
 </body>
 </html>
