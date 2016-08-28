@@ -26,6 +26,9 @@ app:
 homepage:
     path: /
 
+fos_user_registration_confirmed:
+    path: /
+
 contacts:
     path: /contacts
     defaults:
