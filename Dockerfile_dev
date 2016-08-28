@@ -17,7 +17,7 @@ RUN set -ex \
         git \
         icu-dev \
         zlib-dev \
-    && docker-php-ext-install zip intl pdo_mysql iconv opcache \
+    && docker-php-ext-install zip intl pdo_mysql iconv \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer global require phpunit/phpunit
 
