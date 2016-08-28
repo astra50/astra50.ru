@@ -30,7 +30,7 @@ build:
             - while ! nc -z 127.0.0.1 3306; do sleep 1; done
             - composer run-script post-install-cmd --no-interaction --quiet
             - bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --quiet
-#            - bin/console doctrine:fixtures:load --no-interaction --quiet
+            - bin/console doctrine:fixtures:load --no-interaction --quiet
             - phpunit
         environment:
             SYMFONY_ENV: test

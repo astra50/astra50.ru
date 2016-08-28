@@ -23,6 +23,9 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+homepage:
+    path: /
+
 under_construction:
     path: /underconstruction
     defaults:

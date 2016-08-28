@@ -33,7 +33,7 @@ class Builder
         $menu = $this->factory->createItem('root', ['childrenAttributes' => ['class' => 'nav nav-justified']]);
 
         $menu
-            ->addChild('Home', ['label' => 'Новости', 'route' => 'homepage'])->getParent()
+            ->addChild('News', ['label' => 'Новости', 'route' => 'news_list'])->getParent()
             ->addChild('Finance', ['label' => 'Финансовая отчетность', 'route' => 'under_construction'])->getParent()
             ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'under_construction'])->getParent()
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'under_construction'])->getParent()

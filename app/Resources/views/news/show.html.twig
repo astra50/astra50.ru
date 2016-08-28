@@ -1,0 +1,21 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ news.title }}</h1>
+
+    <p class="lead">
+        от {{ news.author.username }}
+    </p>
+
+    <hr>
+
+    <p>
+        <span class="glyphicon glyphicon-time"></span>
+        опубликовано {{ news.createdAt|localizeddate }}
+    </p>
+
+    <hr>
+
+    <p class="lead">{{ news.shortContent|raw }}</p>
+    {{ news.mainContent|raw }}
+{% endblock %}

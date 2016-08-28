@@ -28,7 +28,7 @@ final class UserProvider extends FOSUBUserProvider
         }
 
         if (!$user) {
-            $user = new User(null, $response->getRealName(), $email, uniqid(null, true), true);
+            $user = new User(null, $email, $response->getRealName(), uniqid(null, true), true);
         }
 
         $user->updateOauth2($response->getResourceOwner()->getName(), $username, $response->getAccessToken());

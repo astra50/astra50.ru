@@ -3,3 +3,7 @@ services:
         class: AppBundle\Doctrine\EntityRepository
         calls:
             - ['setEntityManager', ['@doctrine.orm.entity_manager']]
+
+    app.repository.news:
+        class: AppBundle\Repository\NewsRepository
+        parent: app.doctrine.entity_repository

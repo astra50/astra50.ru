@@ -1,0 +1,48 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+
+    {% if is_granted('ROLE_NEWS_WRITER') %}
+        <hr>
+        <a class="btn btn-primary" href="{{ path('news_new') }}">Добавить новость</a>
+        <hr>
+    {% endif %}
+
+    {% if 0 < pagerfanta.count %}
+        {% for news in pagerfanta.currentPageResults %}
+            <h2>
+                <a href="{{ path('news_show', {'slug': news.slug}) }}">{{ news.title }}</a>
+            </h2>
+
+            <p class="lead">
+                от {{ news.author.username }}
+            </p>
+
+            {% if news.published %}
+                <p>
+                    <span class="glyphicon glyphicon-time"></span>
+                    Опубликовано: {{ news.createdAt|localizeddate }}
+                </p>
+            {% else %}
+                <h3>
+                    <span class="label label-default">Не опубликовано</span>
+                </h3>
+            {% endif %}
+
+            <hr>
+
+            <p>{{ news.shortContent ?? news.mainContent }}</p>
+
+            <hr>
+        {% endfor %}
+
+        <div class="text-center">
+            {{ pagerfanta(pagerfanta) }}
+        </div>
+    {% else %}
+        <div class="jumbotron">
+            <h1>Новостей пока нет</h1>
+        </div>
+    {% endif %}
+
+{% endblock %}

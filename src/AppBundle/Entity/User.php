@@ -26,6 +26,20 @@ class User extends BaseUser
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(nullable=true)
+     */
+    private $phone;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column()
+     */
+    private $realname;
+
+    /**
      * @ORM\Column(nullable=true)
      */
     private $googleId;
@@ -50,13 +64,14 @@ class User extends BaseUser
      * @param      $username
      * @param      $email
      */
-    public function __construct($id = null, $username = null, $email = null, $password = null, $enabled = false)
+    public function __construct($id = null, $email = null, $realname = null, $password = null, $enabled = false)
     {
         parent::__construct();
 
         $this->id = $id ?? Uuid::uuid4();
-        $this->username = $username;
+        $this->username = $email;
         $this->email = $email;
+        $this->realname = $realname;
         $this->password = $password;
         $this->enabled = $enabled;
     }
@@ -74,5 +89,48 @@ class User extends BaseUser
 
         $this->{sprintf('%sId', $provider)} = $id;
         $this->{sprintf('%sAccessToken', $provider)} = $token;
+    }
+
+    public function setEmail($email)
+    {
+        $this->username = $email;
+
+        return parent::setEmail($email);
+    }
+
+    public function setUsername($username)
+    {
+    }
+
+    /**
+     * @param string $phone
+     */
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone(): string
+    {
+        return (string) $this->phone;
+    }
+
+    /**
+     * @param string $realname
+     */
+    public function setRealname(string $realname)
+    {
+        $this->realname = $realname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRealname()
+    {
+        return $this->realname;
     }
 }

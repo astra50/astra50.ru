@@ -14,7 +14,6 @@ WORKDIR ${APP_DIR}
 
 RUN set -ex \
     && apk add --no-cache \
-        git \
         icu-dev \
         zlib-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv \
@@ -22,7 +21,8 @@ RUN set -ex \
     && composer global require phpunit/phpunit
 
 RUN set -ex \
-    && apk add --no-cache --virtual .build-deps git openssh-client mysql-client $PHPIZE_DEPS \
+    && apk add --no-cache git openssh-client mysql-client \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && { \

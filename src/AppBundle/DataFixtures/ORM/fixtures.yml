@@ -1,0 +1,7 @@
+AppBundle\Entity\User:
+    User_{1..2}:
+        __construct: ['<uuid4()>', '<firstName()> <lastName()>', '<email()>', '<city()>', true]
+
+AppBundle\Entity\News:
+    news_{1..10}:
+        __construct: ['<uuid4()>', '@User*', '<city()>',  '<text()>',  true,  false]

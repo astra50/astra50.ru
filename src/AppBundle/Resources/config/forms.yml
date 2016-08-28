@@ -1,0 +1,6 @@
+services:
+    app.form.registration_type:
+        class: AppBundle\Form\RegistrationFormType
+        parent: fos_user.registration.form.type
+        tags:
+            - { name: form.type, alias: fos_user_registration }

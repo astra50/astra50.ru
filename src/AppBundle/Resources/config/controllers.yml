@@ -4,6 +4,8 @@ services:
         calls:
             - ['setContainer', ['@service_container']]
 
-    app.controller.home:
-        class: AppBundle\Controller\HomeController
+    app.controller.news:
+        class: AppBundle\Controller\NewsController
         parent: app.controller.base
+        arguments:
+            - '@app.repository.news'
