@@ -38,7 +38,7 @@ class Builder
             ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'under_construction'])->getParent()
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'under_construction'])->getParent()
             ->addChild('Payment', ['label' => 'Оплата', 'route' => 'under_construction'])->getParent()
-            ->addChild('Contacts', ['label' => 'Контакты', 'route' => 'under_construction'])->getParent()
+            ->addChild('Contacts', ['label' => 'Контакты', 'route' => 'contacts'])->getParent()
             ;
 
         return $menu;

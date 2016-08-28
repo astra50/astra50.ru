@@ -16,5 +16,6 @@ class ControllerTest extends WebTestCase
         $app->boot();
 
         self::assertTrue($app->handle(Request::create('/underconstruction'))->isSuccessful());
+        self::assertTrue($app->handle(Request::create('/contacts'))->isSuccessful());
     }
 }
