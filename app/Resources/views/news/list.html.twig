@@ -2,8 +2,11 @@
 
 {% block content %}
 
+    <h1>Новости</h1>
+
+    <hr>
+
     {% if is_granted('ROLE_NEWS_WRITER') %}
-        <hr>
         <a class="btn btn-primary" href="{{ path('news_new') }}">Добавить новость</a>
         <hr>
     {% endif %}
