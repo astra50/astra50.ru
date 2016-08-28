@@ -93,6 +93,6 @@ abstract class EntityRepository
      */
     protected function paginate(QueryBuilder $qb)
     {
-        return new Pagerfanta(new DoctrineORMAdapter($qb, false));
+        return new Pagerfanta(new DoctrineORMAdapter($qb));
     }
 }
