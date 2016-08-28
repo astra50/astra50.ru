@@ -50,6 +50,8 @@ RUN set -ex \
         echo 'composer run-script post-install-cmd --no-interaction --quiet'; \
         echo 'console doctrine:migrations:migrate --no-interaction --allow-no-migration'; \
         echo 'chown -R www-data:www-data $APP_DIR/var'; \
+        echo 'cp -rfL  $APP_DIR/web/* $NGINX_WEB_DIR/'; \
+        echo 'rm -rf $NGINX_WEB_DIR/*.php'; \
         echo 'exec "$@"'; \
     } > /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
