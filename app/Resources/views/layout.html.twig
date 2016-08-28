@@ -15,7 +15,8 @@
 
                     <div class="pull-right" style="min-height: 80px;padding-top: 30px">
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                            {{ app.user.realname }} | <a href="{{ path('fos_user_security_logout') }}">Выход</a>
+                            <a href="{{ path('account') }}">{{ app.user.realname }}</a>
+                            | <a href="{{ path('fos_user_security_logout') }}">Выход</a>
                         {% else %}
                             <a href="{{ path('fos_user_security_login') }}">Вход</a>
                         {% endif %}

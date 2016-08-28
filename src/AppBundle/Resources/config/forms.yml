@@ -4,3 +4,8 @@ services:
         parent: fos_user.registration.form.type
         tags:
             - { name: form.type, alias: fos_user_registration }
+
+    app.form.account_type:
+        class: AppBundle\Form\AccountType
+        tags:
+            - { name: form.type }

@@ -9,3 +9,9 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.news'
+
+    app.controller.account:
+        class: AppBundle\Controller\AccountController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.user'

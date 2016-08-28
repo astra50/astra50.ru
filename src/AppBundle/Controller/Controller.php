@@ -11,4 +11,11 @@ use AppBundle\Entity\User;
  */
 abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
 {
+    /**
+     * @param $message
+     */
+    protected function success($message)
+    {
+        $this->addFlash('success', $message);
+    }
 }

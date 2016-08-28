@@ -7,3 +7,7 @@ services:
     app.repository.news:
         class: AppBundle\Repository\NewsRepository
         parent: app.doctrine.entity_repository
+
+    app.repository.user:
+        class: AppBundle\Repository\UserRepository
+        parent: app.doctrine.entity_repository
