@@ -7,16 +7,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @property UuidInterface $id
- * @property User $author
- * @property string $title
- * @property string $slug
- * @property string $content
- * @property bool $published
- * @property bool $internal
- * @property \DateTime $createdAt
- * @property \DateTime $updatedAt
- *
  * @ORM\Entity
  *
  * @author Konstantin Grachev <me@grachevko.ru>
