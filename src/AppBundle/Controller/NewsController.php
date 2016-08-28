@@ -40,8 +40,7 @@ class NewsController extends Controller
     {
         $news = $this->newsRepository->getLatestPaginated(!$this->isGranted(\Roles::NEWS_WRITER), !$this->isGranted(\Roles::COMMUNITY))
             ->setMaxPerPage(self::NEWS_PER_PAGE)
-            ->setCurrentPage($request->query->get('page', 1))
-        ;
+            ->setCurrentPage($request->query->get('page', 1));
 
         return $this->render('news/list.html.twig', [
             'pagerfanta' => $news,
@@ -56,12 +55,13 @@ class NewsController extends Controller
     public function newAction(Request $request)
     {
         $model = new NewsModel();
-        $form = $this->createEditForm($model);
+        $form = $this->createForm(NewsType::class, $model, [
+            'action' => $this->generateUrl('news_new'),
+        ]);
 
         if ($form->handleRequest($request)->isValid()) {
             $entity = $this->newsRepository->create(Uuid::uuid4(), $this->getUser(), $model->title, $model->content, $model->published, $model->internal);
             $this->newsRepository->save($entity);
-
 
             return $this->redirectToRoute('news_show', ['slug' => $entity->getSlug()]);
         }
@@ -81,10 +81,27 @@ class NewsController extends Controller
         ]);
     }
 
-    private function createEditForm(NewsModel $model)
+    /**
+     * @Route("/news/{slug}/edit", name="news_edit")
+     *
+     * @Security("is_granted(constant('Roles::NEWS_WRITER'))")
+     */
+    public function editAction(Request $request, News $news)
     {
-        return $this->createForm(NewsType::class, $model, [
-            'action' => $this->generateUrl('news_new'),
+        $model = NewsModel::fromEntity($news);
+        $form = $this->createForm(NewsType::class, $model, [
+            'action' => $this->generateUrl('news_edit', ['slug' => $news->getSlug()]),
+        ]);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $news->update($model->title, $model->content, $model->published, $model->internal);
+            $this->newsRepository->save($news);
+
+            return $this->redirectToRoute('news_show', ['slug' => $news->getSlug()]);
+        }
+
+        return $this->render(':news:edit.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

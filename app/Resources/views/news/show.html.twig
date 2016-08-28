@@ -18,4 +18,10 @@
 
     <p class="lead">{{ news.shortContent|raw }}</p>
     {{ news.mainContent|raw }}
+
+    {% if is_granted('ROLE_NEWS_WRITER') %}
+        <hr>
+
+        <a class="btn btn-default" href="{{ path('news_edit', {'slug': news.slug}) }}">Редактировать</a>
+    {% endif %}
 {% endblock %}

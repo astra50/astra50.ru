@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\News;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -36,4 +37,20 @@ final class NewsModel
      * @Assert\Type("boolean")
      */
     public $internal;
+
+    /**
+     * @param News $news
+     *
+     * @return static
+     */
+    public static function fromEntity(News $news)
+    {
+        $model = new static();
+        $model->title = $news->getTitle();
+        $model->content = $news->getContent();
+        $model->published = $news->isPublished();
+        $model->internal = $news->isInternal();
+
+        return $model;
+    }
 }
