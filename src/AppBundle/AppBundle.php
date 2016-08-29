@@ -2,8 +2,10 @@
 
 namespace AppBundle;
 
-use AppBundle\Doctrine\UuidClassMetadata;
+use AppBundle\Uuid\UuidBuilder;
+use Ramsey\Uuid\Codec\StringCodec;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AppBundle extends Bundle
@@ -12,6 +14,10 @@ class AppBundle extends Bundle
     {
         parent::boot();
 
-        $this->container->get('doctrine.orm.entity_manager')->getMetadataFactory()->setMetadataFor(Uuid::class, new UuidClassMetadata(Uuid::class));
+        $uuidFactory = new UuidFactory();
+        $uuidBuilder = new UuidBuilder($uuidFactory->getNumberConverter());
+        $uuidFactory->setUuidBuilder($uuidBuilder);
+        $uuidFactory->setCodec(new StringCodec($uuidBuilder));
+        Uuid::setFactory($uuidFactory);
     }
 }
