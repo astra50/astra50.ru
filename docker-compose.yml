@@ -9,6 +9,7 @@ services:
       container_name: astra50
       volumes:
           - ./:/usr/local/app
+          - COMPOSER_CACHE:/var/cache/composer
       depends_on:
           - mysql
 
@@ -25,3 +26,5 @@ services:
 volumes:
   mysql-db:
     driver: local
+  COMPOSER_CACHE:
+    external: true
