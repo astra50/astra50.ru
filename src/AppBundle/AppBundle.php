@@ -2,7 +2,7 @@
 
 namespace AppBundle;
 
-use AppBundle\Doctrine\ClassMetadataUuid;
+use AppBundle\Doctrine\UuidClassMetadata;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -12,6 +12,6 @@ class AppBundle extends Bundle
     {
         parent::boot();
 
-        $this->container->get('doctrine.orm.entity_manager')->getMetadataFactory()->setMetadataFor(Uuid::class, new ClassMetadataUuid(Uuid::class));
+        $this->container->get('doctrine.orm.entity_manager')->getMetadataFactory()->setMetadataFor(Uuid::class, new UuidClassMetadata(Uuid::class));
     }
 }

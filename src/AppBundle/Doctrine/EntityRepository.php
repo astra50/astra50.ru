@@ -38,7 +38,7 @@ abstract class EntityRepository
             ->select('c')
             ->from($this->getClass(), 'c')
             ->where('c.id = :id')
-            ->setParameter('id', $id, 'uuid_binary')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
     }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class ClassMetadataUuid extends ClassMetadataInfo
+final class UuidClassMetadata extends ClassMetadataInfo
 {
     /**
      * {@inheritdoc}
