@@ -10,6 +10,9 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ENV PATH ${APP_DIR}/bin:${PATH}
 
+VOLUME ${APP_DIR}/var/logs
+VOLUME ${APP_DIR}/var/sessions
+
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
