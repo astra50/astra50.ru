@@ -11,3 +11,7 @@ services:
     app.repository.user:
         class: AppBundle\Repository\UserRepository
         parent: app.doctrine.entity_repository
+
+    app.repository.area:
+        class: AppBundle\Repository\AreaRepository
+        parent: app.doctrine.entity_repository

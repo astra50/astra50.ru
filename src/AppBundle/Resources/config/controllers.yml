@@ -15,3 +15,9 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.user'
+
+    app.controller.area:
+        class: AppBundle\Controller\AreaController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.area'
