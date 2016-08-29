@@ -57,7 +57,7 @@ class News
      *
      * @ORM\Column(type="boolean")
      */
-    protected $published;
+    protected $published = false;
 
     /**
      * @var bool
@@ -90,13 +90,12 @@ class News
      * @param bool          $internal
      * @param \DateTime     $createdAt
      */
-    public function __construct(UuidInterface $id, User $author, string $title, string $content, bool $published, bool $internal)
+    public function __construct(UuidInterface $id, User $author, string $title, string $content, bool $internal)
     {
         $this->id = $id;
         $this->author = $author;
         $this->title = $title;
         $this->content = $content;
-        $this->published = $published;
         $this->internal = $internal;
         $this->createdAt = new \DateTime();
     }
@@ -107,13 +106,22 @@ class News
      * @param bool   $published
      * @param bool   $internal
      */
-    public function update(string $title, string $content, bool $published, bool $internal)
+    public function update(string $title, string $content, bool $internal)
     {
         $this->title = $title;
         $this->content = $content;
-        $this->published = $published;
         $this->internal = $internal;
         $this->updatedAt = new \DateTime();
+    }
+
+    public function publish()
+    {
+        $this->published = true;
+    }
+
+    public function unPublish()
+    {
+        $this->published = false;
     }
 
     /**

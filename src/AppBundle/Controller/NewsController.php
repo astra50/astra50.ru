@@ -60,7 +60,10 @@ class NewsController extends Controller
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $entity = $this->newsRepository->create(Uuid::uuid4(), $this->getUser(), $model->title, $model->content, $model->published, $model->internal);
+            $entity = new News(Uuid::uuid4(), $this->getUser(), $model->title, $model->content, $model->internal);
+            if ($model->published) {
+                $entity->publish();
+            }
             $this->newsRepository->save($entity);
 
             return $this->redirectToRoute('news_show', ['slug' => $entity->getSlug()]);
@@ -94,7 +97,14 @@ class NewsController extends Controller
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $news->update($model->title, $model->content, $model->published, $model->internal);
+            $news->update($model->title, $model->content, $model->internal);
+
+            if ($model->published) {
+                $news->publish();
+            } else {
+                $news->unPublish();
+            }
+
             $this->newsRepository->save($news);
 
             return $this->redirectToRoute('news_show', ['slug' => $news->getSlug()]);

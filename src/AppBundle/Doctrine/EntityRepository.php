@@ -2,7 +2,6 @@
 
 namespace AppBundle\Doctrine;
 
-use AppBundle\Traits\Aware\EntityManagerTrait;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -20,14 +19,6 @@ abstract class EntityRepository
      * @return string Entity Class
      */
     abstract protected function getClass(): string;
-
-    /**
-     * @return mixed
-     */
-    public function create()
-    {
-        return (new \ReflectionClass($this->getClass()))->newInstanceArgs(func_get_args());
-    }
 
     /**
      * @param UuidInterface $id

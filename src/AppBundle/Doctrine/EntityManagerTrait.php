@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Traits\Aware;
+namespace AppBundle\Doctrine;
 
 use Doctrine\ORM\EntityManager;
 

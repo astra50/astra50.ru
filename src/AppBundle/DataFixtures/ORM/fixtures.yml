@@ -4,7 +4,7 @@ AppBundle\Entity\User:
 
 AppBundle\Entity\News:
     News_{1..10}:
-        __construct: ['<uuid4()>', '@User*', '<city()>',  '<text()>',  true,  false]
+        __construct: ['<uuid4()>', '@User*', '<city()>',  '<text()>',  false]
 
 AppBundle\Entity\Area:
     Area_{1..50}:
