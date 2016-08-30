@@ -2,13 +2,12 @@ FROM php:fpm-alpine
 
 MAINTAINER Konstantin Grachev <ko@grachev.io>
 
-ENV APP_DIR /usr/local/app
-
-ENV COMPOSER_BIN_DIR /usr/local/bin
-ENV COMPOSER_CACHE_DIR /var/cache/composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
-
-ENV PATH ${APP_DIR}/bin:${PATH}
+ENV \
+    APP_DIR=/usr/local/app \
+    COMPOSER_BIN_DIR=/usr/local/bin \
+    COMPOSER_CACHE_DIR=/var/cache/composer \
+    COMPOSER_ALLOW_SUPERUSER=1 \
+    PATH=${APP_DIR}/bin:${PATH}
 
 WORKDIR ${APP_DIR}
 
@@ -19,7 +18,8 @@ RUN set -ex \
         zlib-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer global require phpunit/phpunit
+    && composer global require phpunit/phpunit \
+    && rm -rf ${COMPOSER_CACHE_DIR}/*
 
 COPY ./composer.* ${APP_DIR}/
 RUN composer install --no-dev --no-scripts --no-interaction --no-autoloader --quiet
