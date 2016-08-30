@@ -42,7 +42,7 @@ build:
         commands:
             - docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
             - docker push ${IMAGE} > /dev/null
-            - docker rmi --force ${IMAGE}
+#            - docker rmi --force ${IMAGE}
         environment:
             IMAGE: $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
             REGISTRY_HOST: $$REGISTRY_HOST
