@@ -10,9 +10,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ENV PATH ${APP_DIR}/bin:${PATH}
 
-VOLUME ${APP_DIR}/var/logs
-VOLUME ${APP_DIR}/var/sessions
-
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
@@ -58,6 +55,9 @@ RUN set -ex \
         echo 'exec "$@"'; \
     } > /usr/local/bin/docker-entrypoint.sh \
     && chmod +x /usr/local/bin/docker-entrypoint.sh
+
+VOLUME ${APP_DIR}/var/logs
+VOLUME ${APP_DIR}/var/sessions
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["php-fpm"]
