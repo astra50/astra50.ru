@@ -31,10 +31,8 @@ build:
             - bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --quiet
             - bin/console doctrine:fixtures:load --no-interaction --quiet
             - phpunit
-            - echo ${TEST}
         environment:
             SYMFONY_ENV: test
-            TEST: $${DRONE_JOB_NUMBER - 1}
     clean:
         image: docker
         pull: false
