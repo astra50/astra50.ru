@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Uuid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -75,7 +75,7 @@ class User extends BaseUser
     {
         parent::__construct();
 
-        $this->id = $id ?? Uuid::uuid4();
+        $this->id = $id ?? Uuid::create();
         $this->username = $email;
         $this->email = $email;
         $this->realname = $realname;

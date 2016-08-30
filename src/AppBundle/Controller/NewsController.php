@@ -6,7 +6,7 @@ use AppBundle\Entity\News;
 use AppBundle\Form\NewsType;
 use AppBundle\Model\NewsModel;
 use AppBundle\Repository\NewsRepository;
-use Ramsey\Uuid\Uuid;
+use AppBundle\Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +60,7 @@ class NewsController extends Controller
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $entity = new News(Uuid::uuid4(), $this->getUser(), $model->title, $model->content, $model->internal);
+            $entity = new News(Uuid::create(), $this->getUser(), $model->title, $model->content, $model->internal);
             if ($model->published) {
                 $entity->publish();
             }
