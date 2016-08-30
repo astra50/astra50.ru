@@ -2,12 +2,12 @@ FROM php:fpm-alpine
 
 MAINTAINER Konstantin Grachev <ko@grachev.io>
 
+ENV APP_DIR=/usr/local/app
 ENV \
-    APP_DIR=/usr/local/app \
+    PATH=${APP_DIR}/bin:${PATH} \
     COMPOSER_BIN_DIR=/usr/local/bin \
     COMPOSER_CACHE_DIR=/var/cache/composer \
-    COMPOSER_ALLOW_SUPERUSER=1 \
-    PATH=${APP_DIR}/bin:${PATH}
+    COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR ${APP_DIR}
 
