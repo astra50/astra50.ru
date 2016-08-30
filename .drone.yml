@@ -15,7 +15,7 @@ build:
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
         commands:
-          - docker build -t ${IMAGE} .
+          - docker rmi --force ${IMAGE} .
         environment:
             IMAGE: $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
     test:
@@ -24,9 +24,8 @@ build:
         volumes:
             - /var/cache/composer:/var/cache/composer
         commands:
-            - composer install --no-scripts --optimize-autoloader --no-interaction --quiet
             - composer run-script build-parameters --no-interaction --quiet
-            - bin/symfony_requirements > /dev/null
+            - bin/symfony_requirements
             - while ! nc -z 127.0.0.1 3306; do sleep 1; done
             - composer run-script post-install-cmd --no-interaction --quiet
             - bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --quiet

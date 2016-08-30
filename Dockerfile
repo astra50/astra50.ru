@@ -21,7 +21,7 @@ RUN set -ex \
     && rm -rf ${COMPOSER_CACHE_DIR}/*
 
 COPY ./composer.* ${APP_DIR}/
-RUN composer install --no-dev --no-scripts --no-interaction --no-autoloader --quiet
+RUN composer install --no-scripts --no-interaction --no-autoloader --quiet
 COPY ./ ${APP_DIR}
 
 RUN set -ex \
