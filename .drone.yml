@@ -15,7 +15,7 @@ build:
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
         commands:
-          - docker rmi --force ${IMAGE} .
+          - docker build -t ${IMAGE} .
         environment:
             IMAGE: $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
     test:
