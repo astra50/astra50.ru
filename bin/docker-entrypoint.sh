@@ -84,6 +84,10 @@ if [ "$XDEBUG" == "true" ]; then
     docker-php-ext-enable xdebug
 fi
 
+if [ "$OPCACHE" == "true" ]; then
+    docker-php-ext-enable opcache
+fi
+
 if [ "$SYMFONY_ENV" == "prod" ]; then
     chown -R www-data:www-data $APP_DIR/var
     cp -rfL  $APP_DIR/web/* $NGINX_WEB_DIR/
