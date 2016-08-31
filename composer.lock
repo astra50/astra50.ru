@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9d00231a86c2b50c2ee7fb2f836490ea",
-    "content-hash": "80e18fe68b3a077249239b46d0339af6",
+    "hash": "d758c6f33fd486c4d727f068c5b42d59",
+    "content-hash": "b4171686ce2ce59b69f8887a8e51dfd1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -952,12 +952,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "07ec96d93f03650e7480e0637fcd51eee6575c12"
+                "reference": "147ca6888712365e5ad3b7906f7b6e8654da2f48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/07ec96d93f03650e7480e0637fcd51eee6575c12",
-                "reference": "07ec96d93f03650e7480e0637fcd51eee6575c12",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/147ca6888712365e5ad3b7906f7b6e8654da2f48",
+                "reference": "147ca6888712365e5ad3b7906f7b6e8654da2f48",
                 "shasum": ""
             },
             "require": {
@@ -1016,20 +1016,20 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-08-04 10:13:39"
+            "time": "2016-08-31 11:01:35"
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "v2.4.21",
+            "version": "v2.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
-                "reference": "dcaab46a25e1baeb5142c3e25d5b6fd495ced504"
+                "reference": "b8188801bafc420b86908ee5229a5e92143ce514"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/dcaab46a25e1baeb5142c3e25d5b6fd495ced504",
-                "reference": "dcaab46a25e1baeb5142c3e25d5b6fd495ced504",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/b8188801bafc420b86908ee5229a5e92143ce514",
+                "reference": "b8188801bafc420b86908ee5229a5e92143ce514",
                 "shasum": ""
             },
             "require": {
@@ -1095,7 +1095,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2016-08-17 16:52:00"
+            "time": "2016-08-30 18:42:36"
         },
         {
             "name": "hwi/oauth-bundle",

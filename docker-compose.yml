@@ -2,9 +2,7 @@ version: '2'
 
 services:
   app:
-      build:
-          dockerfile: Dockerfile_dev
-          context: .
+      build: .
       hostname: astra50.local
       container_name: astra50
       volumes:
