@@ -10,6 +10,7 @@ DEVDEPS=
 MIGRATION=
 FIXTURES=
 BUILDPARAMS=
+REQUIREMENTS=
 
 for i in "$@"
 do
@@ -38,11 +39,11 @@ if [ "$SYMFONY_ENV" == "dev" ]; then
 fi
 
 if [ "$SYMFONY_ENV" == "test" ]; then
-    bin/symfony_requirements
     export SYMFONY_DEBUG=0
 
     BUILDPARAMS=${BUILDPARAMS:=true}
     DEVDEPS=${DEVDEPS:=true}
+    REQUIREMENTS=${REQUIREMENTS:=true}
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
 
@@ -70,6 +71,10 @@ if [ "$DEVDEPS" == "true" ]; then
     composer install --no-interaction --optimize-autoloader
 else
     composer install --no-dev --no-interaction --optimize-autoloader
+fi
+
+if [ "$REQUIREMENTS" == "true" ]; then
+    bin/symfony_requirements
 fi
 
 if [ "$MIGRATION" == "true" ]; then
