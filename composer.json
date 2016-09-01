@@ -8,7 +8,11 @@
         },
         "classmap": [
             "app/AppKernel.php",
-            "app/AppCache.php"
+            "app/AppCache.php",
+            "app/AppRoles.php"
+        ],
+        "files": [
+            "src/Uuid/bootstrap.php"
         ]
     },
     "require": {
@@ -64,7 +68,7 @@
         "symfony-var-dir": "var",
         "symfony-web-dir": "web",
         "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
+        "symfony-assets-install": "hard",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml",
             "env-map": {

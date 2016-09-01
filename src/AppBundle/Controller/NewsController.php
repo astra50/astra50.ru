@@ -6,7 +6,7 @@ use AppBundle\Entity\News;
 use AppBundle\Form\NewsType;
 use AppBundle\Model\NewsModel;
 use AppBundle\Repository\NewsRepository;
-use AppBundle\Uuid\Uuid;
+use Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +38,7 @@ class NewsController extends Controller
      */
     public function listAction(Request $request)
     {
-        $news = $this->newsRepository->getLatestPaginated(!$this->isGranted(\Roles::NEWS_WRITER), !$this->isGranted(\Roles::COMMUNITY))
+        $news = $this->newsRepository->getLatestPaginated(!$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY))
             ->setMaxPerPage(self::NEWS_PER_PAGE)
             ->setCurrentPage($request->query->get('page', 1));
 
@@ -50,7 +50,7 @@ class NewsController extends Controller
     /**
      * @Route("/news/new", name="news_new")
      *
-     * @Security("is_granted(constant('Roles::NEWS_WRITER'))")
+     * @Security("is_granted(constant('AppRoles::NEWS_WRITER'))")
      */
     public function newAction(Request $request)
     {
@@ -87,7 +87,7 @@ class NewsController extends Controller
     /**
      * @Route("/news/{slug}/edit", name="news_edit")
      *
-     * @Security("is_granted(constant('Roles::NEWS_WRITER'))")
+     * @Security("is_granted(constant('AppRoles::NEWS_WRITER'))")
      */
     public function editAction(Request $request, News $news)
     {

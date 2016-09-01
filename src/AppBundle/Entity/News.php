@@ -187,7 +187,7 @@ class News
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPublished(): bool
     {
@@ -195,7 +195,7 @@ class News
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isInternal(): bool
     {

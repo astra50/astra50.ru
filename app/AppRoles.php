@@ -3,7 +3,7 @@
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class Roles
+final class AppRoles
 {
     /**
      * Член СНТ

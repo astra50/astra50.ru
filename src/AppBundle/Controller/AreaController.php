@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Repository\AreaRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/area", service="app.controller.area")

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Uuid;
+namespace Uuid;
 
 use Ramsey\Uuid\UuidInterface;
 
