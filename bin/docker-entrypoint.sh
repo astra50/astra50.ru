@@ -5,6 +5,7 @@ set -e
 APP_DIR=${APP_DIR:=/usr/local/app}
 SYMFONY_ENV=${SYMFONY_ENV:=dev}
 NGINX_WEB_DIR=${NGINX_WEB_DIR:=/var/www}
+PHP_INI_DIR=${PHP_INI_DIR:=/usr/local/etc/php}
 
 OPCACHE=
 BUILD_PARAMS=
