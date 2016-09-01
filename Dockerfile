@@ -44,7 +44,7 @@ RUN set -ex \
     } >> ${PHP_INI_DIR}/conf.d/xdebug.ini
 
 COPY ./composer.* ${APP_DIR}/
-RUN composer install --no-scripts --no-interaction --no-autoloader
+RUN composer install --no-scripts --no-interaction --no-autoloader --no-progress
 COPY ./ ${APP_DIR}
 
 VOLUME ${APP_DIR}/var/logs

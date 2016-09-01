@@ -77,9 +77,9 @@ if [ "$BUILD_PARAMS" == "true" ]; then
 fi
 
 if [ "$DEV_DEPS" == "true" ]; then
-    composer install --no-interaction --optimize-autoloader
+    composer install --no-interaction --optimize-autoloader --no-progress
 else
-    composer install --no-dev --no-interaction --optimize-autoloader
+    composer install --no-dev --no-interaction --optimize-autoloader --no-progress
 fi
 
 if [ "$REQUIREMENTS" == "true" ]; then
