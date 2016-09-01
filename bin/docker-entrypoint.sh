@@ -84,7 +84,7 @@ ln -sf ${APP_DIR}/bin/console /usr/local/bin/sf
 chmod +x -R ${APP_DIR}/bin/*
 
 if [ "$BUILD_PARAMS" == "true" ]; then
-    composer run-script build-parameters --no-interaction --quiet
+    composer run-script build-parameters --no-interaction
 fi
 
 if [ "$COMPOSER" != "false" ]; then
@@ -100,7 +100,7 @@ if [ "$MIGRATION" == "true" ]; then
 fi
 
 if [ "$FIXTURES" == "true" ]; then
-    bin/console doctrine:fixtures:load --no-interaction --quiet
+    bin/console doctrine:fixtures:load --no-interaction
 fi
 
 if [ "$XDEBUG" == "true" ]; then
