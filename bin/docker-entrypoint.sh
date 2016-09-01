@@ -9,7 +9,7 @@ NGINX_WEB_DIR=${NGINX_WEB_DIR:=/var/www}
 COMMAND=
 XDEBUG=
 OPCACHE=
-DEV_DEPS=
+COMPOSER=
 MIGRATION=
 FIXTURES=
 BUILD_PARAMS=
@@ -30,6 +30,14 @@ case ${i} in
     -f|--fixtures)
     FIXTURES=true
     ;;
+    --no-composer)
+    COMPOSER=false
+    ;;
+    composer)
+    COMPOSER=false
+    XDEBUG=false
+    COMMAND=${COMMAND}' '${i}
+    ;;
     *)
     # unknown option
     COMMAND=${COMMAND}' '${i}
@@ -44,6 +52,7 @@ if [ "$SYMFONY_ENV" == "dev" ]; then
     XDEBUG=${XDEBUG:=true}
     BUILD_PARAMS=${BUILD_PARAMS:=true}
     DEV_DEPS=${DEV_DEPS:=true}
+    COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --prefer-source"}
 
     COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80'}
 fi
@@ -53,6 +62,7 @@ if [ "$SYMFONY_ENV" == "test" ]; then
 
     BUILD_PARAMS=${BUILD_PARAMS:=true}
     DEV_DEPS=${DEV_DEPS:=true}
+    COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     REQUIREMENTS=${REQUIREMENTS:=true}
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
@@ -61,6 +71,7 @@ if [ "$SYMFONY_ENV" == "test" ]; then
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
+    COMPOSER=${COMPOSER:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     MIGRATION=${MIGRATION:=true}
     OPCACHE=${OPCACHE:=true}
 
@@ -76,10 +87,8 @@ if [ "$BUILD_PARAMS" == "true" ]; then
     composer run-script build-parameters --no-interaction --quiet
 fi
 
-if [ "$DEV_DEPS" == "true" ]; then
-    composer install --no-interaction --optimize-autoloader --no-progress
-else
-    composer install --no-dev --no-interaction --optimize-autoloader --no-progress
+if [ "$COMPOSER" != "false" ]; then
+    ${COMPOSER}
 fi
 
 if [ "$REQUIREMENTS" == "true" ]; then
