@@ -22,6 +22,10 @@ RUN set -ex \
     && composer global require phpunit/phpunit && rm -rf ${COMPOSER_CACHE_DIR}/* \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && pecl install xdebug && apk del .build-deps
 
+COPY ./composer.* ${APP_DIR}/
+RUN composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist
+COPY ./ ${APP_DIR}
+
 RUN set -ex \
     && { \
         echo 'opcache.enable = 1'; \
@@ -41,11 +45,11 @@ RUN set -ex \
         echo 'xdebug.remote_enable=On'; \
         echo 'xdebug.remote_autostart=On'; \
         echo 'xdebug.remote_connect_back=On'; \
-    } >> ${PHP_INI_DIR}/conf.d/xdebug.ini
-
-COPY ./composer.* ${APP_DIR}/
-RUN composer install --no-scripts --no-interaction --no-autoloader --no-progress
-COPY ./ ${APP_DIR}
+    } >> ${PHP_INI_DIR}/conf.d/xdebug.ini \
+    && { \
+        echo 'date.timezone = UTC'; \
+        echo 'short_open_tag = off'; \
+    } > ${PHP_INI_DIR}/php.ini
 
 VOLUME ${APP_DIR}/var/logs
 VOLUME ${APP_DIR}/var/sessions
