@@ -6,30 +6,18 @@ APP_DIR=${APP_DIR:=/usr/local/app}
 SYMFONY_ENV=${SYMFONY_ENV:=dev}
 NGINX_WEB_DIR=${NGINX_WEB_DIR:=/var/www}
 
-COMMAND=
-XDEBUG=
 OPCACHE=
+BUILD_PARAMS=
 COMPOSER=
+REQUIREMENTS=
 MIGRATION=
 FIXTURES=
-BUILD_PARAMS=
-REQUIREMENTS=
+XDEBUG=
+COMMAND=
 
 for i in "$@"
 do
 case ${i} in
-    -x|--xdebug)
-    XDEBUG=true
-    ;;
-    --no-xdebug)
-    XDEBUG=false
-    ;;
-    -m|--migrations)
-    MIGRATION=true
-    ;;
-    -f|--fixtures)
-    FIXTURES=true
-    ;;
     --no-composer)
     COMPOSER=false
     ;;
@@ -37,6 +25,21 @@ case ${i} in
     COMPOSER=false
     XDEBUG=false
     COMMAND=${COMMAND}' '${i}
+    ;;
+    -m|--migrations)
+    MIGRATION=true
+    ;;
+    -f|--fixtures)
+    FIXTURES=true
+    ;;
+    --no-fixtures)
+    FIXTURES=false
+    ;;
+    -x|--xdebug)
+    XDEBUG=true
+    ;;
+    --no-xdebug)
+    XDEBUG=false
     ;;
     *)
     # unknown option
@@ -51,7 +54,6 @@ done
 if [ "$SYMFONY_ENV" == "dev" ]; then
     XDEBUG=${XDEBUG:=true}
     BUILD_PARAMS=${BUILD_PARAMS:=true}
-    DEV_DEPS=${DEV_DEPS:=true}
     COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --prefer-source"}
 
     COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80'}
@@ -60,20 +62,20 @@ fi
 if [ "$SYMFONY_ENV" == "test" ]; then
     export SYMFONY_DEBUG=0
 
+    OPCACHE=${OPCACHE:=true}
     BUILD_PARAMS=${BUILD_PARAMS:=true}
-    DEV_DEPS=${DEV_DEPS:=true}
     COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     REQUIREMENTS=${REQUIREMENTS:=true}
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
 
-    COMMAND=${COMMAND:=phpunit}
+    COMMAND=${COMMAND:="sf doctrine:schema:validate && phpunit"}
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
+    OPCACHE=${OPCACHE:=true}
     COMPOSER=${COMPOSER:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     MIGRATION=${MIGRATION:=true}
-    OPCACHE=${OPCACHE:=true}
 
     COMMAND=${COMMAND:=php-fpm}
 fi
@@ -82,6 +84,12 @@ ln -sf ${APP_DIR}/bin/console /usr/local/bin/sf
 #chmod -R 644 ${APP_DIR}
 #find ${APP_DIR} -type d -exec chmod 755 {} \;
 chmod +x -R ${APP_DIR}/bin/*
+
+
+if [ "$OPCACHE" == "true" ]; then
+#    docker-php-ext-enable opcache # wait for fix "nm not found"
+    echo "zend_extension=opcache.so" > ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini
+fi
 
 if [ "$BUILD_PARAMS" == "true" ]; then
     composer run-script build-parameters --no-interaction
@@ -104,11 +112,8 @@ if [ "$FIXTURES" == "true" ]; then
 fi
 
 if [ "$XDEBUG" == "true" ]; then
-    docker-php-ext-enable xdebug
-fi
-
-if [ "$OPCACHE" == "true" ]; then
-    docker-php-ext-enable opcache
+#    docker-php-ext-enable xdebug # wait for fix "nm not found"
+    echo "zend_extension=xdebug.so" > ${PHP_INI_DIR}/conf.d/docker-php-ext-xdebug.ini
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
@@ -117,4 +122,4 @@ if [ "$SYMFONY_ENV" == "prod" ]; then
     rm -rf ${NGINX_WEB_DIR}/*.php
 fi
 
-${COMMAND}
+/bin/sh -c "${COMMAND}"
