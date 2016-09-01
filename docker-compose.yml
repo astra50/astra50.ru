@@ -8,6 +8,10 @@ services:
       volumes:
           - ./:/usr/local/app
           - COMPOSER_CACHE:/var/cache/composer
+      environment:
+          database_host: mysql
+          database_user: db
+          database_password: db
       depends_on:
           - mysql
 
@@ -19,6 +23,8 @@ services:
           - mysql-db:/var/lib/mysql
       environment:
           MYSQL_DATABASE: db
+          MYSQL_USER: db
+          MYSQL_PASSWORD: db
           MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
 
 volumes:
