@@ -1,29 +1,38 @@
 #!/bin/sh
 
-set -ex
+set -e
 
+APP_DIR=${APP_DIR:=/usr/local/app}
 SYMFONY_ENV=${SYMFONY_ENV:=dev}
+NGINX_WEB_DIR=${NGINX_WEB_DIR:=/var/www}
+
 COMMAND=
 XDEBUG=
 OPCACHE=
-DEVDEPS=
+DEV_DEPS=
 MIGRATION=
 FIXTURES=
-BUILDPARAMS=
+BUILD_PARAMS=
 REQUIREMENTS=
 
 for i in "$@"
 do
-case $i in
+case ${i} in
     -x|--xdebug)
     XDEBUG=true
     ;;
     --no-xdebug)
     XDEBUG=false
     ;;
+    -m|--migrations)
+    MIGRATION=true
+    ;;
+    -f|--fixtures)
+    FIXTURES=true
+    ;;
     *)
     # unknown option
-    COMMAND=$COMMAND' '$i
+    COMMAND=${COMMAND}' '${i}
     ;;
 esac
     # past argument=value
@@ -33,7 +42,8 @@ done
 
 if [ "$SYMFONY_ENV" == "dev" ]; then
     XDEBUG=${XDEBUG:=true}
-    BUILDPARAMS=${BUILDPARAMS:=true}
+    BUILD_PARAMS=${BUILD_PARAMS:=true}
+    DEV_DEPS=${DEV_DEPS:=true}
 
     COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80'}
 fi
@@ -41,8 +51,8 @@ fi
 if [ "$SYMFONY_ENV" == "test" ]; then
     export SYMFONY_DEBUG=0
 
-    BUILDPARAMS=${BUILDPARAMS:=true}
-    DEVDEPS=${DEVDEPS:=true}
+    BUILD_PARAMS=${BUILD_PARAMS:=true}
+    DEV_DEPS=${DEV_DEPS:=true}
     REQUIREMENTS=${REQUIREMENTS:=true}
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
@@ -51,23 +61,22 @@ if [ "$SYMFONY_ENV" == "test" ]; then
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
-    OPCACHE=${OPCACHE:=true}
-    DEVDEPS=${DEVDEPS:=false}
     MIGRATION=${MIGRATION:=true}
+    OPCACHE=${OPCACHE:=true}
 
     COMMAND=${COMMAND:=php-fpm}
 fi
 
-ln -s $APP_DIR/bin/console /usr/local/bin/sf
-chmod -R 644 ${APP_DIR}
-find ${APP_DIR} -type d -exec chmod 755 {} \;
-chmod +x -R $APP_DIR/bin/*
+ln -sf ${APP_DIR}/bin/console /usr/local/bin/sf
+#chmod -R 644 ${APP_DIR}
+#find ${APP_DIR} -type d -exec chmod 755 {} \;
+chmod +x -R ${APP_DIR}/bin/*
 
-if [ "$BUILDPARAMS" == "true" ]; then
+if [ "$BUILD_PARAMS" == "true" ]; then
     composer run-script build-parameters --no-interaction --quiet
 fi
 
-if [ "$DEVDEPS" == "true" ]; then
+if [ "$DEV_DEPS" == "true" ]; then
     composer install --no-interaction --optimize-autoloader
 else
     composer install --no-dev --no-interaction --optimize-autoloader
@@ -94,9 +103,9 @@ if [ "$OPCACHE" == "true" ]; then
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
-    chown -R www-data:www-data $APP_DIR/var
-    cp -rfL  $APP_DIR/web/* $NGINX_WEB_DIR/
-    rm -rf $NGINX_WEB_DIR/*.php
+    chown -R www-data:www-data ${APP_DIR}/var
+    cp -rfL  ${APP_DIR}/web/* ${NGINX_WEB_DIR}/
+    rm -rf ${NGINX_WEB_DIR}/*.php
 fi
 
-$COMMAND
+${COMMAND}
