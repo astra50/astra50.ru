@@ -3,11 +3,10 @@ FROM php:fpm-alpine
 MAINTAINER Konstantin Grachev <me@grachevko.ru>
 
 ENV APP_DIR=/usr/local/app \
-  COMPOSER_BIN_DIR=/usr/local/bin \
   COMPOSER_CACHE_DIR=/var/cache/composer \
   COMPOSER_ALLOW_SUPERUSER=1
 
-ENV PATH=${APP_DIR}/bin:${PATH}
+ENV PATH=${APP_DIR}/bin:${APP_DIR}/vendor/bin:${PATH}
 
 WORKDIR ${APP_DIR}
 
@@ -19,13 +18,14 @@ RUN set -ex \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer global require phpunit/phpunit && rm -rf ${COMPOSER_CACHE_DIR}/* \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && pecl install xdebug && apk del .build-deps
 
 ARG SOURCE_DIR=.
 
 COPY $SOURCE_DIR/composer.* ${APP_DIR}/
-RUN [ -f composer.lock ] && composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist || true
+RUN if [ -f composer.lock ]; then \
+    composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist \
+    && rm -rf ${COMPOSER_CACHE_DIR}/* ; fi
 
 COPY $SOURCE_DIR/ ${APP_DIR}/
 
