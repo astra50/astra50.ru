@@ -23,6 +23,7 @@ case ${i} in
     COMPOSER=false
     ;;
     composer)
+    BUILD_PARAMS=false
     COMPOSER=false
     XDEBUG=false
     COMMAND=${COMMAND}' '${i}
@@ -72,7 +73,7 @@ if [ "$SYMFONY_ENV" == "test" ]; then
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
 
-    COMMAND=${COMMAND:="sf doctrine:schema:validate && phpunit"}
+    COMMAND=${COMMAND:="bin/console doctrine:schema:validate && phpunit"}
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
