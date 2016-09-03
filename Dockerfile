@@ -1,6 +1,6 @@
 FROM php:fpm-alpine
 
-MAINTAINER Konstantin Grachev <ko@grachev.io>
+MAINTAINER Konstantin Grachev <me@grachevko.ru>
 
 ENV APP_DIR=/usr/local/app \
   COMPOSER_BIN_DIR=/usr/local/bin \
@@ -22,9 +22,12 @@ RUN set -ex \
     && composer global require phpunit/phpunit && rm -rf ${COMPOSER_CACHE_DIR}/* \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS && pecl install xdebug && apk del .build-deps
 
-COPY ./composer.* ${APP_DIR}/
-RUN composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist
-COPY ./ ${APP_DIR}
+ARG SOURCE_DIR=.
+
+COPY $SOURCE_DIR/composer.* ${APP_DIR}/
+RUN [ -f composer.lock ] && composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist || true
+
+COPY $SOURCE_DIR/ ${APP_DIR}/
 
 RUN set -ex \
     && { \

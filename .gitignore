@@ -1,16 +1,27 @@
-/app/config/parameters.yml
-/build/
-/phpunit.xml
-/var/*
-!/var/cache
-/var/cache/*
+!.gitkeep
+
+# Composer
+vendor/
+
+# Cache and logs (Symfony)
+/var/bootstrap.php.cache
+/var/cache
 !var/cache/.gitkeep
-!/var/logs
-/var/logs/*
+!var/cache/composer.null
+/var/logs
 !var/logs/.gitkeep
-!/var/sessions
-/var/sessions/*
-!var/sessions/.gitkeep
-!var/SymfonyRequirements.php
-/vendor/
-/web/bundles/
+/var/sessions
+/var/SymfonyRequirements.php
+
+# Assets and user uploads
+web/bundles/*
+!web/bundles/.gitkeep
+
+# Symfony parameters
+app/config/parameters.yml
+
+# Docker compose
+/docker-compose.yml
+
+# Drone secret valiables
+/.drone.sec.yml
