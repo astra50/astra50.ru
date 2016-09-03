@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 APP_DIR=${APP_DIR:=/usr/local/app}
 SYMFONY_ENV=${SYMFONY_ENV:=dev}
@@ -53,6 +53,8 @@ done
 
 
 if [ "$SYMFONY_ENV" == "dev" ]; then
+    ln -sf ${APP_DIR}/bin/console /usr/local/bin/sf
+
     XDEBUG=${XDEBUG:=true}
     BUILD_PARAMS=${BUILD_PARAMS:=true}
     COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --prefer-source"}
@@ -80,12 +82,6 @@ if [ "$SYMFONY_ENV" == "prod" ]; then
 
     COMMAND=${COMMAND:=php-fpm}
 fi
-
-ln -sf ${APP_DIR}/bin/console /usr/local/bin/sf
-#chmod -R 644 ${APP_DIR}
-#find ${APP_DIR} -type d -exec chmod 755 {} \;
-chmod +x -R ${APP_DIR}/bin/*
-
 
 if [ "$OPCACHE" == "true" ]; then
 #    docker-php-ext-enable opcache # wait for fix "nm not found"
