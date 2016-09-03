@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 APP_DIR=${APP_DIR:=/usr/local/app}
 SYMFONY_ENV=${SYMFONY_ENV:=dev}
