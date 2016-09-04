@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 /**
  * @ORM\Entity()
  */
-final class Area
+class Area
 {
     /**
      * @var UuidInterface
@@ -19,9 +19,9 @@ final class Area
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", unique=true)
+     * @ORM\Column(type="string", unique=true)
      */
     private $number;
 
@@ -34,35 +34,26 @@ final class Area
 
     /**
      * @param UuidInterface $id
-     * @param int           $number
+     * @param string        $number
      * @param int           $size
      */
-    public function __construct(UuidInterface $id, int $number, int $size)
+    public function __construct(UuidInterface $id, string $number, int $size)
     {
         $this->id = $id;
         $this->number = $number;
         $this->size = $size;
     }
 
-    /**
-     * @return UuidInterface
-     */
     public function getId(): UuidInterface
     {
         return $this->id;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumber(): int
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    /**
-     * @return int
-     */
     public function getSize(): int
     {
         return $this->size;
