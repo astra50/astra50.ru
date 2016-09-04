@@ -15,6 +15,7 @@ services:
           database_host: mysql
           database_user: db
           database_password: db
+          PHP_IDE_CONFIG: "serverName=astra50"
       depends_on:
           - mysql
 
