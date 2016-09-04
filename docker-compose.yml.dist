@@ -13,7 +13,7 @@ services:
           - ./:/usr/local/app
           - COMPOSER_CACHE:/var/cache/composer
       environment:
-          SYMFONY_ENV: prod
+          SYMFONY_ENV: dev
           PHP_IDE_CONFIG: "serverName=astra50"
           database_host: mysql
           database_user: db
@@ -28,10 +28,10 @@ services:
           SYMFONY__mailer_user: "null"
           SYMFONY__mailer_password: "null"
           SYMFONY__secret: 05b4db48594ff353c6dc1b44dffafe6c399512db
-          SYMFONY__google_oauth_id: 113537866015-lavdm8fd9mfsjeuphr17ogbt6345m2sj.apps.googleusercontent.com
-          SYMFONY__google_oauth_secret: EEThCiS_PRYLRBpco2-gN4_h
-          SYMFONY__vkontakte_oauth_id: 5607102
-          SYMFONY__vkontakte_oauth_secret: 83eAXnZqzxZNpwTUGPoE
+          SYMFONY__google_oauth_id: 05b4db48594ff353c6dc1b44dffafe6c399512db
+          SYMFONY__google_oauth_secret: 05b4db48594ff353c6dc1b44dffafe6c399512db
+          SYMFONY__vkontakte_oauth_id: 05b4db48594ff353c6dc1b44dffafe6c399512db
+          SYMFONY__vkontakte_oauth_secret: 05b4db48594ff353c6dc1b44dffafe6c399512db
       depends_on:
           - mysql
 
