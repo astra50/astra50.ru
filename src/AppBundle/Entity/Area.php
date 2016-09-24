@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
 
@@ -33,6 +34,14 @@ class Area
     private $size;
 
     /**
+     * @var User[]
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinTable(joinColumns={@ORM\JoinColumn()}, inverseJoinColumns={@ORM\JoinColumn()})
+     */
+    private $users;
+
+    /**
      * @param UuidInterface $id
      * @param string        $number
      * @param int           $size
@@ -42,6 +51,7 @@ class Area
         $this->id = $id;
         $this->number = $number;
         $this->size = $size;
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): UuidInterface
@@ -57,5 +67,18 @@ class Area
     public function getSize(): int
     {
         return $this->size;
+    }
+
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getUsers(): array
+    {
+        return $this->users->toArray();
     }
 }

@@ -14,4 +14,14 @@ final class AppRoles
      * Писатель новостей
      */
     const NEWS_WRITER = 'ROLE_NEWS_WRITER';
+
+    /**
+     * Кассир
+     */
+    const CASHIER = 'ROLE_CASHIER';
+
+    /**
+     * Председатель
+     */
+    const CHAIRMAN = 'ROLE_CHAIRMAN';
 }

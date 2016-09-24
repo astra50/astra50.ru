@@ -1,6 +1,6 @@
 AppBundle\Entity\User:
     User_{1..2}:
-        __construct: ['<uuid4()>', '<firstName()> <lastName()>', '<email()>', '<city()>', true]
+        __construct: ['<uuid4()>', '<email()>', '<firstName()> <lastName()>', '<city()>', true]
 
 AppBundle\Entity\News:
     News_{1..10}:
@@ -9,3 +9,4 @@ AppBundle\Entity\News:
 AppBundle\Entity\Area:
     Area_{1..50}:
         __construct: ['<uuid4()>', '<current()>', '<numberBetween(6, 12)>']
+        addUser: ['@User*']

@@ -21,7 +21,9 @@ final class AreaRepository extends EntityRepository
     public function findAll()
     {
         return $this->createQueryBuilder('a')
-            ->orderBy('a.number')
+            ->select('a', 'u', 'ABS(a.number) as HIDDEN numbers')
+            ->join('a.users', 'u')
+            ->orderBy('numbers', 'ASC')
             ->getQuery()
             ->getResult();
     }
