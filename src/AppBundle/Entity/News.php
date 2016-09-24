@@ -25,7 +25,7 @@ class News
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn()
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $author;
 
