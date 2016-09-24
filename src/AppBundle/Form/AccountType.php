@@ -28,9 +28,6 @@ class AccountType extends AbstractType
             ])
             ->add('phone', TextType::class, [
                 'label' => 'Телефон',
-            ])
-            ->add('placement', TextType::class, [
-                'label' => 'Номер участка',
             ]);
     }
 

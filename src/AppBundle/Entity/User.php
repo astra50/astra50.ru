@@ -40,13 +40,6 @@ class User extends BaseUser
     private $realname;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(nullable=true)
-     */
-    private $placement;
-
-    /**
      * @ORM\Column(nullable=true)
      */
     private $googleId;
@@ -143,23 +136,5 @@ class User extends BaseUser
     public function getRealname()
     {
         return $this->realname;
-    }
-
-    /**
-     * @param string $placement
-     */
-    public function setPlacement(string $placement)
-    {
-        $this->placement = $placement;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlacement()
-    {
-        return $this->placement;
     }
 }

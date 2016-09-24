@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/account", service="app.controller.account")
+ *
  * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
  *
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -43,8 +44,7 @@ final class AccountController extends Controller
         if ($form->handleRequest($request)->isValid()) {
             $user
                 ->setRealname($model->realname)
-                ->setPhone($model->phone)
-                ->setPlacement($model->placement);
+                ->setPhone($model->phone);
 
             $this->userRepository->save($user);
 

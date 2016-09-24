@@ -47,7 +47,6 @@ final class AccountModel
         $model->email = $user->getEmail();
         $model->realname = $user->getRealname();
         $model->phone = $user->getPhone();
-        $model->placement = $user->getPlacement();
 
         return $model;
     }
