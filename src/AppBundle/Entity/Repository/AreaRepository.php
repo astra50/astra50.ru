@@ -1,15 +1,21 @@
 <?php
 
-namespace AppBundle\Repository;
+namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
 use AppBundle\Entity\Area;
+use Ramsey\Uuid\UuidInterface;
 
 /**
+ * @method Area get(UuidInterface $id)
+ *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
 final class AreaRepository extends EntityRepository
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function getClass(): string
     {
         return Area::class;
@@ -18,7 +24,7 @@ final class AreaRepository extends EntityRepository
     /**
      * @return Area[]
      */
-    public function findAll()
+    public function findAllWithOwners()
     {
         return $this->createQueryBuilder('a')
             ->select('a', 'u', 'ABS(a.number) as HIDDEN numbers')
@@ -26,5 +32,16 @@ final class AreaRepository extends EntityRepository
             ->orderBy('numbers', 'ASC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function findAllForChoices()
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a.id', 'a.number')
+            ->getQuery()->getResult()
+            ;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Repository\AreaRepository;
+use AppBundle\Entity\Repository\AreaRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
@@ -31,7 +31,7 @@ final class AreaController extends Controller
     public function listAction()
     {
         return $this->render(':area:list.html.twig', [
-            'areas' => $this->areaRepository->findAll(),
+            'areas' => $this->areaRepository->findAllWithOwners(),
         ]);
     }
 }

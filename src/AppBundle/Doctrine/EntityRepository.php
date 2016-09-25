@@ -22,6 +22,16 @@ abstract class EntityRepository
 
     /**
      * @param UuidInterface $id
+     *
+     * @return mixed
+     */
+    public function getReference(UuidInterface $id)
+    {
+        return $this->em->getReference($this->getClass(), $id);
+    }
+
+    /**
+     * @param UuidInterface $id
      */
     public function find(UuidInterface $id)
     {

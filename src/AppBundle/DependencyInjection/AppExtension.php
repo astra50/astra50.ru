@@ -24,5 +24,6 @@ class AppExtension extends Extension
         $loader->load('menu.yml');
         $loader->load('repositories.yml');
         $loader->load('services.yml');
+        $loader->load('twig_extensions.yml');
     }
 }

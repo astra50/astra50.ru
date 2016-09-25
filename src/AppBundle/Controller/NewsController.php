@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\News;
-use AppBundle\Form\NewsType;
-use AppBundle\Model\NewsModel;
-use AppBundle\Repository\NewsRepository;
+use AppBundle\Form\Type\NewsType;
+use AppBundle\Form\Model\NewsModel;
+use AppBundle\Entity\Repository\NewsRepository;
 use Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

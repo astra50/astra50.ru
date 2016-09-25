@@ -21,3 +21,10 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.area'
+
+    app.controller.payment_type:
+        class: AppBundle\Controller\PaymentTypeController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.payment_type'
+            - '@app.repository.area'

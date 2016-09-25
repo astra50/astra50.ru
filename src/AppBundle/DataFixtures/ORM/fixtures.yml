@@ -7,6 +7,10 @@ AppBundle\Entity\News:
         __construct: ['<uuid4()>', '@User*', '<city()>',  '<text()>',  false]
 
 AppBundle\Entity\Area:
-    Area_{1..50}:
+    Area_{0..50}:
         __construct: ['<uuid4()>', '<current()>', '<numberBetween(6, 12)>']
         addUser: ['@User*']
+
+AppBundle\Entity\PaymentType:
+    PaymentType_{1..30}:
+        __construct: ['<uuid4()>', '<paymentType()>', '<numberBetween(500, 50000)>', '<numberBetween(1, 2)>', '<numberBetween(1, 2)>']

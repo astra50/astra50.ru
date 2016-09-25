@@ -9,6 +9,7 @@
         "classmap": [
             "app/AppKernel.php",
             "app/AppCache.php",
+            "app/AppEvents.php",
             "app/AppRoles.php"
         ],
         "files": [
