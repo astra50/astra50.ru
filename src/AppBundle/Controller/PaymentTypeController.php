@@ -72,7 +72,7 @@ final class PaymentTypeController extends Controller
             $this->paymentTypeRepository->save($entity);
             $this->dispatch(\AppEvents::PAYMENT_TYPE_NEW, new NewPaymentTypeEvent($entity, $model, $this->getUser()));
 
-            $this->success(sprintf('Платежа "%s" создан!', $model->name));
+            $this->success(sprintf('Платеж "%s" создан!', $model->name));
 
             return $this->redirectToRoute('payment_type');
         }

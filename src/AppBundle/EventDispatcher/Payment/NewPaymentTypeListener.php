@@ -54,7 +54,7 @@ final class NewPaymentTypeListener implements EventSubscriberInterface
 
         $sum = null;
         if ($model->calculation === PaymentType::CALCULATION_SHARE) {
-            $sum = (int) ceil($model->sum / count($model->areas));
+            $sum = (int) (ceil(($model->sum / 100) / count($model->areas)) * 100);
         }
 
         foreach ($model->areas as $id) {
