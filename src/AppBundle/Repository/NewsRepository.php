@@ -24,12 +24,14 @@ final class NewsRepository extends EntityRepository
     }
 
     /**
+     * @param int  $pageSize
+     * @param int  $pageIndex
      * @param bool $publishedOnly
-     * @param bool $internalOnly
+     * @param bool $withInternal
      *
      * @return Pagerfanta
      */
-    public function getLatestPaginated($publishedOnly = true, $withInternal = false)
+    public function paginateLatest(int $pageSize, int $pageIndex, $publishedOnly = true, $withInternal = false)
     {
         $qb = $this->createQueryBuilder('n')
             ->addSelect('u')
@@ -45,6 +47,6 @@ final class NewsRepository extends EntityRepository
                 ->setParameter('internal', false);
         }
 
-        return $this->paginate($qb);
+        return $this->paginate($qb, $pageSize, $pageIndex);
     }
 }

@@ -38,9 +38,10 @@ class NewsController extends Controller
      */
     public function listAction(Request $request)
     {
-        $news = $this->newsRepository->getLatestPaginated(!$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY))
-            ->setMaxPerPage(self::NEWS_PER_PAGE)
-            ->setCurrentPage($request->query->get('page', 1));
+        $pageSize = self::NEWS_PER_PAGE;
+        $pageIndex = $request->query->get('page', 1);
+
+        $news = $this->newsRepository->paginateLatest($pageSize, $pageIndex, !$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY));
 
         return $this->render('news/list.html.twig', [
             'pagerfanta' => $news,
