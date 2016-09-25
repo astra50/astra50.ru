@@ -78,7 +78,7 @@ fos_user:
     use_flash_notifications: true
     registration:
         form:
-            type: AppBundle\Form\RegistrationFormType
+            type: AppBundle\Form\Type\RegistrationFormType
 
 hwi_oauth:
     firewall_names: [main]
