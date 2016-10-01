@@ -8,9 +8,7 @@
         },
         "classmap": [
             "app/AppKernel.php",
-            "app/AppCache.php",
-            "app/AppEvents.php",
-            "app/AppRoles.php"
+            "app/AppCache.php"
         ],
         "files": [
             "src/Uuid/bootstrap.php"
