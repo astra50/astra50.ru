@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2a1123285dc862c51820726410a52254",
-    "content-hash": "217d99dcc29725843dfc56d5ef9c10b6",
+    "hash": "d9da495df4b49c4fe8bd6b9a67c56f04",
+    "content-hash": "89a7ce3cb8cfd67c8a8cadd0fd84552e",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -955,12 +955,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/FOSUserBundle.git",
-                "reference": "4cb7a29869e4a9bef4f51986d48b1a3af76d3f48"
+                "reference": "cf2fa7dba1954645a8a28a4720d0dbb68b6fd6f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/4cb7a29869e4a9bef4f51986d48b1a3af76d3f48",
-                "reference": "4cb7a29869e4a9bef4f51986d48b1a3af76d3f48",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSUserBundle/zipball/cf2fa7dba1954645a8a28a4720d0dbb68b6fd6f1",
+                "reference": "cf2fa7dba1954645a8a28a4720d0dbb68b6fd6f1",
                 "shasum": ""
             },
             "require": {
@@ -994,7 +994,10 @@
             "autoload": {
                 "psr-4": {
                     "FOS\\UserBundle\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1019,7 +1022,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2016-09-12 15:04:02"
+            "time": "2016-09-30 08:33:06"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1106,12 +1109,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/hwi/HWIOAuthBundle.git",
-                "reference": "0c7abffa1cf47a8e33733837b94495b629a424c1"
+                "reference": "58924e0a044a0126d333a6f08a9d0a29dbda7c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hwi/HWIOAuthBundle/zipball/0c7abffa1cf47a8e33733837b94495b629a424c1",
-                "reference": "0c7abffa1cf47a8e33733837b94495b629a424c1",
+                "url": "https://api.github.com/repos/hwi/HWIOAuthBundle/zipball/58924e0a044a0126d333a6f08a9d0a29dbda7c8b",
+                "reference": "58924e0a044a0126d333a6f08a9d0a29dbda7c8b",
                 "shasum": ""
             },
             "require": {
@@ -1152,7 +1155,10 @@
             "autoload": {
                 "psr-4": {
                     "HWI\\Bundle\\OAuthBundle\\": ""
-                }
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1244,7 +1250,7 @@
                 "yandex",
                 "youtube"
             ],
-            "time": "2016-09-11 13:50:44"
+            "time": "2016-09-28 09:58:48"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -3599,16 +3605,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd"
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/9270140b940ff02e58ec577c237274e92cd40cdd",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/8331b5efe816ae05461b7ca1e721c01b46bafb3e",
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e",
                 "shasum": ""
             },
             "require": {
@@ -3640,7 +3646,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-06-10 09:48:41"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",
