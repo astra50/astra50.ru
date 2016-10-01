@@ -4,6 +4,7 @@ namespace AppBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -16,11 +17,17 @@ class Builder
     private $factory;
 
     /**
+     * @var AuthorizationChecker
+     */
+    private $authorizationChecker;
+
+    /**
      * @param FactoryInterface $factory
      */
-    public function __construct(FactoryInterface $factory)
+    public function __construct(FactoryInterface $factory, AuthorizationChecker $authorizationChecker)
     {
         $this->factory = $factory;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -42,5 +49,28 @@ class Builder
             ;
 
         return $menu;
+    }
+
+    public function createManagerMenu(): ItemInterface
+    {
+        $menu = $this->factory->createItem('root', ['childrenAttributes' => ['class' => 'nav navbar-nav']]);
+
+        $menu
+            ->addChild('Payment', ['label' => 'Платежи', 'route' => 'payment_list'])->getParent()
+            ->addChild('PaymentType', ['label' => 'Типы платежей', 'route' => 'payment_type_list'])->getParent()
+            ->addChild('Area', ['label' => 'Участки', 'route' => 'area_list'])->getParent()
+            ;
+
+        return $menu;
+    }
+
+    /**
+     * @param $role
+     *
+     * @return bool
+     */
+    private function isGranted($role)
+    {
+        return $this->authorizationChecker->isGranted($role);
     }
 }
