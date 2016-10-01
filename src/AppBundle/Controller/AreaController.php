@@ -2,8 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Area;
 use AppBundle\Entity\Repository\AreaRepository;
+use AppBundle\Entity\Repository\PaymentRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/area", service="app.controller.area")
@@ -18,11 +21,17 @@ final class AreaController extends BaseController
     private $areaRepository;
 
     /**
+     * @var PaymentRepository
+     */
+    private $paymentRepository;
+
+    /**
      * @param AreaRepository $areaRepository
      */
-    public function __construct(AreaRepository $areaRepository)
+    public function __construct(AreaRepository $areaRepository, PaymentRepository $paymentRepository)
     {
         $this->areaRepository = $areaRepository;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -32,6 +41,22 @@ final class AreaController extends BaseController
     {
         return $this->render(':area:list.html.twig', [
             'areas' => $this->areaRepository->findAllWithOwners(),
+        ]);
+    }
+
+    /**
+     * @Route("/{number}", name="area_show")
+     */
+    public function showAction(Request $request, Area $area)
+    {
+        $pageSize = 50;
+        $pageIndex = $request->query->get('page', 1);
+
+        $payments = $this->paymentRepository->paginateByArea($area, $pageSize, $pageIndex);
+
+        return $this->render(':area:show.html.twig', [
+            'area' => $area,
+            'pagerfanta' => $payments,
         ]);
     }
 }

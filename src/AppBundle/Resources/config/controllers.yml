@@ -21,6 +21,7 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.area'
+            - '@app.repository.payment'
 
     app.controller.payment:
         class: AppBundle\Controller\PaymentController

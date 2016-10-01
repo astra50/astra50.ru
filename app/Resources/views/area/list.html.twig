@@ -7,28 +7,33 @@
 
     <table class="table table-hover">
         <thead>
-            <tr>
-                <th>№</th>
-                <th>Соток</th>
-                <th>Владельцы</th>
-            </tr>
+        <tr>
+            <th>№</th>
+            <th>Соток</th>
+            <th>Владельцы</th>
+        </tr>
         </thead>
         <tbody>
-            {% for area in areas %}
-                <tr>
-                    <td>{{ area.number }}</td>
-                    <td>{{ area.size }}</td>
-                    <td>
-                        {% if area.users is not empty %}
-                            <ul>
-                                {% for user in area.users %}
-                                    <li>{{ user.realname }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
+        {% for area in areas %}
+            <tr>
+                <td>{{ area.number }}</td>
+                <td>{{ area.size }}</td>
+                <td>
+                    {% if area.users is not empty %}
+                        <ul>
+                            {% for user in area.users %}
+                                <li>{{ user.realname }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-default" href="{{ path('area_show', {'number': area.number}) }}">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endblock %}
