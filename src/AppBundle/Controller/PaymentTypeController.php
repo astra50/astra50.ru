@@ -41,7 +41,7 @@ final class PaymentTypeController extends BaseController
     }
 
     /**
-     * @Route(name="payment_type")
+     * @Route(name="payment_type_list")
      */
     public function listAction(Request $request)
     {
@@ -74,7 +74,7 @@ final class PaymentTypeController extends BaseController
 
             $this->success(sprintf('Платеж "%s" создан!', $model->name));
 
-            return $this->redirectToRoute('payment_type');
+            return $this->redirectToRoute('payment_type_list');
         }
 
         return $this->render(':payment_type:edit.html.twig', [
