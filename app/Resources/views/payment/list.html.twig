@@ -1,0 +1,38 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <h1>Платежи</h1>
+
+    <hr>
+
+    {% if 0 < pagerfanta.count %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Участок</th>
+                <th>Наименование</th>
+                <th>Сумма (руб.)</th>
+                <th>Дата создания</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in pagerfanta.currentPageResults %}
+                <tr>
+                    <td>{{ item.area.number }}</td>
+                    <td>{{ item.paymentType.name }}</td>
+                    <td>{{ (item.sum / 100)|number_format }}</td>
+                    <td>{{ item.createdAt|localizeddate }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            {{ pagerfanta(pagerfanta) }}
+        </div>
+    {% else %}
+        <div class="jumbotron">
+            <h2>Записей нет</h2>
+        </div>
+    {% endif %}
+{% endblock %}
