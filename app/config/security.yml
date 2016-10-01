@@ -5,8 +5,12 @@ security:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
     role_hierarchy:
-        ROLE_ADMIN:       [ROLE_USER, ROLE_NEWS_WRITER]
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_COMMUNITY:     ROLE_USER
+        ROLE_NEWS_WRITER:   ROLE_COMMUNITY
+        ROLE_CASHIER:       [ROLE_COMMUNITY, ROLE_MANAGER]
+        ROLE_CHAIRMAN:      [ROLE_COMMUNITY, ROLE_MANAGER]
+        ROLE_ADMIN:         [ROLE_NEWS_WRITER, ROLE_CASHIER, ROLE_CHAIRMAN]
+        ROLE_SUPER_ADMIN:   ROLE_ADMIN
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
