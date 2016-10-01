@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentController extends Controller
+final class PaymentController extends BaseController
 {
     /**
      * @Route("")

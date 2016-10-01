@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class NewsController extends Controller
+class NewsController extends BaseController
 {
     const NEWS_PER_PAGE = 3;
 

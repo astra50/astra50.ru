@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class AccountController extends Controller
+final class AccountController extends BaseController
 {
     /**
      * @var UserRepository

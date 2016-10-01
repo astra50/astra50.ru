@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class AreaController extends Controller
+final class AreaController extends BaseController
 {
     /**
      * @var AreaRepository

@@ -1,6 +1,6 @@
 services:
     app.controller.base:
-        class: AppBundle\Controller\Controller
+        class: AppBundle\Controller\BaseController
         calls:
             - ['setContainer', ['@service_container']]
 

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
+abstract class BaseController extends Controller
 {
     /**
      * @param $message
@@ -26,6 +27,14 @@ abstract class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Con
      */
     public function dispatch($eventName, Event $event)
     {
-        $this->get('event_dispatcher')->dispatch($eventName, $event);
+        $this->container->get('event_dispatcher')->dispatch($eventName, $event);
+    }
+
+    /**
+     * @throws \BadMethodCallException
+     */
+    protected function get($id)
+    {
+        throw new \BadMethodCallException('Inject service instead');
     }
 }

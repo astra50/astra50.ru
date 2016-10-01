@@ -19,7 +19,7 @@ use Uuid\Uuid;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentTypeController extends Controller
+final class PaymentTypeController extends BaseController
 {
     /**
      * @var PaymentTypeRepository
