@@ -15,15 +15,18 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-                <th>Сумма (руб.)</th>
+                <th>Статус</th>
                 <th>Дата создания</th>
             </tr>
             </thead>
             <tbody>
             {% for item in pagerfanta.currentPageResults %}
                 <tr>
-                    <td>{{ item.paymentType.name }}</td>
-                    <td>{{ (item.sum / 100)|number_format }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        {#{{ (item.sum / 100)|number_format }}#}
+                        {{ dump(item) }}
+                    </td>
                     <td>{{ item.createdAt|localizeddate }}</td>
                 </tr>
             {% endfor %}

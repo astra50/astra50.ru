@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Uuid\Uuid;
 
 /**
- * @Route("/payment/type", service="app.controller.payment_type")
+ * @Route("/payment/type", service="app.controller.payment_purpose")
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
@@ -33,6 +33,7 @@ final class PaymentPurposeController extends BaseController
 
     /**
      * @param PaymentPurposeRepository $paymentPurposeRepository
+     * @param AreaRepository           $areaRepository
      */
     public function __construct(PaymentPurposeRepository $paymentPurposeRepository, AreaRepository $areaRepository)
     {
@@ -41,20 +42,20 @@ final class PaymentPurposeController extends BaseController
     }
 
     /**
-     * @Route(name="payment_type_list")
+     * @Route(name="payment_purpose_list")
      */
     public function listAction(Request $request)
     {
         $pageSize = 20;
         $pageIndex = $request->query->get('page', 1);
 
-        return $this->render(':payment_type:list.html.twig', [
+        return $this->render(':payment_purpose:list.html.twig', [
             'pagerfanta' => $this->paymentPurposeRepository->paginateLatest($pageSize, $pageIndex),
         ]);
     }
 
     /**
-     * @Route("/new", name="payment_type_new")
+     * @Route("/new", name="payment_purpose_new")
      *
      * @Security("is_granted(constant('AppRoles::CHAIRMAN'))")
      */
@@ -62,7 +63,7 @@ final class PaymentPurposeController extends BaseController
     {
         $model = new PaymentPurposeModel();
         $form = $this->createForm(PaymentPurposeType::class, $model, [
-            'action' => $this->generateUrl('payment_type_new'),
+            'action' => $this->generateUrl('payment_purpose_new'),
             'areas' => DoctrineUtils::arrayToChoices($this->areaRepository->findAllForChoices(), 'number'),
         ]);
 
@@ -74,10 +75,10 @@ final class PaymentPurposeController extends BaseController
 
             $this->success(sprintf('Платеж "%s" создан!', $model->name));
 
-            return $this->redirectToRoute('payment_type_list');
+            return $this->redirectToRoute('payment_purpose_list');
         }
 
-        return $this->render(':payment_type:edit.html.twig', [
+        return $this->render(':payment_purpose:edit.html.twig', [
            'form' => $form->createView(),
         ]);
     }
