@@ -54,7 +54,7 @@ final class NewPurposeListener implements EventSubscriberInterface
 
         $amount = null;
         if ($model->calculation === Purpose::CALCULATION_SHARE) {
-            $amount = (int) (ceil(($model->amount / 100) / count($model->areas)) * 100);
+            $amount = (int) ceil($model->amount / count($model->areas));
         }
 
         foreach ($model->areas as $id) {
@@ -62,7 +62,7 @@ final class NewPurposeListener implements EventSubscriberInterface
 
             if (!$amount) {
                 if (Purpose::CALCULATION_SIZE === $model->calculation) {
-                    $amount = $area->getSize() * $model->amount;
+                    $amount = $area->getSize() / 100 * $model->amount;
                 } elseif (Purpose::CALCULATION_EACH === $model->calculation) {
                     $amount = $model->amount;
                 } else {
