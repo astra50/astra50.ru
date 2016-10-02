@@ -5,7 +5,7 @@
 
     <dl class="dl-horizontal">
         <dt>Количество соток</dt>
-        <dd>{{ area.size }}</dd>
+        <dd>{{ area.size / 100 }}</dd>
         {% if is_granted(constant('AppRoles::COMMUNITY')) %}
             <dt>Владельцы</dt>
             <dd>

@@ -18,7 +18,7 @@
         {% for area in areas %}
             <tr>
                 <td>{{ area.number }}</td>
-                <td>{{ area.size }}</td>
+                <td>{{ area.size / 100 }}</td>
                 <td>
                     {% if area.users is not empty %}
                         <ul>
