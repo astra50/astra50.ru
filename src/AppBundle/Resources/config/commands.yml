@@ -1,0 +1,7 @@
+services:
+    app.command.area_import:
+        class: AppBundle\Command\AreaImportCommand
+        arguments:
+            - '@app.repository.area'
+        tags:
+            - { name: console.command }
