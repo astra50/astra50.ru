@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container">
 
-        {% if is_granted(constant('AppRoles::MANAGER')) %}
+        {% if is_granted(constant('AppRoles::EMPLOYEE')) %}
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">

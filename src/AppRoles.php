@@ -28,5 +28,5 @@ final class AppRoles
     /**
      * Роль для отображение админской панели навигации
      */
-    const MANAGER = 'ROLE_MANAGER';
+    const EMPLOYEE = 'ROLE_EMPLOYEE';
 }
