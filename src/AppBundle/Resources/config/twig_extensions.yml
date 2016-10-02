@@ -1,6 +1,6 @@
 services:
     app.twig_extension.payment_type:
-        class: AppBundle\Twig\Extension\PaymentPurposeExtension
+        class: AppBundle\Twig\Extension\PurposeExtension
         public: false
         tags:
             - { name: twig.extension }

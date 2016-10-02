@@ -4,8 +4,18 @@
     <h1>Участок №{{ area.number }}</h1>
 
     <dl class="dl-horizontal">
-      <dt>Количество соток</dt>
-      <dd>{{ area.size }}</dd>
+        <dt>Количество соток</dt>
+        <dd>{{ area.size }}</dd>
+        {% if is_granted(constant('AppRoles::COMMUNITY')) %}
+            <dt>Владельцы</dt>
+            <dd>
+                <ul>
+                    {% for user in area.users %}
+                        <li>{{ user.realname }}</li>
+                    {% endfor %}
+                </ul>
+            </dd>
+        {% endif %}
     </dl>
 
     <h2>Платежи</h2>
@@ -21,21 +31,27 @@
             </thead>
             <tbody>
             {% for item in pagerfanta.currentPageResults %}
+                {% set purpose = item|first %}
                 <tr>
-                    <td>{{ item.name }}</td>
+                    <td>{{ purpose.name }}</td>
                     <td>
-                        {#{{ (item.sum / 100)|number_format }}#}
-                        {{ dump(item) }}
+                        {% if item.amount >= 0 %}
+                            <span class="label label-success">Оплачено</span>
+                        {% else %}
+                            <span class="label label-danger">{{ (item.amount / 100)|number_format }}</span>
+                        {% endif %}
                     </td>
-                    <td>{{ item.createdAt|localizeddate }}</td>
+                    <td>{{ purpose.createdAt|localizeddate }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
 
-        <div class="text-center">
-            {{ pagerfanta(pagerfanta) }}
-        </div>
+        {% if pagerfanta.hasNextPage %}
+            <div class="text-center">
+                {{ pagerfanta(pagerfanta) }}
+            </div>
+        {% endif %}
     {% else %}
         <div class="jumbotron">
             <h2>Записей нет</h2>

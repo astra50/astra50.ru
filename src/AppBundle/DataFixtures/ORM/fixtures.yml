@@ -6,11 +6,11 @@ AppBundle\Entity\News:
     News_{1..10}:
         __construct: ['<uuid4()>', '@User*', '<city()>',  '<text()>',  false]
 
+AppBundle\Entity\Purpose:
+    Purpose_{1..30}:
+        __construct: ['<uuid4()>', '<purpose()>', '<numberBetween(500000, 5000000)>', '<numberBetween(1, 2)>', '<numberBetween(1, 2)>']
+
 AppBundle\Entity\Area:
     Area_{0..50}:
         __construct: ['<uuid4()>', '<current()>', '<numberBetween(6, 12)>']
         addUser: ['@User*']
-
-AppBundle\Entity\PaymentPurpose:
-    PaymentPurpose_{1..30}:
-        __construct: ['<uuid4()>', '<paymentPurpose()>', '<numberBetween(500, 50000)>', '<numberBetween(1, 2)>', '<numberBetween(1, 2)>']

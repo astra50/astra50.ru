@@ -2,13 +2,13 @@
 
 namespace AppBundle\Form\Model;
 
-use AppBundle\Entity\PaymentPurpose;
+use AppBundle\Entity\Purpose;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentPurposeModel
+final class PurposeModel
 {
     /**
      * @var string
@@ -23,7 +23,7 @@ final class PaymentPurposeModel
      * @Assert\NotBlank()
      * @Assert\Type("int")
      */
-    public $sum;
+    public $amount;
 
     /**
      * @var int
@@ -45,15 +45,15 @@ final class PaymentPurposeModel
     public $areas;
 
     /**
-     * @param PaymentPurpose $entity
+     * @param Purpose $entity
      *
-     * @return PaymentPurposeModel
+     * @return PurposeModel
      */
-    public static function fromEntity(PaymentPurpose $entity): PaymentPurposeModel
+    public static function fromEntity(Purpose $entity): PurposeModel
     {
         $model = new static();
         $model->name = $entity->getName();
-        $model->sum = $entity->getSum();
+        $model->amount = $entity->getAmount();
         $model->schedule = $entity->getSchedule();
 
         return $model;
@@ -65,8 +65,8 @@ final class PaymentPurposeModel
     public function getSchedules(): array
     {
         return [
-            PaymentPurpose::SCHEDULE_ONCE,
-            PaymentPurpose::SCHEDULE_MONTHLY,
+            Purpose::SCHEDULE_ONCE,
+            Purpose::SCHEDULE_MONTHLY,
         ];
     }
 
@@ -76,9 +76,9 @@ final class PaymentPurposeModel
     public function getCalculations(): array
     {
         return [
-            PaymentPurpose::CALCULATION_EACH,
-            PaymentPurpose::CALCULATION_SIZE,
-            PaymentPurpose::CALCULATION_SHARE,
+            Purpose::CALCULATION_EACH,
+            Purpose::CALCULATION_SIZE,
+            Purpose::CALCULATION_SHARE,
         ];
     }
 }

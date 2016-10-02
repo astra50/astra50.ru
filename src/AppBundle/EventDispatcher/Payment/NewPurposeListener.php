@@ -3,7 +3,7 @@
 namespace AppBundle\EventDispatcher\Payment;
 
 use AppBundle\Entity\Payment;
-use AppBundle\Entity\PaymentPurpose;
+use AppBundle\Entity\Purpose;
 use AppBundle\Entity\Repository\AreaRepository;
 use AppBundle\Entity\Repository\PaymentRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,7 +12,7 @@ use Uuid\Uuid;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class NewPaymentPurposeListener implements EventSubscriberInterface
+final class NewPurposeListener implements EventSubscriberInterface
 {
     /**
      * @var AreaRepository
@@ -39,42 +39,42 @@ final class NewPaymentPurposeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            \AppEvents::PAYMENT_TYPE_NEW => 'onNewPaymentPurpose',
+            \AppEvents::PAYMENT_TYPE_NEW => 'onNewPurpose',
         ];
     }
 
     /**
-     * @param PaymentPurposeEvent $event
+     * @param PurposeEvent $event
      */
-    public function onNewPaymentPurpose(PaymentPurposeEvent $event)
+    public function onNewPurpose(PurposeEvent $event)
     {
-        $paymentPurpose = $event->getPaymentPurpose();
-        $model = $event->getPaymentPurposeModel();
+        $purpose = $event->getPurpose();
+        $model = $event->getPurposeModel();
         $user = $event->getUser();
 
-        $sum = null;
-        if ($model->calculation === PaymentPurpose::CALCULATION_SHARE) {
-            $sum = (int) (ceil(($model->sum / 100) / count($model->areas)) * 100);
+        $amount = null;
+        if ($model->calculation === Purpose::CALCULATION_SHARE) {
+            $amount = (int) (ceil(($model->amount / 100) / count($model->areas)) * 100);
         }
 
         foreach ($model->areas as $id) {
             $area = $this->areaRepository->get(Uuid::fromString($id));
 
-            if (!$sum) {
-                if (PaymentPurpose::CALCULATION_SIZE === $model->calculation) {
-                    $sum = $area->getSize() * $model->sum;
-                } elseif (PaymentPurpose::CALCULATION_EACH === $model->calculation) {
-                    $sum = $model->sum;
+            if (!$amount) {
+                if (Purpose::CALCULATION_SIZE === $model->calculation) {
+                    $amount = $area->getSize() * $model->amount;
+                } elseif (Purpose::CALCULATION_EACH === $model->calculation) {
+                    $amount = $model->amount;
                 } else {
                     throw new \DomainException();
                 }
             }
 
-            if (0 < $sum) {
-                $sum *= -1;
+            if (0 < $amount) {
+                $amount *= -1;
             }
 
-            $this->paymentRepository->save(new Payment(Uuid::create(), $area, $paymentPurpose, $user, $sum));
+            $this->paymentRepository->save(new Payment(Uuid::create(), $area, $purpose, $user, $amount));
         }
     }
 }

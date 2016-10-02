@@ -5,6 +5,14 @@
 
     <hr>
 
+    {% if is_granted(constant('AppRoles::CASHIER')) %}
+        <a href="{{ path('payment_new') }}" class="btn btn-success">
+            <i class="fa fa-plus"></i> Создать платёж
+        </a>
+
+        <hr>
+    {% endif %}
+
     {% if 0 < pagerfanta.count %}
         <table class="table">
             <thead>
@@ -18,18 +26,22 @@
             <tbody>
             {% for item in pagerfanta.currentPageResults %}
                 <tr>
-                    <td>{{ item.area.number }}</td>
-                    <td>{{ item.paymentType.name }}</td>
-                    <td>{{ (item.sum / 100)|number_format }}</td>
+                    <td>
+                        <a href="{{ path('area_show', {'number': item.area.number}) }}">{{ item.area.number }}</a>
+                    </td>
+                    <td>{{ item.purpose.name }}</td>
+                    <td>{{ (item.amount / 100)|number_format }}</td>
                     <td>{{ item.createdAt|localizeddate }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
 
-        <div class="text-center">
-            {{ pagerfanta(pagerfanta) }}
-        </div>
+        {% if pagerfanta.hasNextPage %}
+            <div class="text-center">
+                {{ pagerfanta(pagerfanta) }}
+            </div>
+        {% endif %}
     {% else %}
         <div class="jumbotron">
             <h2>Записей нет</h2>

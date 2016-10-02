@@ -3,20 +3,20 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
-use AppBundle\Entity\PaymentPurpose;
+use AppBundle\Entity\Purpose;
 use Pagerfanta\Pagerfanta;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentPurposeRepository extends EntityRepository
+final class PurposeRepository extends EntityRepository
 {
     /**
      * {@inheritdoc}
      */
     protected function getClass(): string
     {
-        return PaymentPurpose::class;
+        return Purpose::class;
     }
 
     /**
@@ -31,5 +31,16 @@ final class PaymentPurposeRepository extends EntityRepository
             ->orderBy('pt.id', 'DESC');
 
         return $this->paginate($qb, $pageSize, $pageIndex);
+    }
+
+    /**
+     * @return array
+     */
+    public function findActiveForChoices()
+    {
+        return $this->createQueryBuilder('pt')
+            ->select('pt.id', 'pt.name')
+            ->where('pt.archivedAt IS NULL')
+            ->getQuery()->getResult();
     }
 }

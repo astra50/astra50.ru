@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 /**
  * @ORM\Entity
  */
-class PaymentPurpose
+class Purpose
 {
     const
         SCHEDULE_ONCE = 1,
@@ -39,7 +39,7 @@ class PaymentPurpose
      *
      * @ORM\Column(type="integer")
      */
-    private $sum;
+    private $amount;
 
     /**
      * @var int
@@ -72,13 +72,13 @@ class PaymentPurpose
     /**
      * @param UuidInterface $id
      * @param string        $name
-     * @param int           $sum
+     * @param int           $amount
      */
-    public function __construct(UuidInterface $id, string $name, int $sum, int $schedule, int $calculation)
+    public function __construct(UuidInterface $id, string $name, int $amount, int $schedule, int $calculation)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->sum = $sum;
+        $this->amount = $amount;
         $this->schedule = $schedule;
         $this->calculation = $calculation;
         $this->createdAt = new \DateTime();
@@ -108,9 +108,9 @@ class PaymentPurpose
     /**
      * @return int
      */
-    public function getSum(): int
+    public function getAmount(): int
     {
-        return $this->sum;
+        return $this->amount;
     }
 
     /**

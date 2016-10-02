@@ -2,9 +2,16 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Doctrine\DoctrineUtils;
+use AppBundle\Entity\Payment;
+use AppBundle\Entity\Repository\AreaRepository;
+use AppBundle\Entity\Repository\PurposeRepository;
 use AppBundle\Entity\Repository\PaymentRepository;
+use AppBundle\Form\Model\PaymentModel;
+use AppBundle\Form\Type\PaymentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Uuid\Uuid;
 
 /**
  * @Route("/payment", service="app.controller.payment")
@@ -19,10 +26,25 @@ final class PaymentController extends BaseController
     private $paymentRepository;
 
     /**
+     * @var PurposeRepository
      */
-    public function __construct(PaymentRepository $paymentRepository)
+    private $purposeRepository;
+
+    /**
+     * @var AreaRepository
+     */
+    private $areaRepository;
+
+    /**
+     * @param PaymentRepository        $paymentRepository
+     * @param PurposeRepository $purposeRepository
+     * @param AreaRepository           $areaRepository
+     */
+    public function __construct(PaymentRepository $paymentRepository, PurposeRepository $purposeRepository, AreaRepository $areaRepository)
     {
         $this->paymentRepository = $paymentRepository;
+        $this->purposeRepository = $purposeRepository;
+        $this->areaRepository = $areaRepository;
     }
 
     /**
@@ -39,10 +61,39 @@ final class PaymentController extends BaseController
     }
 
     /**
-     * @Route("")
+     * @Route("/new", name="payment_new")
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
+        $model = new PaymentModel();
+        $areas = DoctrineUtils::arrayToChoices($this->areaRepository->findAllForChoices(), 'number');
+        $purposes = DoctrineUtils::arrayToChoices($this->purposeRepository->findActiveForChoices(), 'name');
 
+        $form = $this->createForm(PaymentType::class, $model, [
+            'action' => $this->generateUrl('payment_new'),
+            'areas' => $areas,
+            'purposes' => $purposes,
+        ]);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $purpose = $this->purposeRepository->getReference(Uuid::fromString($model->purpose));
+            $area = $this->areaRepository->getReference(Uuid::fromString($model->area));
+            $user = $this->getUser();
+            $amount = $model->amount;
+
+            $entity = new Payment(Uuid::create(), $area, $purpose, $user, $amount);
+
+            $this->paymentRepository->save($entity);
+
+            $areaNumber = array_search($model->area, $areas, true);
+            $purposeName = array_search($model->purpose, $purposes, true);
+            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purposeName, $areaNumber, $amount));
+
+            return $this->redirectToRoute('payment_list');
+        }
+
+        return $this->render(':payment:edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

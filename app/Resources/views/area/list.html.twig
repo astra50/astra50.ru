@@ -11,6 +11,7 @@
             <th>№</th>
             <th>Соток</th>
             <th>Владельцы</th>
+            <th>Действия</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +30,7 @@
                 </td>
                 <td>
                     <a class="btn btn-default" href="{{ path('area_show', {'number': area.number}) }}">
-                        <i class="fa fa-eye" aria-hidden="true"></i>
+                        <i class="fa fa-eye" aria-hidden="true" title="Просмотр"></i>
                     </a>
                 </td>
             </tr>

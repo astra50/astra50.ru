@@ -49,10 +49,10 @@ final class AreaController extends BaseController
      */
     public function showAction(Request $request, Area $area)
     {
-        $pageSize = 50;
+        $pageSize = 10;
         $pageIndex = $request->query->get('page', 1);
 
-        $payments = $this->paymentRepository->paginateByArea($area, $pageSize, $pageIndex);
+        $payments = $this->paymentRepository->paginatePurposesByArea($area, $pageSize, $pageIndex);
 
         return $this->render(':area:show.html.twig', [
             'area' => $area,

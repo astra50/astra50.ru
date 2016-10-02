@@ -2,12 +2,12 @@
 
 namespace AppBundle\Twig\Extension;
 
-use AppBundle\Entity\PaymentPurpose;
+use AppBundle\Entity\Purpose;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class PaymentPurposeExtension extends \Twig_Extension
+class PurposeExtension extends \Twig_Extension
 {
     public function getFilters()
     {
@@ -25,8 +25,8 @@ class PaymentPurposeExtension extends \Twig_Extension
     public function paymentScheduleToString(int $value): string
     {
         return [
-            PaymentPurpose::SCHEDULE_ONCE => 'Разовая',
-            PaymentPurpose::SCHEDULE_MONTHLY => 'Ежемесячная',
+            Purpose::SCHEDULE_ONCE => 'Разовая',
+            Purpose::SCHEDULE_MONTHLY => 'Ежемесячная',
         ][$value];
     }
 
@@ -38,9 +38,9 @@ class PaymentPurposeExtension extends \Twig_Extension
     public function paymentCalculationToString(int $value): string
     {
         return [
-            PaymentPurpose::CALCULATION_EACH => 'За участок',
-            PaymentPurpose::CALCULATION_SIZE => 'За сотку',
-            PaymentPurpose::CALCULATION_SHARE => 'Поровну',
+            Purpose::CALCULATION_EACH => 'За участок',
+            Purpose::CALCULATION_SIZE => 'За сотку',
+            Purpose::CALCULATION_SHARE => 'Поровну',
         ][$value];
     }
 

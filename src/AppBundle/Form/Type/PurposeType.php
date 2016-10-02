@@ -2,10 +2,10 @@
 
 namespace AppBundle\Form\Type;
 
-use AppBundle\Entity\PaymentPurpose;
-use AppBundle\Form\Model\PaymentPurposeModel;
+use AppBundle\Entity\Purpose;
+use AppBundle\Form\Model\PurposeModel;
+use AppBundle\Form\Transformer\MoneyTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class PaymentPurposeType extends AbstractType
+class PurposeType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -24,35 +24,31 @@ class PaymentPurposeType extends AbstractType
             ->add('name', Type\TextType::class, [
                 'label' => 'Наименование',
             ])
-            ->add($builder->create('sum', Type\MoneyType::class, [
+            ->add($builder->create('amount', Type\MoneyType::class, [
                 'label' => 'Сумма',
                 'currency' => 'RUB',
                 'divisor' => 100,
             ])
-                ->addModelTransformer(new CallbackTransformer(function ($value) {
-                    return $value;
-                }, function ($value) {
-                    return (int) $value;
-                }))
+                ->addModelTransformer(new MoneyTransformer())
             )
             ->add('schedule', Type\ChoiceType::class, [
                 'label' => 'Расписание',
                 'choices' => [
-                    'Разово' => PaymentPurpose::SCHEDULE_ONCE,
-                    'Ежемесячно' => PaymentPurpose::SCHEDULE_MONTHLY,
+                    'Разово' => Purpose::SCHEDULE_ONCE,
+                    'Ежемесячно' => Purpose::SCHEDULE_MONTHLY,
                 ],
-                'data' => PaymentPurpose::SCHEDULE_ONCE,
+                'data' => Purpose::SCHEDULE_ONCE,
                 'multiple' => false,
                 'expanded' => true,
             ])
             ->add('calculation', Type\ChoiceType::class, [
                 'label' => 'Начисление',
                 'choices' => [
-                    'На участок' => PaymentPurpose::CALCULATION_EACH,
-                    'На Сотку' => PaymentPurpose::CALCULATION_SIZE,
-                    'Разделить между участками' => PaymentPurpose::CALCULATION_SHARE,
+                    'На участок' => Purpose::CALCULATION_EACH,
+                    'На Сотку' => Purpose::CALCULATION_SIZE,
+                    'Разделить между участками' => Purpose::CALCULATION_SHARE,
                 ],
-                'data' => PaymentPurpose::CALCULATION_EACH,
+                'data' => Purpose::CALCULATION_EACH,
                 'multiple' => false,
                 'expanded' => true,
             ])
@@ -71,7 +67,7 @@ class PaymentPurposeType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => PaymentPurposeModel::class,
+                'data_class' => PurposeModel::class,
             ])
             ->setRequired([
                 'areas',

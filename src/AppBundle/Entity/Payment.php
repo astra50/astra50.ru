@@ -27,12 +27,12 @@ class Payment
     private $area;
 
     /**
-     * @var PaymentPurpose
+     * @var Purpose
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\PaymentPurpose")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Purpose")
      * @ORM\JoinColumn()
      */
-    private $paymentPurpose;
+    private $purpose;
 
     /**
      * @var User
@@ -54,7 +54,7 @@ class Payment
      *
      * @ORM\Column(type="integer")
      */
-    private $sum;
+    private $amount;
 
     /**
      * @var \DateTime
@@ -66,17 +66,17 @@ class Payment
     /**
      * @param UuidInterface $id
      * @param Area          $area
-     * @param PaymentPurpose   $paymentPurpose
+     * @param Purpose   $purpose
      * @param User          $user
-     * @param int           $sum
+     * @param int           $amount
      */
-    public function __construct(UuidInterface $id, Area $area, PaymentPurpose $paymentPurpose, User $user, $sum)
+    public function __construct(UuidInterface $id, Area $area, Purpose $purpose, User $user, $amount)
     {
         $this->id = $id;
         $this->area = $area;
-        $this->paymentPurpose = $paymentPurpose;
+        $this->purpose = $purpose;
         $this->user = $user;
-        $this->sum = $sum;
+        $this->amount = $amount;
         $this->createdAt = new \DateTime();
     }
 
@@ -105,11 +105,11 @@ class Payment
     }
 
     /**
-     * @return PaymentPurpose
+     * @return Purpose
      */
-    public function getPaymentPurpose(): PaymentPurpose
+    public function getPurpose(): Purpose
     {
-        return $this->paymentPurpose;
+        return $this->purpose;
     }
 
     /**
@@ -131,9 +131,9 @@ class Payment
     /**
      * @return int
      */
-    public function getSum(): int
+    public function getAmount(): int
     {
-        return $this->sum;
+        return $this->amount;
     }
 
     /**

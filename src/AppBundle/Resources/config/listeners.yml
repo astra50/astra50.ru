@@ -1,6 +1,6 @@
 services:
     app.listener.payment_new:
-        class: AppBundle\EventDispatcher\Payment\NewPaymentPurposeListener
+        class: AppBundle\EventDispatcher\Payment\NewPurposeListener
         arguments:
             - '@app.repository.area'
             - '@app.repository.payment'

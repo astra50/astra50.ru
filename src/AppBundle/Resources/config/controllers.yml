@@ -28,9 +28,11 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.payment'
+            - '@app.repository.payment_type'
+            - '@app.repository.area'
 
-    app.controller.payment_purpose:
-        class: AppBundle\Controller\PaymentPurposeController
+    app.controller.purpose:
+        class: AppBundle\Controller\PurposeController
         parent: app.controller.base
         arguments:
             - '@app.repository.payment_type'
