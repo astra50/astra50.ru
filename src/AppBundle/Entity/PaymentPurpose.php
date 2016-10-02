@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 /**
  * @ORM\Entity
  */
-class PaymentType
+class PaymentPurpose
 {
     const
         SCHEDULE_ONCE = 1,

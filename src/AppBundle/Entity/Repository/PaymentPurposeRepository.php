@@ -3,20 +3,20 @@
 namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
-use AppBundle\Entity\PaymentType;
+use AppBundle\Entity\PaymentPurpose;
 use Pagerfanta\Pagerfanta;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentTypeRepository extends EntityRepository
+final class PaymentPurposeRepository extends EntityRepository
 {
     /**
      * {@inheritdoc}
      */
     protected function getClass(): string
     {
-        return PaymentType::class;
+        return PaymentPurpose::class;
     }
 
     /**

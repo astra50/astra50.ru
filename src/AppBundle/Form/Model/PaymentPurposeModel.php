@@ -2,13 +2,13 @@
 
 namespace AppBundle\Form\Model;
 
-use AppBundle\Entity\PaymentType;
+use AppBundle\Entity\PaymentPurpose;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentTypeModel
+final class PaymentPurposeModel
 {
     /**
      * @var string
@@ -45,11 +45,11 @@ final class PaymentTypeModel
     public $areas;
 
     /**
-     * @param PaymentType $entity
+     * @param PaymentPurpose $entity
      *
-     * @return PaymentTypeModel
+     * @return PaymentPurposeModel
      */
-    public static function fromEntity(PaymentType $entity): PaymentTypeModel
+    public static function fromEntity(PaymentPurpose $entity): PaymentPurposeModel
     {
         $model = new static();
         $model->name = $entity->getName();
@@ -65,8 +65,8 @@ final class PaymentTypeModel
     public function getSchedules(): array
     {
         return [
-            PaymentType::SCHEDULE_ONCE,
-            PaymentType::SCHEDULE_MONTHLY,
+            PaymentPurpose::SCHEDULE_ONCE,
+            PaymentPurpose::SCHEDULE_MONTHLY,
         ];
     }
 
@@ -76,9 +76,9 @@ final class PaymentTypeModel
     public function getCalculations(): array
     {
         return [
-            PaymentType::CALCULATION_EACH,
-            PaymentType::CALCULATION_SIZE,
-            PaymentType::CALCULATION_SHARE,
+            PaymentPurpose::CALCULATION_EACH,
+            PaymentPurpose::CALCULATION_SIZE,
+            PaymentPurpose::CALCULATION_SHARE,
         ];
     }
 }

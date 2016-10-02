@@ -17,7 +17,7 @@ services:
         parent: app.doctrine.entity_repository
 
     app.repository.payment_type:
-        class: AppBundle\Entity\Repository\PaymentTypeRepository
+        class: AppBundle\Entity\Repository\PaymentPurposeRepository
         parent: app.doctrine.entity_repository
 
     app.repository.payment:

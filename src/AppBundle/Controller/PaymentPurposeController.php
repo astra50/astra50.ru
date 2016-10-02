@@ -3,12 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Doctrine\DoctrineUtils;
-use AppBundle\Entity\PaymentType;
-use AppBundle\EventDispatcher\Payment\NewPaymentTypeEvent;
-use AppBundle\Form\Type\PaymentTypeType;
-use AppBundle\Form\Model\PaymentTypeModel;
+use AppBundle\Entity\PaymentPurpose;
+use AppBundle\EventDispatcher\Payment\PaymentPurposeEvent;
+use AppBundle\Form\Type\PaymentPurposeType;
+use AppBundle\Form\Model\PaymentPurposeModel;
 use AppBundle\Entity\Repository\AreaRepository;
-use AppBundle\Entity\Repository\PaymentTypeRepository;
+use AppBundle\Entity\Repository\PaymentPurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,12 +19,12 @@ use Uuid\Uuid;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentTypeController extends BaseController
+final class PaymentPurposeController extends BaseController
 {
     /**
-     * @var PaymentTypeRepository
+     * @var PaymentPurposeRepository
      */
-    private $paymentTypeRepository;
+    private $paymentPurposeRepository;
 
     /**
      * @var AreaRepository
@@ -32,11 +32,11 @@ final class PaymentTypeController extends BaseController
     private $areaRepository;
 
     /**
-     * @param PaymentTypeRepository $paymentTypeRepository
+     * @param PaymentPurposeRepository $paymentPurposeRepository
      */
-    public function __construct(PaymentTypeRepository $paymentTypeRepository, AreaRepository $areaRepository)
+    public function __construct(PaymentPurposeRepository $paymentPurposeRepository, AreaRepository $areaRepository)
     {
-        $this->paymentTypeRepository = $paymentTypeRepository;
+        $this->paymentPurposeRepository = $paymentPurposeRepository;
         $this->areaRepository = $areaRepository;
     }
 
@@ -49,7 +49,7 @@ final class PaymentTypeController extends BaseController
         $pageIndex = $request->query->get('page', 1);
 
         return $this->render(':payment_type:list.html.twig', [
-            'pagerfanta' => $this->paymentTypeRepository->paginateLatest($pageSize, $pageIndex),
+            'pagerfanta' => $this->paymentPurposeRepository->paginateLatest($pageSize, $pageIndex),
         ]);
     }
 
@@ -60,17 +60,17 @@ final class PaymentTypeController extends BaseController
      */
     public function newAction(Request $request)
     {
-        $model = new PaymentTypeModel();
-        $form = $this->createForm(PaymentTypeType::class, $model, [
+        $model = new PaymentPurposeModel();
+        $form = $this->createForm(PaymentPurposeType::class, $model, [
             'action' => $this->generateUrl('payment_type_new'),
             'areas' => DoctrineUtils::arrayToChoices($this->areaRepository->findAllForChoices(), 'number'),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $entity = new PaymentType(Uuid::create(), $model->name, $model->sum, $model->schedule, $model->calculation);
+            $entity = new PaymentPurpose(Uuid::create(), $model->name, $model->sum, $model->schedule, $model->calculation);
 
-            $this->paymentTypeRepository->save($entity);
-            $this->dispatch(\AppEvents::PAYMENT_TYPE_NEW, new NewPaymentTypeEvent($entity, $model, $this->getUser()));
+            $this->paymentPurposeRepository->save($entity);
+            $this->dispatch(\AppEvents::PAYMENT_TYPE_NEW, new PaymentPurposeEvent($entity, $model, $this->getUser()));
 
             $this->success(sprintf('Платеж "%s" создан!', $model->name));
 

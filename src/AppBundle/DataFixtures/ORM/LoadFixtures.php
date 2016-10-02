@@ -59,7 +59,7 @@ class LoadFixtures implements FixtureInterface
         'Откуп рейдерам',
     ];
 
-    public function paymentType()
+    public function paymentPurpose()
     {
         return next(self::$arr);
     }

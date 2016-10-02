@@ -2,8 +2,8 @@
 
 namespace AppBundle\Form\Type;
 
-use AppBundle\Entity\PaymentType;
-use AppBundle\Form\Model\PaymentTypeModel;
+use AppBundle\Entity\PaymentPurpose;
+use AppBundle\Form\Model\PaymentPurposeModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type;
@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class PaymentTypeType extends AbstractType
+class PaymentPurposeType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -38,21 +38,21 @@ class PaymentTypeType extends AbstractType
             ->add('schedule', Type\ChoiceType::class, [
                 'label' => 'Расписание',
                 'choices' => [
-                    'Разово' => PaymentType::SCHEDULE_ONCE,
-                    'Ежемесячно' => PaymentType::SCHEDULE_MONTHLY,
+                    'Разово' => PaymentPurpose::SCHEDULE_ONCE,
+                    'Ежемесячно' => PaymentPurpose::SCHEDULE_MONTHLY,
                 ],
-                'data' => PaymentType::SCHEDULE_ONCE,
+                'data' => PaymentPurpose::SCHEDULE_ONCE,
                 'multiple' => false,
                 'expanded' => true,
             ])
             ->add('calculation', Type\ChoiceType::class, [
                 'label' => 'Начисление',
                 'choices' => [
-                    'На участок' => PaymentType::CALCULATION_EACH,
-                    'На Сотку' => PaymentType::CALCULATION_SIZE,
-                    'Разделить между участками' => PaymentType::CALCULATION_SHARE,
+                    'На участок' => PaymentPurpose::CALCULATION_EACH,
+                    'На Сотку' => PaymentPurpose::CALCULATION_SIZE,
+                    'Разделить между участками' => PaymentPurpose::CALCULATION_SHARE,
                 ],
-                'data' => PaymentType::CALCULATION_EACH,
+                'data' => PaymentPurpose::CALCULATION_EACH,
                 'multiple' => false,
                 'expanded' => true,
             ])
@@ -71,7 +71,7 @@ class PaymentTypeType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => PaymentTypeModel::class,
+                'data_class' => PaymentPurposeModel::class,
             ])
             ->setRequired([
                 'areas',

@@ -3,7 +3,7 @@
 namespace AppBundle\EventDispatcher\Payment;
 
 use AppBundle\Entity\Payment;
-use AppBundle\Entity\PaymentType;
+use AppBundle\Entity\PaymentPurpose;
 use AppBundle\Entity\Repository\AreaRepository;
 use AppBundle\Entity\Repository\PaymentRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,7 +12,7 @@ use Uuid\Uuid;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class NewPaymentTypeListener implements EventSubscriberInterface
+final class NewPaymentPurposeListener implements EventSubscriberInterface
 {
     /**
      * @var AreaRepository
@@ -39,21 +39,21 @@ final class NewPaymentTypeListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            \AppEvents::PAYMENT_TYPE_NEW => 'onNewPaymentType',
+            \AppEvents::PAYMENT_TYPE_NEW => 'onNewPaymentPurpose',
         ];
     }
 
     /**
-     * @param NewPaymentTypeEvent $event
+     * @param PaymentPurposeEvent $event
      */
-    public function onNewPaymentType(NewPaymentTypeEvent $event)
+    public function onNewPaymentPurpose(PaymentPurposeEvent $event)
     {
-        $paymentType = $event->getPaymentType();
-        $model = $event->getPaymentTypeModel();
+        $paymentPurpose = $event->getPaymentPurpose();
+        $model = $event->getPaymentPurposeModel();
         $user = $event->getUser();
 
         $sum = null;
-        if ($model->calculation === PaymentType::CALCULATION_SHARE) {
+        if ($model->calculation === PaymentPurpose::CALCULATION_SHARE) {
             $sum = (int) (ceil(($model->sum / 100) / count($model->areas)) * 100);
         }
 
@@ -61,9 +61,9 @@ final class NewPaymentTypeListener implements EventSubscriberInterface
             $area = $this->areaRepository->get(Uuid::fromString($id));
 
             if (!$sum) {
-                if (PaymentType::CALCULATION_SIZE === $model->calculation) {
+                if (PaymentPurpose::CALCULATION_SIZE === $model->calculation) {
                     $sum = $area->getSize() * $model->sum;
-                } elseif (PaymentType::CALCULATION_EACH === $model->calculation) {
+                } elseif (PaymentPurpose::CALCULATION_EACH === $model->calculation) {
                     $sum = $model->sum;
                 } else {
                     throw new \DomainException();
@@ -74,7 +74,7 @@ final class NewPaymentTypeListener implements EventSubscriberInterface
                 $sum *= -1;
             }
 
-            $this->paymentRepository->save(new Payment(Uuid::create(), $area, $paymentType, $user, $sum));
+            $this->paymentRepository->save(new Payment(Uuid::create(), $area, $paymentPurpose, $user, $sum));
         }
     }
 }
