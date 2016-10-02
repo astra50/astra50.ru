@@ -22,6 +22,16 @@ abstract class EntityRepository
 
     /**
      * @param UuidInterface $id
+     *
+     * @return mixed
+     */
+    public function getReference(UuidInterface $id)
+    {
+        return $this->em->getReference($this->getClass(), $id);
+    }
+
+    /**
+     * @param UuidInterface $id
      */
     public function find(UuidInterface $id)
     {
@@ -70,7 +80,7 @@ abstract class EntityRepository
      *
      * @return QueryBuilder
      */
-    public function createQueryBuilder($alias)
+    public function createQueryBuilder($alias): QueryBuilder
     {
         return $this->em->createQueryBuilder()
             ->select($alias)
@@ -79,11 +89,15 @@ abstract class EntityRepository
 
     /**
      * @param QueryBuilder $qb
+     * @param int          $pageSize
+     * @param int          $pageIndex
      *
      * @return Pagerfanta
      */
-    protected function paginate(QueryBuilder $qb)
+    protected function paginate(QueryBuilder $qb, int $pageSize, int $pageIndex): Pagerfanta
     {
-        return new Pagerfanta(new DoctrineORMAdapter($qb));
+        return (new Pagerfanta(new DoctrineORMAdapter($qb)))
+            ->setMaxPerPage($pageSize)
+            ->setCurrentPage($pageIndex);
     }
 }

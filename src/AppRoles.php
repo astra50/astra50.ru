@@ -24,4 +24,9 @@ final class AppRoles
      * Председатель
      */
     const CHAIRMAN = 'ROLE_CHAIRMAN';
+
+    /**
+     * Роль для отображение админской панели навигации
+     */
+    const MANAGER = 'ROLE_MANAGER';
 }

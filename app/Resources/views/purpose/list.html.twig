@@ -1,0 +1,52 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <h1>Платежные цели</h1>
+
+    <hr>
+
+    {% if is_granted(constant('AppRoles::CHAIRMAN')) %}
+        <a href="{{ path('purpose_new') }}" class="btn btn-success">
+            <i class="fa fa-plus"></i> Создать цель
+        </a>
+
+        <hr>
+    {% endif %}
+
+    {% if 0 < pagerfanta.count %}
+        <table class="table ">
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Сумма (руб.)</th>
+                <th>Расписание</th>
+                <th>Начисление</th>
+                <th>Дата создания</th>
+                <th>Дата архивации</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in pagerfanta.currentPageResults %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td>{{ (item.amount / 100)|number_format }}</td>
+                    <td>{{ item.schedule|payment_schedule }}</td>
+                    <td>{{ item.calculation|payment_calculation }}</td>
+                    <td>{{ item.createdAt|localizeddate }}</td>
+                    <td>{{ item.archivedAt ? item.archivedAt|localizeddate : '-' }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if pagerfanta.hasNextPage %}
+            <div class="text-center">
+                {{ pagerfanta(pagerfanta) }}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="jumbotron">
+            <h2>Записей нет</h2>
+        </div>
+    {% endif %}
+{% endblock %}

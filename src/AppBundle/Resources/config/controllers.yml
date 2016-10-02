@@ -1,6 +1,6 @@
 services:
     app.controller.base:
-        class: AppBundle\Controller\Controller
+        class: AppBundle\Controller\BaseController
         calls:
             - ['setContainer', ['@service_container']]
 
@@ -20,4 +20,20 @@ services:
         class: AppBundle\Controller\AreaController
         parent: app.controller.base
         arguments:
+            - '@app.repository.area'
+            - '@app.repository.payment'
+
+    app.controller.payment:
+        class: AppBundle\Controller\PaymentController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.payment'
+            - '@app.repository.payment_type'
+            - '@app.repository.area'
+
+    app.controller.purpose:
+        class: AppBundle\Controller\PurposeController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.payment_type'
             - '@app.repository.area'

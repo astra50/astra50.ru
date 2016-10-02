@@ -5,13 +5,21 @@ services:
             - ['setEntityManager', ['@doctrine.orm.entity_manager']]
 
     app.repository.news:
-        class: AppBundle\Repository\NewsRepository
+        class: AppBundle\Entity\Repository\NewsRepository
         parent: app.doctrine.entity_repository
 
     app.repository.user:
-        class: AppBundle\Repository\UserRepository
+        class: AppBundle\Entity\Repository\UserRepository
         parent: app.doctrine.entity_repository
 
     app.repository.area:
-        class: AppBundle\Repository\AreaRepository
+        class: AppBundle\Entity\Repository\AreaRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.payment_type:
+        class: AppBundle\Entity\Repository\PurposeRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.payment:
+        class: AppBundle\Entity\Repository\PaymentRepository
         parent: app.doctrine.entity_repository

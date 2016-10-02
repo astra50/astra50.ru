@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\AccountType;
-use AppBundle\Model\AccountModel;
-use AppBundle\Repository\UserRepository;
+use AppBundle\Form\Type\AccountType;
+use AppBundle\Form\Model\AccountModel;
+use AppBundle\Entity\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class AccountController extends Controller
+final class AccountController extends BaseController
 {
     /**
      * @var UserRepository

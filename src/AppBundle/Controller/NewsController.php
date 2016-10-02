@@ -3,9 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\News;
-use AppBundle\Form\NewsType;
-use AppBundle\Model\NewsModel;
-use AppBundle\Repository\NewsRepository;
+use AppBundle\Form\Type\NewsType;
+use AppBundle\Form\Model\NewsModel;
+use AppBundle\Entity\Repository\NewsRepository;
 use Uuid\Uuid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class NewsController extends Controller
+class NewsController extends BaseController
 {
     const NEWS_PER_PAGE = 3;
 
@@ -38,9 +38,10 @@ class NewsController extends Controller
      */
     public function listAction(Request $request)
     {
-        $news = $this->newsRepository->getLatestPaginated(!$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY))
-            ->setMaxPerPage(self::NEWS_PER_PAGE)
-            ->setCurrentPage($request->query->get('page', 1));
+        $pageSize = self::NEWS_PER_PAGE;
+        $pageIndex = $request->query->get('page', 1);
+
+        $news = $this->newsRepository->paginateLatest($pageSize, $pageIndex, !$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY));
 
         return $this->render('news/list.html.twig', [
             'pagerfanta' => $news,

@@ -39,9 +39,11 @@
             <hr>
         {% endfor %}
 
-        <div class="text-center">
-            {{ pagerfanta(pagerfanta) }}
-        </div>
+        {% if pagerfanta.hasNextPage %}
+            <div class="text-center">
+                {{ pagerfanta(pagerfanta) }}
+            </div>
+        {% endif %}
     {% else %}
         <div class="jumbotron">
             <h1>Новостей пока нет</h1>
