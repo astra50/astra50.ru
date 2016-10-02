@@ -28,7 +28,7 @@ final class AreaRepository extends EntityRepository
     {
         return $this->createQueryBuilder('a')
             ->select('a', 'u', 'ABS(a.number) as HIDDEN numbers')
-            ->join('a.users', 'u')
+            ->leftJoin('a.users', 'u')
             ->orderBy('numbers', 'ASC')
             ->getQuery()
             ->getResult();

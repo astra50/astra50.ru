@@ -38,7 +38,7 @@
                         {% if item.amount >= 0 %}
                             <span class="label label-success">Оплачено</span>
                         {% else %}
-                            <span class="label label-danger">{{ (item.amount / 100)|number_format }}</span>
+                            <span class="label label-danger">{{ (item.amount / 100)|number_format(0) }}</span>
                         {% endif %}
                     </td>
                     <td>{{ purpose.createdAt|localizeddate }}</td>

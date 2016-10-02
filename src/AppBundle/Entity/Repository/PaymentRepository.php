@@ -47,10 +47,9 @@ final class PaymentRepository extends EntityRepository
     {
         $qb = $this->em->createQueryBuilder()
             ->select('purpose')
-            ->addSelect('SUM(payment2.amount) AS amount')
+            ->addSelect('SUM(payment.amount) AS amount')
             ->from(Purpose::class, 'purpose')
-            ->join(Payment::class, 'payment', Join::WITH, 'payment.purpose = purpose')
-            ->leftJoin(Payment::class, 'payment2', Join::WITH, 'payment2.purpose = purpose')
+            ->join(Payment::class, 'payment', Join::WITH, 'payment.purpose = purpose AND payment.area = :area')
             ->where('payment.area = :area')
             ->setParameter('area', $area)
             ->groupBy('purpose')
