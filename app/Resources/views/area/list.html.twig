@@ -5,36 +5,42 @@
 
     <hr>
 
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>№</th>
-            <th>Соток</th>
-            <th>Владельцы</th>
-            <th>Действия</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for area in areas %}
+    {% if areas is not empty %}
+        <table class="table table-hover">
+            <thead>
             <tr>
-                <td>{{ area.number }}</td>
-                <td>{{ area.size / 100 }}</td>
-                <td>
-                    {% if area.users is not empty %}
-                        <ul>
-                            {% for user in area.users %}
-                                <li>{{ user.realname }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </td>
-                <td>
-                    <a class="btn btn-default" href="{{ path('area_show', {'number': area.number}) }}">
-                        <i class="fa fa-eye" aria-hidden="true" title="Просмотр"></i>
-                    </a>
-                </td>
+                <th>№</th>
+                <th>Соток</th>
+                <th>Владельцы</th>
+                <th>Действия</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for area in areas %}
+                <tr>
+                    <td>{{ area.number }}</td>
+                    <td>{{ area.size / 100 }}</td>
+                    <td>
+                        {% if area.users is not empty %}
+                            <ul>
+                                {% for user in area.users %}
+                                    <li>{{ user.realname }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-default" href="{{ path('area_show', {'number': area.number}) }}">
+                            <i class="fa fa-eye" aria-hidden="true" title="Просмотр"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="jumbotron">
+            <h2>Записей нет</h2>
+        </div>
+    {% endif %}
 {% endblock %}
