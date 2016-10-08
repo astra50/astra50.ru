@@ -11,6 +11,6 @@ AppBundle\Entity\Purpose:
         __construct: ['<uuid4()>', '<purpose()>', '<numberBetween(500000, 5000000)>', '<numberBetween(1, 2)>', '<numberBetween(1, 2)>']
 
 AppBundle\Entity\Area:
-    Area_{0..50}:
+    Area_{0..125}:
         __construct: ['<uuid4()>', '<current()>', '<numberBetween(600, 1200)>']
         addUser: ['@User*']
