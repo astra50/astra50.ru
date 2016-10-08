@@ -45,6 +45,8 @@ final class NewPurposeListener implements EventSubscriberInterface
 
     /**
      * @param PurposeEvent $event
+     *
+     * @throws \DomainException
      */
     public function onNewPurpose(PurposeEvent $event)
     {
