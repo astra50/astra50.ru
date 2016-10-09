@@ -13,6 +13,7 @@ WORKDIR ${APP_DIR}
 RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
+        zlib1g-dev \
         libicu-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
