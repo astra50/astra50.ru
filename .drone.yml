@@ -22,9 +22,9 @@ build:
         - >-
           (docker run --rm --network ${NETWORK}
           -e SYMFONY_ENV=test
-          -e database_host=${MYSQL_HOST}
-          -e database_user=${MYSQL_USER}
-          -e database_password=${MYSQL_PASSWORD}
+          -e DATABASE_HOST=${MYSQL_HOST}
+          -e DATABASE_USER=${MYSQL_USER}
+          -e DATABASE_PASSWORD=${MYSQL_PASSWORD}
           ${IMAGE}:$$BUILD_NUMBER); local result=$?;
         - docker rm -f ${MYSQL_HOST}
         - docker network rm ${NETWORK}
