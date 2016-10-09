@@ -14,7 +14,7 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
         libicu-dev \
-    && docker-php-ext-install intl pdo_mysql iconv opcache \
+    && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && pecl install xdebug \
