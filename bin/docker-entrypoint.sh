@@ -69,6 +69,7 @@ if [ "$SYMFONY_ENV" == "prod" ]; then
     COMPOSER=${COMPOSER:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     MIGRATION=${MIGRATION:=true}
 
+    a2enmod rewrite
     COMMAND=${COMMAND:=apache2-foreground}
 fi
 
