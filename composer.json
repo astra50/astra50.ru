@@ -44,22 +44,19 @@
         "phpunit/phpunit": "^5.5"
     },
     "scripts": {
-        "post-install-cmd": [
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+        ],
+        "post-install-cmd": [
+            "@symfony-scripts"
         ],
         "post-update-cmd": [
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ],
-        "build-parameters": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
+            "@symfony-scripts"
         ]
     },
     "extra": {
@@ -73,8 +70,20 @@
             "file": "app/config/parameters.yml",
             "env-map": {
                 "database_host": "database_host",
+                "database_port": "database_port",
+                "database_name": "database_name",
                 "database_user": "database_user",
-                "database_password": "database_password"
+                "database_password": "database_password",
+                "mailer_transport": "mailer_transport",
+                "mailer_host": "mailer_host",
+                "mailer_user": "mailer_user",
+                "mailer_password": "mailer_password",
+                "secret": "secret",
+                "mail_delivery_address": "mail_delivery_address",
+                "google_oauth_id": "google_oauth_id",
+                "google_oauth_secret": "google_oauth_secret",
+                "vkontakte_oauth_id": "vkontakte_oauth_id",
+                "vkontakte_oauth_secret": "vkontakte_oauth_secret"
             }
         }
     }
