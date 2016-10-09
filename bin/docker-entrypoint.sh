@@ -69,7 +69,7 @@ if [ "$SYMFONY_ENV" == "prod" ]; then
     COMPOSER=${COMPOSER:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     MIGRATION=${MIGRATION:=true}
 
-    COMMAND=${COMMAND:=php-fpm}
+    COMMAND=${COMMAND:=apache2-foreground}
 fi
 
 if [ "$OPCACHE" == "true" ]; then
@@ -128,6 +128,7 @@ fi
 if [ "$SYMFONY_ENV" == "prod" ]; then
     chown -R www-data:www-data ${APP_DIR}/var
     rm -rf ${APP_DIR}/bin/sf ${APP_DIR}/web/config.php ${APP_DIR}/web/app_dev.php
+    cp ${APP_DIR}/app/config/apache.conf ${APACHE_CONFDIR}/sites-enabled/000-default.conf
 fi
 
 /bin/sh -c "${COMMAND}"
