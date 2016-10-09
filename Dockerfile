@@ -11,10 +11,11 @@ ENV PATH=${APP_DIR}/bin:${APP_DIR}/vendor/bin:${PATH}
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
+    && echo "deb http://httpredir.debian.org/debian/ stretch main" > /etc/apt/sources.list.d/testing.list \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
         zlib1g-dev \
-        libicu-dev \
+        libicu-dev/testing \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
