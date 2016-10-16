@@ -38,8 +38,8 @@ build:
         fi
       - exit "$result"
     environment:
-      NETWORK: drone_network_$DRONE_COMMIT
-      MYSQL_HOST: drone_mysql_$DRONE_COMMIT
+      NETWORK: drone_network_$$COMMIT
+      MYSQL_HOST: drone_mysql_$$COMMIT
       MYSQL_DB: db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
