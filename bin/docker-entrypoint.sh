@@ -2,49 +2,6 @@
 
 set -e
 
-OPCACHE=
-COMPOSER=
-REQUIREMENTS=
-MIGRATION=
-FIXTURES=
-XDEBUG=
-COMMAND=
-
-for i in "$@"
-do
-case ${i} in
-    --no-composer)
-    COMPOSER=false
-    ;;
-    -m|--migrations)
-    MIGRATION=true
-    ;;
-    -f|--fixtures)
-    FIXTURES=true
-    ;;
-    --no-fixtures)
-    FIXTURES=false
-    ;;
-    -x|--xdebug)
-    XDEBUG=true
-    ;;
-    --no-xdebug)
-    XDEBUG=false
-    ;;
-    *)
-    # unknown option
-    COMMAND=${COMMAND}' '${i}
-    ;;
-esac
-    # past argument=value
-    shift
-done
-
-{
-    echo 'date.timezone = UTC';
-    echo 'short_open_tag = off';
-} > ${PHP_INI_DIR}/php.ini
-
 if [ "$SYMFONY_ENV" == "dev" ]; then
     XDEBUG=${XDEBUG:=true}
     COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --prefer-source"}
@@ -73,10 +30,13 @@ if [ "$SYMFONY_ENV" == "prod" ]; then
     COMMAND=${COMMAND:=apache2-foreground}
 fi
 
-if [ "$OPCACHE" == "true" ]; then
-#    docker-php-ext-enable opcache # wait for fix "nm not found"
-    echo "zend_extension=opcache.so" > ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini
+{
+    echo 'date.timezone = UTC';
+    echo 'short_open_tag = off';
+} > ${PHP_INI_DIR}/php.ini
 
+
+if [ "$OPCACHE" == "true" ]; then
     {
         echo 'opcache.enable = 1';
         echo 'opcache.enable_cli = 1';
@@ -92,6 +52,7 @@ if [ "$OPCACHE" == "true" ]; then
         echo 'opcache.load_comments = 1';
     } > ${PHP_INI_DIR}/conf.d/opcache.ini
 
+    docker-php-ext-enable opcache # wait for fix "nm not found"
     echo -e '\n > opcache enabled\n'
 fi
 
@@ -104,7 +65,7 @@ if [ "$REQUIREMENTS" == "true" ]; then
 fi
 
 if [ "$MIGRATION" == "true" ]; then
-    console doctrine:migrations:migrate --no-interaction --allow-no-migration
+    bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --quiet
 fi
 
 if [ "$FIXTURES" == "true" ]; then
@@ -112,9 +73,6 @@ if [ "$FIXTURES" == "true" ]; then
 fi
 
 if [ "$XDEBUG" == "true" ]; then
-#    docker-php-ext-enable xdebug # wait for fix "nm not found"
-    echo "zend_extension=xdebug.so" > ${PHP_INI_DIR}/conf.d/docker-php-ext-xdebug.ini
-
     {
         echo 'xdebug.remote_enable=On';
         echo 'xdebug.remote_autostart=On';
@@ -123,6 +81,7 @@ if [ "$XDEBUG" == "true" ]; then
         echo 'xdebug.file_link_format="phpstorm://open?file=%f&line=%l"';
     } > ${PHP_INI_DIR}/conf.d/xdebug.ini
 
+    docker-php-ext-enable xdebug # wait for fix "nm not found"
     echo -e '\n> xdebug enabled\n'
 fi
 
