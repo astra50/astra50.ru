@@ -1,0 +1,30 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <a href="{{ path('street_new') }}" class="btn btn-success">
+        <i class="fa fa-plus"></i> Создать улицу
+    </a>
+
+    <hr>
+
+    {% if streets is not empty %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Название</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for street in streets %}
+                <tr>
+                    <td>{{ street.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="jumbotron">
+            <h2>Записей нет</h2>
+        </div>
+    {% endif %}
+{% endblock %}

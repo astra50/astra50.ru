@@ -16,6 +16,12 @@
                 </ul>
             </dd>
         {% endif %}
+        <dt>Улица</dt>
+        <dd>
+            {% if area.street %}
+                {{ area.street.name }}
+            {% endif %}
+        </dd>
     </dl>
 
     <h2>Платежи</h2>

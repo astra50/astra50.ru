@@ -34,6 +34,14 @@ class Area
     private $size;
 
     /**
+     * @var Street
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Street")
+     * @ORM\JoinColumn()
+     */
+    private $street;
+
+    /**
      * @var User[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User")
@@ -45,13 +53,20 @@ class Area
      * @param UuidInterface $id
      * @param string        $number
      * @param int           $size
+     * @param Street        $street
      */
-    public function __construct(UuidInterface $id, string $number, int $size)
+    public function __construct(UuidInterface $id, string $number, int $size, Street $street = null)
     {
         $this->id = $id;
         $this->number = $number;
         $this->size = $size;
+        $this->street = $street;
         $this->users = new ArrayCollection();
+    }
+
+    public function setStreet(Street $street)
+    {
+        $this->street = $street;
     }
 
     public function getId(): UuidInterface
@@ -67,6 +82,14 @@ class Area
     public function getSize(): int
     {
         return $this->size;
+    }
+
+    /**
+     * @return Street
+     */
+    public function getStreet()
+    {
+        return $this->street;
     }
 
     public function addUser(User $user)

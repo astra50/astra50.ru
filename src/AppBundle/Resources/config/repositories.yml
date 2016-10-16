@@ -23,3 +23,7 @@ services:
     app.repository.payment:
         class: AppBundle\Entity\Repository\PaymentRepository
         parent: app.doctrine.entity_repository
+
+    app.repository.street:
+        class: AppBundle\Entity\Repository\StreetRepository
+        parent: app.doctrine.entity_repository

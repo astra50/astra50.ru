@@ -59,6 +59,7 @@ class Builder
             ->addChild('Payment', ['label' => 'Платежи', 'route' => 'payment_list'])->getParent()
             ->addChild('Purpose', ['label' => 'Платежные цели', 'route' => 'purpose_list'])->getParent()
             ->addChild('Area', ['label' => 'Участки', 'route' => 'area_list'])->getParent()
+            ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_list'])->getParent()
             ;
 
         return $menu;

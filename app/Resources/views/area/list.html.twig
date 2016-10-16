@@ -12,6 +12,7 @@
                 <th>№</th>
                 <th>Соток</th>
                 <th>Владельцы</th>
+                <th>Улица</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -27,6 +28,11 @@
                                     <li>{{ user.realname }}</li>
                                 {% endfor %}
                             </ul>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if area.street %}
+                            {{ area.street.name }}
                         {% endif %}
                     </td>
                     <td>

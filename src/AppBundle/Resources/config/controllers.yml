@@ -37,3 +37,9 @@ services:
         arguments:
             - '@app.repository.payment_type'
             - '@app.repository.area'
+
+    app.controller.street:
+        class: AppBundle\Controller\StreetController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.street'
