@@ -38,8 +38,8 @@ build:
         fi
       - exit "$result"
     environment:
-      NETWORK: drone_network_DRONE_COMMIT
-      MYSQL_HOST: drone_mysql_DRONE_COMMIT
+      NETWORK: drone_network_$$DRONE_COMMIT
+      MYSQL_HOST: drone_mysql_$$DRONE_COMMIT
       MYSQL_DB: db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
@@ -54,7 +54,7 @@ deploy:
       user: $$SWARM_USER
       port: 22
       commands:
-        - docker pull $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER
+        - docker pull $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER > /dev/null
         - docker service update --image $$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER $$SWARM_SERVICE
         - docker rmi `docker images -q --filter "before=$$REGISTRY_HOST/$$REGISTRY_REPO:$$BUILD_NUMBER" $$REGISTRY_HOST/$$REGISTRY_REPO` 2> /dev/null || true
       when:
