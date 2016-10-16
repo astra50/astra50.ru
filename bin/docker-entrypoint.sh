@@ -18,7 +18,7 @@ if [ "$SYMFONY_ENV" == "test" ]; then
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
 
-    COMMAND=${COMMAND:="bin/console doctrine:schema:validate && phpunit"}
+    COMMAND=${COMMAND:="php-cs-fixer fix --dry-run --level symfony ./src/ && bin/console doctrine:schema:validate && phpunit"}
 fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then

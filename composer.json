@@ -41,7 +41,8 @@
         "symfony/phpunit-bridge": "^3.0",
         "hautelook/alice-bundle": "^1.3",
         "doctrine/data-fixtures": "^1.2",
-        "phpunit/phpunit": "^5.5"
+        "phpunit/phpunit": "^5.5",
+        "friendsofphp/php-cs-fixer": "^1.12"
     },
     "scripts": {
         "symfony-scripts": [
