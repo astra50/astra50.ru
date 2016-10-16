@@ -4,7 +4,7 @@ set -e
 
 if [ "$SYMFONY_ENV" == "dev" ]; then
     XDEBUG=${XDEBUG:=true}
-    COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --prefer-source"}
+    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-source"}
 
     COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80'}
 fi
@@ -13,7 +13,7 @@ if [ "$SYMFONY_ENV" == "test" ]; then
     export SYMFONY_DEBUG=0
 
     OPCACHE=${OPCACHE:=true}
-    COMPOSER=${COMPOSER:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
+    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     REQUIREMENTS=${REQUIREMENTS:=true}
     MIGRATION=${MIGRATION:=true}
     FIXTURES=${FIXTURES:=true}
@@ -23,7 +23,7 @@ fi
 
 if [ "$SYMFONY_ENV" == "prod" ]; then
     OPCACHE=${OPCACHE:=true}
-    COMPOSER=${COMPOSER:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
+    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
     MIGRATION=${MIGRATION:=true}
 
     a2enmod rewrite
@@ -56,8 +56,8 @@ if [ "$OPCACHE" == "true" ]; then
     echo -e '\n > opcache enabled\n'
 fi
 
-if [ "$COMPOSER" != "false" ]; then
-    ${COMPOSER}
+if [ "$COMPOSER_EXEC" != "false" ]; then
+    ${COMPOSER_EXEC}
 fi
 
 if [ "$REQUIREMENTS" == "true" ]; then
