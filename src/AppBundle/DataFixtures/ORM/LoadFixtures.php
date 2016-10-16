@@ -5,6 +5,7 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nelmio\Alice\Fixtures;
+use Ramsey\Uuid\UuidInterface;
 use Uuid\Uuid;
 
 /**
@@ -12,20 +13,31 @@ use Uuid\Uuid;
  */
 class LoadFixtures implements FixtureInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function load(ObjectManager $manager)
     {
         // fix   Notice: Use of undefined constant GLOB_BRACE - assumed 'GLOB_BRACE'
-        define('GLOB_BRACE', 0);
+        if (!defined('GLOB_BRACE')) {
+            define('GLOB_BRACE', 0);
+        }
 
         $objects = Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
     }
 
+    /**
+     * @return UuidInterface
+     */
     public function uuid4()
     {
         return Uuid::create();
     }
 
-    private static $arr = [
+    /**
+     * @var array
+     */
+    private static $purposes = [
         'Ежемесячный платёж',
         'Ремонт дороги',
         'Постройка футбольного поля',
@@ -59,8 +71,37 @@ class LoadFixtures implements FixtureInterface
         'Откуп рейдерам',
     ];
 
-    public function purpose()
+    /**
+     * @return string
+     */
+    public function purpose() : string
     {
-        return next(self::$arr);
+        $value = current(self::$purposes);
+        next(self::$purposes);
+
+        return $value;
+    }
+
+    /**
+     * @var array
+     */
+    private static $streets = [
+        'Новомарьинская',
+        'Братиславская',
+        'Люблинская',
+        'Остаповская',
+        'Волгоградская',
+        'Комсомольская',
+    ];
+
+    /**
+     * @return string
+     */
+    public function street() : string
+    {
+        $value = current(self::$streets);
+        next(self::$streets);
+
+        return $value;
     }
 }

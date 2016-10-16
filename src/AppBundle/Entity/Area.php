@@ -97,8 +97,12 @@ class Area
         return $this->street;
     }
 
-    public function replaceUsers(\Iterator $users)
+    public function replaceUsers($users)
     {
+        if (!is_array($users) && !$users instanceof \Traversable) {
+            throw new \InvalidArgumentException('Users must be iterable type');
+        }
+
         $this->users->clear();
 
         foreach ($users as $user) {
