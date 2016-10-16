@@ -2,11 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Doctrine\DoctrineUtils;
 use AppBundle\Entity\Payment;
 use AppBundle\Entity\Repository\AreaRepository;
-use AppBundle\Entity\Repository\PurposeRepository;
 use AppBundle\Entity\Repository\PaymentRepository;
+use AppBundle\Entity\Repository\PurposeRepository;
 use AppBundle\Form\Model\PaymentModel;
 use AppBundle\Form\Type\PaymentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -66,8 +65,8 @@ final class PaymentController extends BaseController
     public function newAction(Request $request)
     {
         $model = new PaymentModel();
-        $areas = DoctrineUtils::arrayToChoices($this->areaRepository->findAllForChoices(), 'number');
-        $purposes = DoctrineUtils::arrayToChoices($this->purposeRepository->findActiveForChoices(), 'name');
+        $areas = $this->areaRepository->findAllForChoices('number');
+        $purposes = $this->purposeRepository->findActiveForChoices();
 
         $form = $this->createForm(PaymentType::class, $model, [
             'action' => $this->generateUrl('payment_new'),
@@ -76,8 +75,8 @@ final class PaymentController extends BaseController
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $purpose = $this->purposeRepository->getReference(Uuid::fromString($model->purpose));
-            $area = $this->areaRepository->getReference(Uuid::fromString($model->area));
+            $purpose = $this->purposeRepository->getReference($model->purpose);
+            $area = $this->areaRepository->getReference($model->area);
             $user = $this->getUser();
             $amount = $model->amount;
 

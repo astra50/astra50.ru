@@ -39,6 +39,9 @@
                         <a class="btn btn-default" href="{{ path('area_show', {'number': area.number}) }}">
                             <i class="fa fa-eye" aria-hidden="true" title="Просмотр"></i>
                         </a>
+                        <a class="btn btn-default" href="{{ path('area_edit', {'number': area.number}) }}">
+                            <i class="fa fa-pencil" aria-hidden="true" title="Редактировать"></i>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}

@@ -41,6 +41,10 @@ final class PurposeModel
 
     /**
      * @var array
+     *
+     * @Assert\All({
+     *      @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * })
      */
     public $areas;
 

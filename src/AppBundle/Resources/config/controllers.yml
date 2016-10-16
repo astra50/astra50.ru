@@ -22,6 +22,8 @@ services:
         arguments:
             - '@app.repository.area'
             - '@app.repository.payment'
+            - '@app.repository.street'
+            - '@app.repository.user'
 
     app.controller.payment:
         class: AppBundle\Controller\PaymentController

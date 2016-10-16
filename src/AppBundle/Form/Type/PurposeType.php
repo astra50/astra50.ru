@@ -5,6 +5,8 @@ namespace AppBundle\Form\Type;
 use AppBundle\Entity\Purpose;
 use AppBundle\Form\Model\PurposeModel;
 use AppBundle\Form\Transformer\MoneyTransformer;
+use AppBundle\Form\Transformer\UuidTransformer;
+use AppBundle\Utils\FormUtils;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -52,12 +54,12 @@ class PurposeType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
-            ->add('areas', Type\ChoiceType::class, [
+            ->add($builder->create('areas', Type\ChoiceType::class, [
                 'label' => 'Участки',
-                'choices' => $options['areas'],
+                'choices' => FormUtils::arrayToChoices($options['areas'], 'number'),
                 'multiple' => true,
                 'expanded' => true,
-            ]);
+            ])->addModelTransformer(new UuidTransformer()));
     }
 
     /**

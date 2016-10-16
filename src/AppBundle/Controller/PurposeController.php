@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Doctrine\DoctrineUtils;
 use AppBundle\Entity\Purpose;
-use AppBundle\EventDispatcher\Payment\PurposeEvent;
-use AppBundle\Form\Type\PurposeType;
-use AppBundle\Form\Model\PurposeModel;
 use AppBundle\Entity\Repository\AreaRepository;
 use AppBundle\Entity\Repository\PurposeRepository;
+use AppBundle\EventDispatcher\Payment\PurposeEvent;
+use AppBundle\Form\Model\PurposeModel;
+use AppBundle\Form\Type\PurposeType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +63,7 @@ final class PurposeController extends BaseController
         $model = new PurposeModel();
         $form = $this->createForm(PurposeType::class, $model, [
             'action' => $this->generateUrl('purpose_new'),
-            'areas' => DoctrineUtils::arrayToChoices($this->areaRepository->findAllForChoices(), 'number'),
+            'areas' => $this->areaRepository->findAllForChoices('number'),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {

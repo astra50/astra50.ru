@@ -8,6 +8,8 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Ramsey\Uuid\UuidInterface;
 
 /**
+ * @method UuidInterface getId()
+ *
  * @ORM\Entity
  */
 class User extends BaseUser

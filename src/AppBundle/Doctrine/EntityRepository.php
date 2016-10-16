@@ -31,6 +31,18 @@ abstract class EntityRepository
     }
 
     /**
+     * @param array $ids
+     *
+     * @return \Generator
+     */
+    public function getReferences(array $ids)
+    {
+        foreach ($ids as $id) {
+            yield $this->getReference($id);
+        }
+    }
+
+    /**
      * @param UuidInterface $id
      */
     public function find(UuidInterface $id)
@@ -62,6 +74,8 @@ abstract class EntityRepository
 
     /**
      * @param $entity
+     *
+     * @throws \InvalidArgumentException
      */
     public function save($entity)
     {
@@ -99,5 +113,23 @@ abstract class EntityRepository
         return (new Pagerfanta(new DoctrineORMAdapter($qb)))
             ->setMaxPerPage($pageSize)
             ->setCurrentPage($pageIndex);
+    }
+
+    /**
+     * @param       $displayField
+     * @param array $orderBy
+     *
+     * @return array
+     */
+    public function findAllForChoices($displayField, array $orderBy = [])
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e.id', 'e.'.$displayField);
+
+        foreach ($orderBy as $key => $value) {
+            $qb->addOrderBy('e.'.$key, $value);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

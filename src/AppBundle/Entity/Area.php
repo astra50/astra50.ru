@@ -64,7 +64,12 @@ class Area
         $this->users = new ArrayCollection();
     }
 
-    public function setStreet(Street $street)
+    public function setSize(int $size)
+    {
+        $this->size = $size;
+    }
+
+    public function setStreet(Street $street = null)
     {
         $this->street = $street;
     }
@@ -92,8 +97,21 @@ class Area
         return $this->street;
     }
 
-    public function addUser(User $user)
+    public function replaceUsers(\Iterator $users)
     {
+        $this->users->clear();
+
+        foreach ($users as $user) {
+            $this->addUser($user);
+        }
+    }
+
+    private function addUser(User $user)
+    {
+        if ($this->users->contains($user)) {
+            return;
+        }
+
         $this->users[] = $user;
     }
 

@@ -60,7 +60,7 @@ final class NewPurposeListener implements EventSubscriberInterface
         }
 
         foreach ($model->areas as $id) {
-            $area = $this->areaRepository->get(Uuid::fromString($id));
+            $area = $this->areaRepository->get($id);
 
             if (!$amount) {
                 if (Purpose::CALCULATION_SIZE === $model->calculation) {
