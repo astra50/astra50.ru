@@ -32,7 +32,7 @@ final class PurposeController extends BaseController
 
     /**
      * @param PurposeRepository $purposeRepository
-     * @param AreaRepository           $areaRepository
+     * @param AreaRepository    $areaRepository
      */
     public function __construct(PurposeRepository $purposeRepository, AreaRepository $areaRepository)
     {

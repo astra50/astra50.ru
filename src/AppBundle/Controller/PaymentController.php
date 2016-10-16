@@ -35,9 +35,9 @@ final class PaymentController extends BaseController
     private $areaRepository;
 
     /**
-     * @param PaymentRepository        $paymentRepository
+     * @param PaymentRepository $paymentRepository
      * @param PurposeRepository $purposeRepository
-     * @param AreaRepository           $areaRepository
+     * @param AreaRepository    $areaRepository
      */
     public function __construct(PaymentRepository $paymentRepository, PurposeRepository $purposeRepository, AreaRepository $areaRepository)
     {

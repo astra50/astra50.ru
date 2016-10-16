@@ -41,7 +41,7 @@ final class AreaModel
      */
     public static function fromEntity(Area $area)
     {
-        $model = new AreaModel();
+        $model = new self();
         $model->size = $area->getSize();
         if ($street = $area->getStreet()) {
             $model->street = $street->getId();

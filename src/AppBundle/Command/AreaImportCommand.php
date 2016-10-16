@@ -65,7 +65,7 @@ class AreaImportCommand extends Command
 
         $io->progressStart(count($array));
         foreach ($array as $item) {
-            list ($number, $size) = $item;
+            list($number, $size) = $item;
 
             $this->areaRepository->save(new Area(Uuid::create(), $number, $size));
             $io->progressAdvance();

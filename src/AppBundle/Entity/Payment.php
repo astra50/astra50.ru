@@ -66,7 +66,7 @@ class Payment
     /**
      * @param UuidInterface $id
      * @param Area          $area
-     * @param Purpose   $purpose
+     * @param Purpose       $purpose
      * @param User          $user
      * @param int           $amount
      */

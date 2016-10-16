@@ -6,12 +6,12 @@
 final class AppRoles
 {
     /**
-     * Член СНТ
+     * Член СНТ.
      */
     const COMMUNITY = 'ROLE_COMMUNITY';
 
     /**
-     * Писатель новостей
+     * Писатель новостей.
      */
     const NEWS_WRITER = 'ROLE_NEWS_WRITER';
 
@@ -21,12 +21,12 @@ final class AppRoles
     const CASHIER = 'ROLE_CASHIER';
 
     /**
-     * Председатель
+     * Председатель.
      */
     const CHAIRMAN = 'ROLE_CHAIRMAN';
 
     /**
-     * Роль для отображение админской панели навигации
+     * Роль для отображение админской панели навигации.
      */
     const EMPLOYEE = 'ROLE_EMPLOYEE';
 }
