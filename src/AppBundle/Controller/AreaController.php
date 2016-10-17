@@ -95,6 +95,13 @@ final class AreaController extends BaseController
 
             $this->areaRepository->save($area);
 
+            foreach ($model->users as $id) {
+                $user = $this->userRepository->get($id);
+                $user->addRole(\AppRoles::COMMUNITY);
+
+                $this->userRepository->save($user);
+            }
+
             return $this->redirectToRoute('area_list');
         }
 

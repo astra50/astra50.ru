@@ -6,6 +6,8 @@ use AppBundle\Doctrine\EntityRepository;
 use AppBundle\Entity\User;
 
 /**
+ * @method User get($id)
+ *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
 final class UserRepository extends EntityRepository
