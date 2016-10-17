@@ -1,11 +1,6 @@
 {% extends '::layout.html.twig' %}
 
 {% block content %}
-
-    <h1>Новости</h1>
-
-    <hr>
-
     {% if is_granted('ROLE_NEWS_WRITER') %}
         <a class="btn btn-primary" href="{{ path('news_new') }}">Добавить новость</a>
         <hr>
@@ -39,11 +34,7 @@
             <hr>
         {% endfor %}
 
-        {% if pagerfanta.hasNextPage %}
-            <div class="text-center">
-                {{ pagerfanta(pagerfanta) }}
-            </div>
-        {% endif %}
+        {% include ':blocks:pagerfanta.html.twig' %}
     {% else %}
         <div class="jumbotron">
             <h1>Новостей пока нет</h1>

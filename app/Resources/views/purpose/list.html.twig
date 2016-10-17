@@ -1,10 +1,6 @@
 {% extends '::layout.html.twig' %}
 
 {% block content %}
-    <h1>Платежные цели</h1>
-
-    <hr>
-
     {% if is_granted(constant('AppRoles::CHAIRMAN')) %}
         <a href="{{ path('purpose_new') }}" class="btn btn-success">
             <i class="fa fa-plus"></i> Создать цель
@@ -39,11 +35,7 @@
             </tbody>
         </table>
 
-        {% if pagerfanta.hasNextPage %}
-            <div class="text-center">
-                {{ pagerfanta(pagerfanta) }}
-            </div>
-        {% endif %}
+        {% include ':blocks:pagerfanta.html.twig' %}
     {% else %}
         <div class="jumbotron">
             <h2>Записей нет</h2>

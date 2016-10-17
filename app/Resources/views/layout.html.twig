@@ -29,6 +29,8 @@
         </nav>
 
         {% if is_granted(constant('AppRoles::EMPLOYEE')) %}
+            <hr>
+
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -54,6 +56,8 @@
                     </div>
                 </div>
             </nav>
+
+            <hr>
         {% endif %}
 
         {% if app.request.hasPreviousSession %}
