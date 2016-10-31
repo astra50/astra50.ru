@@ -69,10 +69,12 @@ final class AreaController extends BaseController
         $pageIndex = $request->query->get('page', 1);
 
         $payments = $this->paymentRepository->paginatePurposesByArea($area, $pageSize, $pageIndex);
+        $balance = $this->paymentRepository->getBalanceFromActivePurposesByArea($area);
 
         return $this->render(':area:show.html.twig', [
             'area' => $area,
             'pagerfanta' => $payments,
+            'balance' => $balance,
         ]);
     }
 

@@ -31,33 +31,33 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-                <th>Статус</th>
+                <th>К оплате</th>
+                <th>Оплачено</th>
+                <th>Недоплата / Переплата</th>
                 <th>Дата создания</th>
             </tr>
             </thead>
             <tbody>
             {% for item in pagerfanta.currentPageResults %}
                 {% set purpose = item|first %}
-                <tr>
+                {% set sum = item.bill + item.paid %}
+
+                <tr class="{{ sum >= 0 ? 'success' : 'danger' }}">
                     <td>{{ purpose.name }}</td>
-                    <td>
-                        {% if item.amount >= 0 %}
-                            <span class="label label-success">Оплачено</span>
-                        {% else %}
-                            <span class="label label-danger">{{ (item.amount / 100)|number_format(0) }}</span>
-                        {% endif %}
-                    </td>
+                    <td>{{ (item.bill|abs / 100)|number_format }}</td>
+                    <td>{{ (item.paid / 100)|number_format }}</td>
+                    <td><strong>{{ ((item.bill + item.paid) / 100)|number_format }}</strong></td>
                     <td>{{ purpose.createdAt|localizeddate }}</td>
                 </tr>
             {% endfor %}
+            <tr class="{{ 0 > balance ? 'warning' : '' }}">
+                <td colspan="3"></td>
+                <td colspan="2">{{ (balance / 100)|number_format }}</td>
+            </tr>
             </tbody>
         </table>
 
-        {% if pagerfanta.hasNextPage %}
-            <div class="text-center">
-                {{ pagerfanta(pagerfanta) }}
-            </div>
-        {% endif %}
+        {% include ':blocks:pagerfanta.html.twig' %}
     {% else %}
         <div class="jumbotron">
             <h2>Записей нет</h2>
