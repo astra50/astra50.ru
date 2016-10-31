@@ -86,7 +86,7 @@ final class PaymentController extends BaseController
 
             $areaNumber = array_search($model->area, $areas, true);
             $purposeName = array_search($model->purpose, $purposes, true);
-            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purposeName, $areaNumber, $amount));
+            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purposeName, $areaNumber, $amount / 100));
 
             return $this->redirectToRoute('payment_list');
         }
