@@ -15,7 +15,7 @@ final class PaymentModel
      * @var UuidInterface
      *
      * @Assert\NotBlank()
-     * @Assert\Uuid()
+     * @Assert\Type("Ramsey\Uuid\UuidInterface")
      */
     public $purpose;
 
@@ -23,7 +23,7 @@ final class PaymentModel
      * @var UuidInterface
      *
      * @Assert\NotBlank()
-     * @Assert\Uuid()
+     * @Assert\Type("Ramsey\Uuid\UuidInterface")
      */
     public $area;
 
