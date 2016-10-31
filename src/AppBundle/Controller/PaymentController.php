@@ -78,7 +78,7 @@ final class PaymentController extends BaseController
             $purpose = $this->purposeRepository->getReference($model->purpose);
             $area = $this->areaRepository->getReference($model->area);
             $user = $this->getUser();
-            $amount = $model->amount;
+            $amount = $model->isPositive ? $model->amount : $model->amount * -1;
 
             $entity = new Payment(Uuid::create(), $area, $purpose, $user, $amount);
 

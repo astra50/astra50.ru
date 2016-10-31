@@ -40,7 +40,17 @@ class PaymentType extends AbstractType
                 'label' => 'Сумма',
                 'currency' => 'RUB',
                 'divisor' => 100,
-            ])->addModelTransformer(new MoneyTransformer()));
+            ])->addModelTransformer(new MoneyTransformer()))
+            ->add('isPositive', Type\ChoiceType::class, [
+                'label' => 'Тип',
+                'choices' => [
+                    'Начисление' => true,
+                    'Списание' => false,
+                ],
+                'multiple' => false,
+                'expanded' => true,
+                'required' => true,
+            ]);
     }
 
     /**

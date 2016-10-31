@@ -32,8 +32,17 @@ final class PaymentModel
      *
      * @Assert\NotBlank()
      * @Assert\Type("int")
+     * @Assert\GreaterThan(0)
      */
     public $amount;
+
+    /**
+     * @var bool
+     *
+     * @Assert\NotNull()
+     * @Assert\Type("bool")
+     */
+    public $isPositive;
 
     /**
      * @param Payment $entity
@@ -45,7 +54,8 @@ final class PaymentModel
         $model = new static();
         $model->area = $entity->getArea();
         $model->purpose = $entity->getPurpose();
-        $model->amount = $entity->getAmount();
+        $model->amount = abs($entity->getAmount());
+        $model->isPositive = $entity->getAmount() > 0;
 
         return $model;
     }
