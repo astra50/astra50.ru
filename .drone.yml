@@ -50,7 +50,9 @@ build:
 
 deploy:
     ssh:
-      host: $$SWARM_HOST
+      host:
+        - $$SWARM_HOST
+        - $$SWARM_SANDBOX_HOST
       user: $$SWARM_USER
       port: 22
       commands:
