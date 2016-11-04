@@ -33,12 +33,13 @@ pipeline:
           docker rmi --force ${IMAGE}:${DRONE_BUILD_NUMBER}
         fi
       - exit "$result"
+
   deploy:
     image: plugins/ssh
     host:
-      - ${SWARM_HOST}
-      - ${SWARM_SANDBOX_HOST}
-    user: ${SWARM_USER}
+      - s2.automagistre.ru
+      - s1.grachevko.ru
+    user: premier
     port: 22
     script:
       - docker pull ${IMAGE}:${DRONE_BUILD_NUMBER} > /dev/null
@@ -46,8 +47,8 @@ pipeline:
       - docker rmi `docker images -q --filter "before=${IMAGE}:${DRONE_BUILD_NUMBER}" ${IMAGE}` 2> /dev/null || true
     when:
       branch: master
+
   notify:
     image: plugins/slack
-    webhook_url: ${SLACK_WEBHOOK_URL}
     channel: drone
     username: drone
