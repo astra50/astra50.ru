@@ -8,24 +8,24 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - docker build -t ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} .
-      - docker network create DRONE_NETWORK_${DRONE_COMMIT_SHA}
+      - docker network create DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >-
-        docker run -d --name DRONE_MYSQL_${DRONE_COMMIT_SHA} --network DRONE_NETWORK_${DRONE_COMMIT_SHA}
+        docker run -d --name DRONE_ASTRA50_${DRONE_BUILD_NUMBER} --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
         -e MYSQL_DATABASE="db"
         -e MYSQL_USER="user"
         -e MYSQL_PASSWORD="password"
         -e MYSQL_RANDOM_ROOT_PASSWORD='true'
         mariadb
-      - docker run --rm --network DRONE_NETWORK_${DRONE_COMMIT_SHA} docker sh -c "while ! nc -z DRONE_MYSQL_${DRONE_COMMIT_SHA} 3306; do sleep 1; done"
+      - docker run --rm --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER} docker sh -c "while ! nc -z DRONE_ASTRA50_${DRONE_BUILD_NUMBER} 3306; do sleep 1; done"
       - >-
-        (docker run --rm --network DRONE_NETWORK_${DRONE_COMMIT_SHA}
+        (docker run --rm --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
         -e SYMFONY_ENV=test
-        -e DATABASE_HOST=DRONE_MYSQL_${DRONE_COMMIT_SHA}
+        -e DATABASE_HOST=DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
         -e DATABASE_USER="user"
         -e DATABASE_PASSWORD="password"
         ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}); local result=$?;
-      - docker rm -f DRONE_MYSQL_${DRONE_COMMIT_SHA}
-      - docker network rm DRONE_NETWORK_${DRONE_COMMIT_SHA}
+      - docker rm -f DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
+      - docker network rm DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >+
         if [ "$result" == 0 ]; then
           docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
@@ -36,22 +36,22 @@ pipeline:
         fi
       - exit "$result"
 
-  deploy:
-    image: ssh
+  ssh:
+    image: plugins/ssh
     host:
       - ${SWARM_HOST}
       - ${SWARM_SANDBOX_HOST}
-    user: $$SWARM_USER
+    user: ${SWARM_USER}
     port: 22
-    commands:
+    script:
       - docker pull ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} > /dev/null
       - docker service update --image ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} ${SWARM_SERVICE}
       - docker rmi `docker images -q --filter "before=${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}" ${REGISTRY_HOST}/${REGISTRY_REPO}` 2> /dev/null || true
     when:
       branch: master
 
-  notify:
-    image: slack
+  slack:
+    image: plugins/slack
     webhook_url: ${SLACK_WEBHOOK_URL}
     channel: drone
     username: drone
