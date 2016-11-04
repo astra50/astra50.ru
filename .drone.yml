@@ -2,7 +2,7 @@ pipeline:
   clone:
     depth: 1
   build:
-    image: docker:1
+    image: library/docker:1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
@@ -34,7 +34,7 @@ pipeline:
           docker rmi --force ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}
         fi
       - exit "$result"
-  ssh:
+  deploy:
     image: plugins/ssh
     host:
       - ${SWARM_HOST}
@@ -47,7 +47,7 @@ pipeline:
       - docker rmi `docker images -q --filter "before=${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}" ${REGISTRY_HOST}/${REGISTRY_REPO}` 2> /dev/null || true
     when:
       branch: master
-  slack:
+  notify:
     image: plugins/slack
     webhook_url: ${SLACK_WEBHOOK_URL}
     channel: drone
