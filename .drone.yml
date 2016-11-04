@@ -35,7 +35,6 @@ pipeline:
           docker rmi --force ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}
         fi
       - exit "$result"
-
   ssh:
     image: plugins/ssh
     host:
@@ -49,7 +48,6 @@ pipeline:
       - docker rmi `docker images -q --filter "before=${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}" ${REGISTRY_HOST}/${REGISTRY_REPO}` 2> /dev/null || true
     when:
       branch: master
-
   slack:
     image: plugins/slack
     webhook_url: ${SLACK_WEBHOOK_URL}
