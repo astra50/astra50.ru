@@ -3,6 +3,7 @@ pipeline:
     depth: 1
   build:
       image: docker
+      pull: true
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
       commands:
