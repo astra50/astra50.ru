@@ -43,7 +43,7 @@ pipeline:
     port: 22
     script:
       - docker pull registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} > /dev/null
-      - docker service update --image registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} ${SWARM_SERVICE}
+      - docker service update --image registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} astra50_app
       - docker rmi `docker images -q --filter "before=registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}" registry.gitlab.com/astra50/astra50.ru` 2> /dev/null || true
     when:
       branch: master
