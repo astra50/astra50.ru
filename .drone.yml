@@ -37,7 +37,7 @@ pipeline:
         - exit "$result"
 
   deploy:
-      ssh:
+      image: ssh
         host:
           - ${SWARM_HOST}
           - ${SWARM_SANDBOX_HOST}
