@@ -4,8 +4,7 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - echo Hello World!
-      - docker build -t ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} .
+      - docker build -t ${IMAGE}:${DRONE_BUILD_NUMBER} .
       - docker network create DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >-
         docker run -d --name DRONE_ASTRA50_${DRONE_BUILD_NUMBER} --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
@@ -21,16 +20,17 @@ pipeline:
         -e DATABASE_HOST=DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
         -e DATABASE_USER="user"
         -e DATABASE_PASSWORD="password"
-        ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}); local result=$?;
+        ${IMAGE}:${DRONE_BUILD_NUMBER}); local result=$?;
       - docker rm -f DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - docker network rm DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >+
         if [ "$result" == 0 ]; then
-          docker login --username ${REGISTRY_USERNAME} --password ${REGISTRY_PASSWORD} ${REGISTRY_HOST} > /dev/null
-          docker push ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} > /dev/null
-          docker rmi --force `docker images -q --filter "before=${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}" ${REGISTRY_HOST}/${REGISTRY_REPO}` || true
+          mkdir ~/.docker
+          echo ${DOCKER_CONFIG_JSON} > ~/.docker/config.json
+          docker push ${IMAGE}:${DRONE_BUILD_NUMBER} > /dev/null
+          docker rmi --force `docker images -q --filter "before=${IMAGE}:${DRONE_BUILD_NUMBER}" ${IMAGE}` || true
         else
-          docker rmi --force ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}
+          docker rmi --force ${IMAGE}:${DRONE_BUILD_NUMBER}
         fi
       - exit "$result"
   deploy:
@@ -41,9 +41,9 @@ pipeline:
     user: ${SWARM_USER}
     port: 22
     script:
-      - docker pull ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} > /dev/null
-      - docker service update --image ${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER} ${SWARM_SERVICE}
-      - docker rmi `docker images -q --filter "before=${REGISTRY_HOST}/${REGISTRY_REPO}:${DRONE_BUILD_NUMBER}" ${REGISTRY_HOST}/${REGISTRY_REPO}` 2> /dev/null || true
+      - docker pull ${IMAGE}:${DRONE_BUILD_NUMBER} > /dev/null
+      - docker service update --image ${IMAGE}:${DRONE_BUILD_NUMBER} ${SWARM_SERVICE}
+      - docker rmi `docker images -q --filter "before=${IMAGE}:${DRONE_BUILD_NUMBER}" ${IMAGE}` 2> /dev/null || true
     when:
       branch: master
   notify:
