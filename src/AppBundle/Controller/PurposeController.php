@@ -63,7 +63,7 @@ final class PurposeController extends BaseController
         $model = new PurposeModel();
         $form = $this->createForm(PurposeType::class, $model, [
             'action' => $this->generateUrl('purpose_new'),
-            'areas' => $this->areaRepository->findAllForChoices('number'),
+            'areas' => $this->areaRepository->findPayable(),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {

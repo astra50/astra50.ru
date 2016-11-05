@@ -14,6 +14,16 @@ use Ramsey\Uuid\UuidInterface;
 final class AreaRepository extends EntityRepository
 {
     /**
+     * @return array
+     */
+    public function findPayable()
+    {
+        return $this->createQueryBuilder('a')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getClass(): string

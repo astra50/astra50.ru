@@ -5,8 +5,6 @@ namespace AppBundle\Form\Type;
 use AppBundle\Entity\Purpose;
 use AppBundle\Form\Model\PurposeModel;
 use AppBundle\Form\Transformer\MoneyTransformer;
-use AppBundle\Form\Transformer\UuidTransformer;
-use AppBundle\Utils\FormUtils;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,11 +23,13 @@ class PurposeType extends AbstractType
         $builder
             ->add('name', Type\TextType::class, [
                 'label' => 'Наименование',
+                'translation_domain' => false,
             ])
             ->add($builder->create('amount', Type\MoneyType::class, [
                 'label' => 'Сумма',
                 'currency' => 'RUB',
                 'divisor' => 100,
+                'translation_domain' => false,
             ])
                 ->addModelTransformer(new MoneyTransformer())
             )
@@ -42,6 +42,7 @@ class PurposeType extends AbstractType
                 'data' => Purpose::SCHEDULE_ONCE,
                 'multiple' => false,
                 'expanded' => true,
+                'translation_domain' => false,
             ])
             ->add('calculation', Type\ChoiceType::class, [
                 'label' => 'Начисление',
@@ -53,13 +54,17 @@ class PurposeType extends AbstractType
                 'data' => Purpose::CALCULATION_EACH,
                 'multiple' => false,
                 'expanded' => true,
+                'translation_domain' => false,
             ])
-            ->add($builder->create('areas', Type\ChoiceType::class, [
+            ->add('areas', Type\ChoiceType::class, [
                 'label' => 'Участки',
-                'choices' => FormUtils::arrayToChoices($options['areas'], 'number'),
+                'choices' => $options['areas'],
+                'choice_label' => 'number',
+                'group_by' => 'street.name',
                 'multiple' => true,
                 'expanded' => true,
-            ])->addModelTransformer(new UuidTransformer()));
+                'translation_domain' => false,
+            ]);
     }
 
     /**

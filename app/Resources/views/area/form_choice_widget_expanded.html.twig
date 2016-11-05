@@ -1,0 +1,29 @@
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {% for name, choices in form.vars.choices %}
+            <div class="col-md-2">
+                {% if choices is iterable %}
+
+                    <label class="choice_category">
+                        <strong>
+                            {{ choice_translation_domain is same as(false) ? name : name|trans({}, choice_translation_domain) }}
+                        </strong>
+                    </label>
+
+                    {#<div>#}
+                    {% for key,choice in choices %}
+                        {{ form_widget(form[key]) }}
+                        {{ form_label(form[key]) }}
+                    {% endfor %}
+                    {#</div>#}
+
+                {% else %}
+
+                    {{- form_widget(form[name]) -}}
+                    {{- form_label(form[name], null, {translation_domain: choice_translation_domain}) -}}
+
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{%- endblock choice_widget_expanded -%}
