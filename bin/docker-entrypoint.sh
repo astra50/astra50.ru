@@ -15,7 +15,7 @@ case $SYMFONY_DEBUG in
    1|0)
 	;;
    *)
-	>&2 echo env "SYMFONY_DEBUG" must in \"true, false\"
+	>&2 echo env "SYMFONY_DEBUG" must in \"1, 0\"
 	exit 1
 	;;
 esac
