@@ -2,33 +2,49 @@
 
 set -e
 
-if [ "$SYMFONY_ENV" == "dev" ]; then
-    XDEBUG=${XDEBUG:=true}
+case $SYMFONY_ENV in
+   prod|dev|test|sandbox)
+	;;
+   *)
+	>&2 echo env "SYMFONY_ENV" must be in \"prod, dev, test, sandbox\"
+	exit 1
+	;;
+esac
+
+case $SYMFONY_DEBUG in
+   true|false)
+	;;
+   *)
+	>&2 echo env "SYMFONY_DEBUG" must in \"true, false\"
+	exit 1
+	;;
+esac
+
+if [ "$SYMFONY_ENV" == "dev" ] || { [ "$SYMFONY_ENV" == "sandbox" ] && [ "$SYMFONY_DEBUG" = true ] ;}; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-source"}
+    XDEBUG=${XDEBUG:=true}
 
-    COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80'}
-fi
+    COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80 --router="vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_prod.php"'}
 
-if [ "$SYMFONY_ENV" == "test" ]; then
-    export SYMFONY_DEBUG=0
-
-    OPCACHE=${OPCACHE:=true}
-    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
-    REQUIREMENTS=${REQUIREMENTS:=true}
-    MIGRATION=${MIGRATION:=true}
-    FIXTURES=${FIXTURES:=true}
-
-    COMMAND=${COMMAND:="php-cs-fixer fix --dry-run --level symfony ./src/ && bin/console doctrine:schema:validate && phpunit"}
-fi
-
-if [ "$SYMFONY_ENV" == "prod" ]; then
-    OPCACHE=${OPCACHE:=true}
+elif [ "$SYMFONY_ENV" == "prod" ] || [ "$SYMFONY_ENV" == "sandbox" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
-    MIGRATION=${MIGRATION:=true}
+
+    rm -rf ${APP_DIR}/web/config.php
+    cp ${APP_DIR}/app/config/apache.conf ${APACHE_CONFDIR}/sites-enabled/000-default.conf
 
     a2enmod rewrite
     COMMAND=${COMMAND:=apache2-foreground}
+
+elif [ "$SYMFONY_ENV" == "test" ]; then
+	COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
+	REQUIREMENTS=${REQUIREMENTS:=true}
+	FIXTURES=${FIXTURES:=true}
+
+	COMMAND=${COMMAND:="php-cs-fixer fix --dry-run --level symfony ./src/ && bin/console doctrine:schema:validate && phpunit"}
 fi
+
+OPCACHE=${OPCACHE:=true}
+MIGRATION=${MIGRATION:=true}
 
 {
     echo 'date.timezone = UTC';
@@ -52,7 +68,7 @@ if [ "$OPCACHE" == "true" ]; then
         echo 'opcache.load_comments = 1';
     } > ${PHP_INI_DIR}/conf.d/opcache.ini
 
-    docker-php-ext-enable opcache # wait for fix "nm not found"
+    docker-php-ext-enable opcache
     echo -e '\n > opcache enabled\n'
 fi
 
@@ -81,14 +97,10 @@ if [ "$XDEBUG" == "true" ]; then
         echo 'xdebug.file_link_format="phpstorm://open?file=%f&line=%l"';
     } > ${PHP_INI_DIR}/conf.d/xdebug.ini
 
-    docker-php-ext-enable xdebug # wait for fix "nm not found"
+    docker-php-ext-enable xdebug
     echo -e '\n> xdebug enabled\n'
 fi
 
-if [ "$SYMFONY_ENV" == "prod" ]; then
-    chown -R www-data:www-data ${APP_DIR}/var
-    rm -rf ${APP_DIR}/bin/sf ${APP_DIR}/web/config.php ${APP_DIR}/web/app_dev.php
-    cp ${APP_DIR}/app/config/apache.conf ${APACHE_CONFDIR}/sites-enabled/000-default.conf
-fi
+chown -R www-data:www-data ${APP_DIR}/var
 
 /bin/sh -c "${COMMAND}"

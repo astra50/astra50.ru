@@ -28,7 +28,7 @@ class AppKernel extends Kernel
             $bundles[] = new SandboxBundle\SandboxBundle();
         }
 
-        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+        if (in_array($this->getEnvironment(), ['dev', 'test'], true) || ('sandbox' === $this->getEnvironment() && $this->isDebug())) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
@@ -57,6 +57,10 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+        if ('sandbox' === $env = $this->getEnvironment()) {
+            $env = $this->isDebug() ? 'dev' : 'prod';
+        }
+
+        $loader->load($this->getRootDir().'/config/config_'.$env.'.yml');
     }
 }
