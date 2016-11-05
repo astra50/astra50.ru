@@ -12,7 +12,7 @@ services:
           - ./:/usr/local/app
       environment:
           SYMFONY_ENV: dev
-          SYMFONY_DEBUG: 'true'
+          SYMFONY_DEBUG: 1
 #          COMPOSER_EXEC: 'false'
           OPCACHE: 'false'
           MIGRATION: 'false'
