@@ -59,9 +59,7 @@ final class NewPurposeListener implements EventSubscriberInterface
             $amount = (int) ceil($model->amount / count($model->areas));
         }
 
-        foreach ($model->areas as $id) {
-            $area = $this->areaRepository->get($id);
-
+        foreach ($model->areas as $area) {
             if (!$amount) {
                 if (Purpose::CALCULATION_SIZE === $model->calculation) {
                     $amount = $area->getSize() / 100 * $model->amount;

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form\Model;
 
+use AppBundle\Entity\Area;
 use AppBundle\Entity\Purpose;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,10 +41,10 @@ final class PurposeModel
     public $calculation;
 
     /**
-     * @var array
+     * @var Area[]
      *
      * @Assert\All({
-     *      @Assert\Type("Ramsey\Uuid\UuidInterface")
+     *      @Assert\Type("AppBundle\Entity\Area")
      * })
      */
     public $areas;
