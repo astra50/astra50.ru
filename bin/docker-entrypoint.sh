@@ -12,7 +12,7 @@ case $SYMFONY_ENV in
 esac
 
 case $SYMFONY_DEBUG in
-   true|false)
+   1|0)
 	;;
    *)
 	>&2 echo env "SYMFONY_DEBUG" must in \"true, false\"
