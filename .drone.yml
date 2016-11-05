@@ -25,7 +25,7 @@ pipeline:
       - docker network rm DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >+
         if [ "$result" == 0 ]; then
-          docker login -u"$REGISTRY_LOGIN" -p"$REGISTRY_PASSWORD" registry.gitlab.com
+          docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
           docker push registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} > /dev/null
           docker rmi --force `docker images -q --filter "before=registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}" registry.gitlab.com/astra50/astra50.ru` || true
         else
