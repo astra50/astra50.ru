@@ -14,6 +14,7 @@ RUN set -ex \
     && echo "deb http://httpredir.debian.org/debian/ stretch main" > /etc/apt/sources.list.d/testing.list \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
+        openssh-client \
         zlib1g-dev \
         libicu-dev/testing \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
