@@ -65,8 +65,8 @@ final class PaymentController extends BaseController
     public function newAction(Request $request)
     {
         $model = new PaymentModel();
-        $areas = $this->areaRepository->findAllForChoices('number');
-        $purposes = $this->purposeRepository->findActiveForChoices();
+        $areas = $this->areaRepository->findPayable();
+        $purposes = $this->purposeRepository->findActive();
 
         $form = $this->createForm(PaymentType::class, $model, [
             'action' => $this->generateUrl('payment_new'),
@@ -75,8 +75,8 @@ final class PaymentController extends BaseController
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $purpose = $this->purposeRepository->getReference($model->purpose);
-            $area = $this->areaRepository->getReference($model->area);
+            $area = $model->area;
+            $purpose = $model->purpose;
             $user = $this->getUser();
             $amount = $model->isPositive ? $model->amount : $model->amount * -1;
 
@@ -84,9 +84,7 @@ final class PaymentController extends BaseController
 
             $this->paymentRepository->save($entity);
 
-            $areaNumber = array_search($model->area, $areas, true);
-            $purposeName = array_search($model->purpose, $purposes, true);
-            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purposeName, $areaNumber, $amount / 100));
+            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
 
             return $this->redirectToRoute('payment_list');
         }

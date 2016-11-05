@@ -36,10 +36,9 @@ final class PurposeRepository extends EntityRepository
     /**
      * @return array
      */
-    public function findActiveForChoices()
+    public function findActive()
     {
         return $this->createQueryBuilder('pt')
-            ->select('pt.id', 'pt.name')
             ->where('pt.archivedAt IS NULL')
             ->orderBy('pt.id', 'DESC')
             ->getQuery()->getResult();

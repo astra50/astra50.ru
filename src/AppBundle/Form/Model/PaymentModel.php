@@ -2,8 +2,9 @@
 
 namespace AppBundle\Form\Model;
 
+use AppBundle\Entity\Area;
 use AppBundle\Entity\Payment;
-use Ramsey\Uuid\UuidInterface;
+use AppBundle\Entity\Purpose;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,18 +13,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class PaymentModel
 {
     /**
-     * @var UuidInterface
+     * @var Purpose
      *
      * @Assert\NotBlank()
-     * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * @Assert\Type("AppBundle\Entity\Purpose")
      */
     public $purpose;
 
     /**
-     * @var UuidInterface
+     * @var Area
      *
      * @Assert\NotBlank()
-     * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * @Assert\Type("AppBundle\Entity\Area")
      */
     public $area;
 
