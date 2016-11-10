@@ -101,6 +101,8 @@ if [ "$XDEBUG" == "true" ]; then
     echo -e '\n> xdebug enabled\n'
 fi
 
-chown -R www-data:www-data ${APP_DIR}/var
+if [ "$SYMFONY_ENV" != "dev" ]; then
+    chown -R www-data:www-data ${APP_DIR}/var
+fi
 
 /bin/sh -c "${COMMAND}"
