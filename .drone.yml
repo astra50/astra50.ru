@@ -1,3 +1,10 @@
+services:
+  database:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
+
 pipeline:
   build:
     image: docker
@@ -5,25 +12,15 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - docker build -t registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} .
-      - docker network create DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
+      - docker run --rm docker sh -c "while ! nc -z 127.0.0.1 3306; do sleep 1; done"
       - >-
-        docker run -d --name DRONE_ASTRA50_${DRONE_BUILD_NUMBER} --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
-        -e MYSQL_DATABASE="db"
-        -e MYSQL_USER="user"
-        -e MYSQL_PASSWORD="password"
-        -e MYSQL_RANDOM_ROOT_PASSWORD='true'
-        mariadb
-      - docker run --rm --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER} docker sh -c "while ! nc -z DRONE_ASTRA50_${DRONE_BUILD_NUMBER} 3306; do sleep 1; done"
-      - >-
-        (docker run --rm --network DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
+        (docker run --rm --network "container:$HOSTNAME"
         -e SYMFONY_ENV=test
         -e SYMFONY_DEBUG=0
-        -e DATABASE_HOST=DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
+        -e DATABASE_HOST=127.0.0.1
         -e DATABASE_USER="user"
         -e DATABASE_PASSWORD="password"
         registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}); local result=$?;
-      - docker rm -f DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
-      - docker network rm DRONE_ASTRA50_${DRONE_BUILD_NUMBER}
       - >+
         if [ "$result" == 0 ]; then
           docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
@@ -46,8 +43,3 @@ pipeline:
       - docker rmi `docker images -q --filter "before=registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}" registry.gitlab.com/astra50/astra50.ru` 2> /dev/null || true
     when:
       branch: master
-
-  notify:
-    image: plugins/slack
-    channel: drone
-    username: drone
