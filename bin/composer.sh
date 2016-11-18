@@ -2,4 +2,4 @@
 
 set -e
 
-docker-compose run --rm --entrypoint composer app "$*"
+docker-compose run --rm --entrypoint composer app "$@"
