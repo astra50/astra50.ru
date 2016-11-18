@@ -12,24 +12,27 @@ case $SYMFONY_ENV in
 esac
 
 case $SYMFONY_DEBUG in
-   1|0)
+   0)
+	;;
+   1)
+	touch ${APP_DIR}/web/config.php
 	;;
    *)
-	>&2 echo env "SYMFONY_DEBUG" must in \"1, 0\"
+	>&2 echo env "SYMFONY_DEBUG" must be in \"1, 0\"
 	exit 1
 	;;
 esac
+
+export HOST_MACHINE_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
 
 if [ "$SYMFONY_ENV" == "dev" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-dist --verbose --profile"}
     XDEBUG=${XDEBUG:=true}
 
-    COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80 --router="vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_prod.php"'}
+    COMMAND=${COMMAND:=start-dev.sh}
 
 elif [ "$SYMFONY_ENV" == "prod" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
-
-    rm -rf ${APP_DIR}/web/config.php
 
     COMMAND=${COMMAND:=start-apache2.sh}
 
@@ -86,7 +89,7 @@ if [ "$XDEBUG" == "true" ]; then
     {
         echo 'xdebug.remote_enable=On';
         echo 'xdebug.remote_autostart=On';
-        echo "xdebug.remote_host=$(/sbin/ip route|awk '/default/ { print $3 }')";
+        echo "xdebug.remote_host=$HOST_MACHINE_IP";
         echo 'xdebug.force_display_errors=On';
         echo 'xdebug.file_link_format="phpstorm://open?file=%f&line=%l"';
     } > ${PHP_INI_DIR}/conf.d/xdebug.ini
@@ -95,4 +98,8 @@ if [ "$XDEBUG" == "true" ]; then
     echo -e '\n> xdebug enabled\n'
 fi
 
-/bin/sh -c "${COMMAND}"
+if [ -f $APP_DIR/web/config.php ]; then
+	sed -i "s~'::1',~'::1', '$HOST_MACHINE_IP',~g" "$APP_DIR/web/config.php"
+fi
+
+exec $COMMAND
