@@ -4,7 +4,6 @@ namespace AppBundle\EventDispatcher\Payment;
 
 use AppBundle\Entity\Payment;
 use AppBundle\Entity\Purpose;
-use AppBundle\Entity\Repository\AreaRepository;
 use AppBundle\Entity\Repository\PaymentRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Uuid\Uuid;
@@ -15,21 +14,15 @@ use Uuid\Uuid;
 final class NewPurposeListener implements EventSubscriberInterface
 {
     /**
-     * @var AreaRepository
-     */
-    private $areaRepository;
-
-    /**
      * @var PaymentRepository
      */
     private $paymentRepository;
 
     /**
-     * @param AreaRepository $areaRepository
+     * @param PaymentRepository $paymentRepository
      */
-    public function __construct(AreaRepository $areaRepository, PaymentRepository $paymentRepository)
+    public function __construct(PaymentRepository $paymentRepository)
     {
-        $this->areaRepository = $areaRepository;
         $this->paymentRepository = $paymentRepository;
     }
 
