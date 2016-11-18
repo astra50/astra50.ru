@@ -12,7 +12,7 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - docker build -t registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} .
-      - docker run --rm docker sh -c "while ! nc -z 127.0.0.1 3306; do sleep 1; done"
+      - while ! nc -z 127.0.0.1 3306; do sleep 1; done
       - >-
         (docker run --rm --network "container:$HOSTNAME"
         -e SYMFONY_ENV=test
