@@ -20,6 +20,9 @@ web/bundles/*
 # Symfony parameters
 app/config/parameters.yml
 
+# Symfony config
+web/config.php
+
 # Docker compose
 /docker-compose.yml
 
