@@ -17,9 +17,6 @@ pipeline:
         (docker run --rm --network "container:$HOSTNAME"
         -e SYMFONY_ENV=test
         -e SYMFONY_DEBUG=0
-        -e DATABASE_HOST=127.0.0.1
-        -e DATABASE_USER="user"
-        -e DATABASE_PASSWORD="password"
         registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}); local result=$?;
       - >+
         if [ "$result" == 0 ]; then
