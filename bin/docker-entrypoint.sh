@@ -3,10 +3,10 @@
 set -e
 
 case $SYMFONY_ENV in
-   prod|dev|test|sandbox)
+   prod|dev|test)
 	;;
    *)
-	>&2 echo env "SYMFONY_ENV" must be in \"prod, dev, test, sandbox\"
+	>&2 echo env "SYMFONY_ENV" must be in \"prod, dev, test\"
 	exit 1
 	;;
 esac
@@ -20,27 +20,25 @@ case $SYMFONY_DEBUG in
 	;;
 esac
 
-if [ "$SYMFONY_ENV" == "dev" ] || { [ "$SYMFONY_ENV" == "sandbox" ] && [ "$SYMFONY_DEBUG" = 1 ] ;}; then
-    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader"}
+if [ "$SYMFONY_ENV" == "dev" ]; then
+    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-dist --verbose --profile"}
     XDEBUG=${XDEBUG:=true}
 
     COMMAND=${COMMAND:='bin/console server:run 0.0.0.0:80 --router="vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/config/router_prod.php"'}
 
-elif [ "$SYMFONY_ENV" == "prod" ] || [ "$SYMFONY_ENV" == "sandbox" ]; then
+elif [ "$SYMFONY_ENV" == "prod" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
 
     rm -rf ${APP_DIR}/web/config.php
-    cp ${APP_DIR}/app/config/apache.conf ${APACHE_CONFDIR}/sites-enabled/000-default.conf
 
-    a2enmod rewrite
-    COMMAND=${COMMAND:=apache2-foreground}
+    COMMAND=${COMMAND:=start-apache2.sh}
 
 elif [ "$SYMFONY_ENV" == "test" ]; then
 	COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
 	REQUIREMENTS=${REQUIREMENTS:=true}
 	FIXTURES=${FIXTURES:=true}
 
-	COMMAND=${COMMAND:="php-cs-fixer fix --dry-run --level symfony ./src/ && bin/console doctrine:schema:validate && phpunit"}
+	COMMAND=${COMMAND:=start-test.sh}
 fi
 
 OPCACHE=${OPCACHE:=true}
@@ -76,10 +74,6 @@ if [ "$COMPOSER_EXEC" != "false" ]; then
     ${COMPOSER_EXEC}
 fi
 
-if [ "$REQUIREMENTS" == "true" ]; then
-    bin/symfony_requirements
-fi
-
 if [ "$MIGRATION" == "true" ]; then
     bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration --quiet
 fi
@@ -99,10 +93,6 @@ if [ "$XDEBUG" == "true" ]; then
 
     docker-php-ext-enable xdebug
     echo -e '\n> xdebug enabled\n'
-fi
-
-if [ "$SYMFONY_ENV" != "dev" ]; then
-    chown -R www-data:www-data ${APP_DIR}/var
 fi
 
 /bin/sh -c "${COMMAND}"
