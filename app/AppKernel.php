@@ -24,7 +24,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
         ];
 
-        if ($this->isDebug()) {
+        if (filter_var(getenv('SANDBOX'), FILTER_VALIDATE_BOOLEAN)) {
             $bundles[] = new SandboxBundle\SandboxBundle();
         }
 

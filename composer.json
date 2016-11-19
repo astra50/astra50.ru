@@ -84,7 +84,8 @@
                 "google_oauth_id": "GOOGLE_OAUTH_ID",
                 "google_oauth_secret": "GOOGLE_OAUTH_SECRET",
                 "vkontakte_oauth_id": "VKONTAKTE_OAUTH_ID",
-                "vkontakte_oauth_secret": "VKONTAKTE_OAUTH_SECRET"
+                "vkontakte_oauth_secret": "VKONTAKTE_OAUTH_SECRET",
+                "sandbox": "SANDBOX"
             }
         }
     }
