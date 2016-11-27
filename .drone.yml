@@ -11,7 +11,8 @@ pipeline:
       - source .drone.env
       - >-
         docker build -t "$IMAGE_BUILD"
-        --label branch="$DRONE_COMMIT_BRANCH" | awk '!/\r/'
+        --label branch="$DRONE_COMMIT_BRANCH"
+        . | awk '!/\r/'
 
   test:
     image: docker
