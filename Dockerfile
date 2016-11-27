@@ -26,7 +26,7 @@ RUN set -ex \
 ARG SOURCE_DIR=.
 
 COPY $SOURCE_DIR/composer.* ${APP_DIR}/
-RUN if [ -f composer.lock ]; then \
+RUN if [ -f composer.json ]; then \
     composer install --no-scripts --no-interaction --no-autoloader --no-progress --prefer-dist \
     && rm -rf ${COMPOSER_CACHE_DIR}/* ; fi
 

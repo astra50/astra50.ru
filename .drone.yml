@@ -1,32 +1,62 @@
-services:
-  database:
-    image: mariadb
-    environment:
-      MYSQL_DATABASE: db
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
-
 pipeline:
+  clone:
+    image: plugins/git
+    depth: 1
+
   build:
     image: docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker build -t registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} .
-      - while ! nc -z 127.0.0.1 3306; do sleep 1; done
+      - source .drone.env
       - >-
-        (docker run --rm --network "container:$HOSTNAME"
+        docker build -t "$IMAGE_BUILD"
+        --label branch="$DRONE_COMMIT_BRANCH" | awk '!/\r/'
+
+  test:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - source .drone.env
+      - >-
+        docker run --rm --network "container:$HOSTNAME"
         -e SYMFONY_ENV=test
         -e SYMFONY_DEBUG=0
-        registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}); local result=$?;
+        "$IMAGE_BUILD"
+
+  publish:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - source .drone.env
+      - docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
+      - docker tag "$IMAGE_BUILD" "$IMAGE_PUSH"
+      - docker push "$IMAGE_PUSH" > /dev/null
       - >+
-        if [ "$result" == 0 ]; then
-          docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
-          docker push registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} > /dev/null
-          docker rmi --force `docker images -q --filter "before=registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}" registry.gitlab.com/astra50/astra50.ru` || true
-        else
-          docker rmi --force registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}
+        if [ "master" == "$DRONE_COMMIT_BRANCH" ]; then
+          docker rmi --force "$IMAGE_PUSH"
+
+          docker tag "$IMAGE_BUILD" "$IMAGE_LATEST"
+          docker push "$IMAGE_LATEST" > /dev/null
         fi
-      - exit "$result"
+    when:
+      event: push
+
+  clean:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - source .drone.env
+      - >+
+        if [ "success" == "$DRONE_BUILD_STATUS" ] && [ "push" == "$DRONE_BUILD_EVENT" ]; then
+          (docker rmi `docker images -q --filter before="$IMAGE_BUILD" --filter label="branch=$DRONE_COMMIT_BRANCH" "$IMAGE"`)
+        fi
+      - docker rmi --force "$IMAGE_BUILD"
+    when:
+      status: [ failure, success ]
 
   deploy:
     image: plugins/ssh
@@ -36,7 +66,15 @@ pipeline:
     user: premier
     port: 22
     script:
-      - docker service update --image registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER} astra50_app
-      - docker rmi `docker images -q --filter "before=registry.gitlab.com/astra50/astra50.ru:${DRONE_BUILD_NUMBER}" registry.gitlab.com/astra50/astra50.ru` 2> /dev/null || true
+      - source .drone.env
+      - docker service update --image "$IMAGE_PUSH" astra50_app
+      - docker rmi `docker images -q --filter "before=$IMAGE_PUSH" "$IMAGE"` 2> /dev/null || true
     when:
       branch: master
+
+services:
+  mysql:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_ALLOW_EMPTY_PASSWORD: true
