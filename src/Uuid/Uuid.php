@@ -17,7 +17,7 @@ final class Uuid extends \Ramsey\Uuid\Uuid
     /**
      * @return UuidInterface
      */
-    public static function create() : UuidInterface
+    public static function create(): UuidInterface
     {
         return static::uuid1();
     }

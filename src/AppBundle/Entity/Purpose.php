@@ -10,14 +10,12 @@ use Ramsey\Uuid\UuidInterface;
  */
 class Purpose
 {
-    const
-        SCHEDULE_ONCE = 1,
-        SCHEDULE_MONTHLY = 2;
+    const SCHEDULE_ONCE = 1;
+    const SCHEDULE_MONTHLY = 2;
 
-    const
-        CALCULATION_EACH = 1,
-        CALCULATION_SIZE = 2,
-        CALCULATION_SHARE = 3;
+    const CALCULATION_EACH = 1;
+    const CALCULATION_SIZE = 2;
+    const CALCULATION_SHARE = 3;
 
     /**
      * @var UuidInterface

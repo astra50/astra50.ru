@@ -23,7 +23,7 @@ class LoadFixtures implements FixtureInterface
             define('GLOB_BRACE', 0);
         }
 
-        $objects = Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
+        Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
     }
 
     /**
@@ -74,7 +74,7 @@ class LoadFixtures implements FixtureInterface
     /**
      * @return string
      */
-    public function purpose() : string
+    public function purpose(): string
     {
         $value = current(self::$purposes);
         next(self::$purposes);
@@ -97,7 +97,7 @@ class LoadFixtures implements FixtureInterface
     /**
      * @return string
      */
-    public function street() : string
+    public function street(): string
     {
         $value = current(self::$streets);
         next(self::$streets);
