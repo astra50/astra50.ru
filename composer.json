@@ -42,7 +42,7 @@
         "hautelook/alice-bundle": "^1.3",
         "doctrine/data-fixtures": "^1.2",
         "phpunit/phpunit": "^5.5",
-        "friendsofphp/php-cs-fixer": "^1.12"
+        "friendsofphp/php-cs-fixer": "^2"
     },
     "scripts": {
         "symfony-scripts": [
