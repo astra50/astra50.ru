@@ -2,6 +2,17 @@
 
 set -e
 
+if [ ! -z "$GITHUB_AUTH_TOKEN" ]; then
+    echo "machine github.com login $GITHUB_AUTH_TOKEN" > ~/.netrc
+fi
+
+# Skip entrypoint if running composer, php or sh
+if echo "$1" | grep -q -E '^(composer|php|sh)$'; then
+	exec "$@"
+
+	exit 0
+fi
+
 case $SYMFONY_ENV in
    prod|dev|test)
 	;;
