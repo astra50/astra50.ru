@@ -1,10 +1,8 @@
 #!/bin/sh
 
-set -e
-
 bin/symfony_requirements
 
-php-cs-fixer fix --dry-run --rules=@Symfony ./src
+php-cs-fixer fix --dry-run
 
 bin/console doctrine:schema:validate
 

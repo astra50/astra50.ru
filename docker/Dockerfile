@@ -1,4 +1,4 @@
-FROM php:apache
+FROM php:7.1.1-apache
 
 MAINTAINER Konstantin Grachev <me@grachevko.ru>
 
@@ -11,17 +11,28 @@ ENV PATH=${APP_DIR}/bin:${APP_DIR}/vendor/bin:${PATH}
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
-    && echo "deb http://httpredir.debian.org/debian/ stretch main" > /etc/apt/sources.list.d/testing.list \
+    && echo "deb http://httpredir.debian.org/debian/ stretch main" > /etc/apt/sources.list.d/stretch.list \
+    && { \
+        echo 'Package: *'; \
+        echo 'Pin: release a=stable'; \
+        echo 'Pin-Priority: 900'; \
+    } > /etc/apt/preferences \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
         openssh-client \
         zlib1g-dev \
-        libicu-dev/testing \
+    && apt-get install -y --no-install-recommends -t testing libicu-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && pecl install xdebug \
     && rm -r /var/lib/apt/lists/*
+
+RUN a2enmod rewrite
+
+COPY docker/composer.sh ./composer.sh
+RUN ./composer.sh --install-dir=/usr/local/bin --filename=composer \
+    && composer global require "hirak/prestissimo:^0.3" \
+    && rm -rf composer.sh
 
 ARG SOURCE_DIR=.
 
@@ -32,6 +43,9 @@ RUN if [ -f composer.json ]; then \
 
 COPY $SOURCE_DIR/ ${APP_DIR}/
 COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+
+COPY docker/php/php.ini ${PHP_INI_DIR}/php.ini
+COPY docker/php/conf.d/* ${PHP_INI_DIR}/conf.d/
 
 VOLUME ${APP_DIR}/var/logs
 VOLUME ${APP_DIR}/var/sessions

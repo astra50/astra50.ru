@@ -2,8 +2,10 @@
 
 set -e
 
+export DOCKER_BRIDGE_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
+
 if [ ! -z "$GITHUB_AUTH_TOKEN" ]; then
-    echo "machine github.com login $GITHUB_AUTH_TOKEN" > ~/.netrc
+    composer config -g github-oauth.github.com ${GITHUB_AUTH_TOKEN}
 fi
 
 # Skip entrypoint if running composer, php or sh
@@ -13,7 +15,7 @@ if echo "$1" | grep -q -E '^(composer|php|sh)$'; then
 	exit 0
 fi
 
-case $SYMFONY_ENV in
+case ${SYMFONY_ENV} in
    prod|dev|test)
 	;;
    *)
@@ -22,7 +24,7 @@ case $SYMFONY_ENV in
 	;;
 esac
 
-case $SYMFONY_DEBUG in
+case ${SYMFONY_DEBUG} in
    0)
 	;;
    1)
@@ -34,52 +36,29 @@ case $SYMFONY_DEBUG in
 	;;
 esac
 
-export HOST_MACHINE_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
-
 if [ "$SYMFONY_ENV" == "dev" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-dist --verbose --profile"}
     XDEBUG=${XDEBUG:=true}
 
-    COMMAND=${COMMAND:=start-dev.sh}
+    COMMAND=${COMMAND:=start-develop}
 
 elif [ "$SYMFONY_ENV" == "prod" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
 
-    COMMAND=${COMMAND:=start-apache2.sh}
+    COMMAND=${COMMAND:=start-apache}
 
 elif [ "$SYMFONY_ENV" == "test" ]; then
 	COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
 	REQUIREMENTS=${REQUIREMENTS:=true}
 	FIXTURES=${FIXTURES:=true}
 
-	COMMAND=${COMMAND:=start-test.sh}
+	COMMAND=${COMMAND:=start-testing}
 fi
 
 OPCACHE=${OPCACHE:=true}
 MIGRATION=${MIGRATION:=true}
 
-{
-    echo 'date.timezone = UTC';
-    echo 'short_open_tag = off';
-} > ${PHP_INI_DIR}/php.ini
-
-
 if [ "$OPCACHE" == "true" ]; then
-    {
-        echo 'opcache.enable = 1';
-        echo 'opcache.enable_cli = 1';
-        echo 'opcache.memory_consumption = 64';
-        echo 'opcache.interned_strings_buffer = 4';
-        echo 'opcache.max_accelerated_files = 15000';
-        echo 'opcache.max_wasted_percentage = 10';
-        echo ';opcache.use_cwd = 1';
-        echo 'opcache.validate_timestamps = 0';
-        echo ';opcache.revalidate_freq = 2';
-        echo ';opcache.revalidate_path = 0';
-        echo 'opcache.save_comments = 1';
-        echo 'opcache.load_comments = 1';
-    } > ${PHP_INI_DIR}/conf.d/opcache.ini
-
     docker-php-ext-enable opcache
     echo -e '\n > opcache enabled\n'
 fi
@@ -97,20 +76,12 @@ if [ "$FIXTURES" == "true" ]; then
 fi
 
 if [ "$XDEBUG" == "true" ]; then
-    {
-        echo 'xdebug.remote_enable=On';
-        echo 'xdebug.remote_autostart=On';
-        echo "xdebug.remote_host=$HOST_MACHINE_IP";
-        echo 'xdebug.force_display_errors=On';
-        echo 'xdebug.file_link_format="phpstorm://open?file=%f&line=%l"';
-    } > ${PHP_INI_DIR}/conf.d/xdebug.ini
-
     docker-php-ext-enable xdebug
     echo -e '\n> xdebug enabled\n'
 fi
 
-if [ -f $APP_DIR/web/config.php ]; then
-	sed -i "s~'::1',~'::1', '$HOST_MACHINE_IP',~g" "$APP_DIR/web/config.php"
+if [ -f ${APP_DIR}/web/config.php ]; then
+	sed -i "s~'::1',~'::1', '$DOCKER_BRIDGE_IP',~g" "$APP_DIR/web/config.php"
 fi
 
-exec $COMMAND
+exec ${COMMAND}
