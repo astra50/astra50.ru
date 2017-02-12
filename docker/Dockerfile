@@ -31,8 +31,9 @@ RUN if [ -f composer.json ]; then \
     && rm -rf ${COMPOSER_CACHE_DIR}/* ; fi
 
 COPY $SOURCE_DIR/ ${APP_DIR}/
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
 
 VOLUME ${APP_DIR}/var/logs
 VOLUME ${APP_DIR}/var/sessions
 
-ENTRYPOINT ["bash", "bin/docker-entrypoint.sh"]
+ENTRYPOINT ["bash", "/docker-entrypoint.sh"]
