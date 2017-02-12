@@ -24,7 +24,7 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends -t testing libicu-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
-    && pecl install xdebug \
+    && pecl install xdebug apcu \
     && rm -r /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
