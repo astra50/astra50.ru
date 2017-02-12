@@ -45,3 +45,9 @@ services:
         parent: app.controller.base
         arguments:
             - '@app.repository.street'
+
+    app.controller.gallery:
+        class: AppBundle\Controller\GalleryController
+        parent: app.controller.base
+        arguments:
+            - '@vk.photos'

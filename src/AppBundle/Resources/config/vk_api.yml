@@ -1,0 +1,35 @@
+services:
+    vk.client:
+        class: GuzzleHttp\Client
+        public: false
+        arguments:
+            -
+              base_uri: 'https://api.vk.com'
+              headers:
+                Accept: '*/*'
+                Content-Type: 'application/json'
+              handler: '@vk.client.handler_stack'
+
+    vk.middleware.response_decoder_closure:
+        class: \Closure
+        public: false
+        factory: ['AppBundle\VK\Middleware', 'decodeResponse']
+
+    vk.middleware.response_decoder:
+        class: \Closure
+        public: false
+        factory: ['GuzzleHttp\Middleware', 'mapResponse']
+        arguments:
+            - '@vk.middleware.response_decoder_closure'
+
+    vk.client.handler_stack:
+        class: GuzzleHttp\HandlerStack
+        public: false
+        factory: ['GuzzleHttp\HandlerStack', 'create']
+        calls:
+            - ['unshift', ['@vk.middleware.response_decoder']]
+
+    vk.photos:
+        class: AppBundle\VK\Sections\Photos
+        arguments:
+            - '@vk.client'

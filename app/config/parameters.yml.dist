@@ -24,3 +24,6 @@ parameters:
     vkontakte_oauth_id: ThisTokenIsNotSoSecretChangeIt
     vkontakte_oauth_secret: ThisTokenIsNotSoSecretChangeIt
     sandbox: false
+
+    vk_gallery_owner: -140112445
+    vk_gallery_album: 241265529
