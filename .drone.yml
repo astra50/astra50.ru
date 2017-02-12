@@ -36,38 +36,24 @@ pipeline:
         -e SYMFONY_DEBUG=0
         "$IMAGE_BUILD"
 
-#  publish:
-#    image: docker
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    commands:
-#      - source .drone.env
-#      - docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
-#      - docker tag "$IMAGE_BUILD" "$IMAGE_PUSH"
-#      - docker push "$IMAGE_PUSH" > /dev/null
-#      - >+
-#        if [ "master" == "$DRONE_COMMIT_BRANCH" ]; then
-#          docker rmi --force "$IMAGE_PUSH"
-#
-#          docker tag "$IMAGE_BUILD" "$IMAGE_LATEST"
-#          docker push "$IMAGE_LATEST" > /dev/null
-#        fi
-#    when:
-#      event: push
+  publish:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - source .drone.env
+      - docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
+      - docker tag "$IMAGE_BUILD" "$IMAGE_PUSH"
+      - docker push "$IMAGE_PUSH" > /dev/null
+      - >+
+        if [ "master" == "$DRONE_COMMIT_BRANCH" ]; then
+          docker rmi --force "$IMAGE_PUSH"
 
-#  clean:
-#    image: docker
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    commands:
-#      - source .drone.env
-#      - >+
-#        if [ "success" == "$DRONE_BUILD_STATUS" ] && [ "push" == "$DRONE_BUILD_EVENT" ]; then
-#          (docker rmi `docker images -q --filter before="$IMAGE_BUILD" --filter label="branch=$DRONE_COMMIT_BRANCH" "$IMAGE"`)
-#        fi
-#      - docker rmi --force "$IMAGE_BUILD"
-#    when:
-#      status: [ failure, success ]
+          docker tag "$IMAGE_BUILD" "$IMAGE_LATEST"
+          docker push "$IMAGE_LATEST" > /dev/null
+        fi
+    when:
+      event: push
 
   clean:
     image: docker
@@ -75,28 +61,21 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - source .drone.env
+      - >+
+        if [ "success" == "$DRONE_BUILD_STATUS" ] && [ "push" == "$DRONE_BUILD_EVENT" ]; then
+          (docker rmi `docker images -q --filter before="$IMAGE_BUILD" --filter label="branch=$DRONE_COMMIT_BRANCH" "$IMAGE"`)
+        fi
       - docker rmi --force "$IMAGE_BUILD"
     when:
-      status: failure
-
-#  deploy:
-#    image: plugins/ssh
-#    host:
-#      - s2.automagistre.ru
-#    user: premier
-#    port: 22
-#    script:
-#      - source .drone.env
-#      - docker service update --image "$IMAGE_PUSH" astra50_app
-#      - docker rmi `docker images -q --filter "before=$IMAGE_PUSH" "$IMAGE"` 2> /dev/null || true
-#    when:
-#      branch: master
+      status: [ failure, success ]
 
   deploy:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
+    image: plugins/ssh
+    host:
+      - s2.automagistre.ru
+    user: premier
+    port: 22
+    script:
       - source .drone.env
       - docker service update --image "$IMAGE_PUSH" astra50_app
       - docker rmi `docker images -q --filter "before=$IMAGE_PUSH" "$IMAGE"` 2> /dev/null || true
