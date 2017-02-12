@@ -74,6 +74,8 @@ pipeline:
 
   deploy:
     image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - source .drone.env
       - source .drone.ssh
