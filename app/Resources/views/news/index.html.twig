@@ -6,20 +6,20 @@
         <hr>
     {% endif %}
 
-    {% if 0 < pagerfanta.count %}
-        {% for news in pagerfanta.currentPageResults %}
+    {% if 0 < news.count %}
+        {% for item in news %}
             <h2>
-                <a href="{{ path('news_show', {'slug': news.slug}) }}">{{ news.title }}</a>
+                <a href="{{ path('news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
             </h2>
 
             <p class="lead">
-                автор {{ news.author.realname }}
+                автор {{ item.author.realname }}
             </p>
 
-            {% if news.published %}
+            {% if item.published %}
                 <p>
                     <span class="glyphicon glyphicon-time"></span>
-                    Опубликовано: {{ news.createdAt|localizeddate }}
+                    Опубликовано: {{ item.createdAt|localizeddate }}
                 </p>
             {% else %}
                 <h3>
@@ -29,12 +29,16 @@
 
             <hr>
 
-            <p>{{ news.shortContent ?? news.mainContent }}</p>
+            <p>{{ item.shortContent ?? item.mainContent }}</p>
 
             <hr>
         {% endfor %}
 
-        {% include ':blocks:pagerfanta.html.twig' %}
+        {% if news.haveToPaginate %}
+            <div class="text-center">
+                {{ pagerfanta(news, 'twitter_bootstrap3_translated', { routeName: 'news_index_paginated' }) }}
+            </div>
+        {% endif %}
     {% else %}
         <div class="jumbotron">
             <h1>Новостей пока нет</h1>

@@ -13,6 +13,8 @@ use Ramsey\Uuid\UuidInterface;
  */
 class News
 {
+    const NUM_ITEMS = 3;
+
     /**
      * @var UuidInterface
      *

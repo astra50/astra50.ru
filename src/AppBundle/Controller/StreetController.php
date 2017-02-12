@@ -2,10 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Repository\StreetRepository;
 use AppBundle\Entity\Street;
 use AppBundle\Form\Model\StreetModel;
 use AppBundle\Form\Type\StreetType;
-use AppBundle\Entity\Repository\StreetRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Uuid\Uuid;
@@ -29,15 +29,15 @@ class StreetController extends BaseController
     }
 
     /**
-     * @Route("/", name="street_list")
+     * @Route("/", name="street_index")
      */
-    public function listAction()
+    public function indexAction()
     {
         $streets = $this->streetRepository->findAll();
 
-        return $this->render(':street:list.html.twig', array(
+        return $this->render(':street:index.html.twig', [
             'streets' => $streets,
-        ));
+        ]);
     }
 
     /**
@@ -52,11 +52,11 @@ class StreetController extends BaseController
             $street = new Street(Uuid::create(), $streetModel->name);
             $this->streetRepository->save($street);
 
-            return $this->redirectToRoute('street_list');
+            return $this->redirectToRoute('street_index');
         }
 
-        return $this->render(':street:edit.html.twig', array(
+        return $this->render(':street:edit.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 }

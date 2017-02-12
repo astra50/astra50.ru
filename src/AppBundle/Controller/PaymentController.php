@@ -34,28 +34,24 @@ final class PaymentController extends BaseController
      */
     private $areaRepository;
 
-    /**
-     * @param PaymentRepository $paymentRepository
-     * @param PurposeRepository $purposeRepository
-     * @param AreaRepository    $areaRepository
-     */
-    public function __construct(PaymentRepository $paymentRepository, PurposeRepository $purposeRepository, AreaRepository $areaRepository)
-    {
+    public function __construct(
+        PaymentRepository $paymentRepository,
+        PurposeRepository $purposeRepository,
+        AreaRepository $areaRepository
+    ) {
         $this->paymentRepository = $paymentRepository;
         $this->purposeRepository = $purposeRepository;
         $this->areaRepository = $areaRepository;
     }
 
     /**
-     * @Route("/", name="payment_list")
+     * @Route("/", name="payment_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="payment_index_paginated")
      */
-    public function listAction(Request $request)
+    public function indexAction($page)
     {
-        $pageSize = 50;
-        $pageIndex = $request->query->get('page', 1);
-
-        return $this->render(':payment:list.html.twig', [
-            'pagerfanta' => $this->paymentRepository->paginateLatest($pageSize, $pageIndex),
+        return $this->render(':payment:index.html.twig', [
+            'payments' => $this->paymentRepository->findLatest($page),
         ]);
     }
 
@@ -86,7 +82,7 @@ final class PaymentController extends BaseController
 
             $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
 
-            return $this->redirectToRoute('payment_list');
+            return $this->redirectToRoute('payment_index');
         }
 
         return $this->render(':payment:edit.html.twig', [

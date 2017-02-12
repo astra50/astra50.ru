@@ -1,9 +1,9 @@
 <?php
 
-use Uuid\Uuid;
-use Uuid\UuidBuilder;
 use Ramsey\Uuid\Codec\OrderedTimeCodec;
 use Ramsey\Uuid\UuidFactory;
+use Uuid\Uuid;
+use Uuid\UuidBuilder;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

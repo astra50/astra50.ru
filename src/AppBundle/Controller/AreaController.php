@@ -51,24 +51,21 @@ final class AreaController extends BaseController
     }
 
     /**
-     * @Route(name="area_list")
+     * @Route(name="area_index")
      */
-    public function listAction()
+    public function indexAction()
     {
-        return $this->render(':area:list.html.twig', [
+        return $this->render(':area:index.html.twig', [
             'areas' => $this->areaRepository->findAllWithOwners(),
         ]);
     }
 
     /**
-     * @Route("/{number}", name="area_show")
+     * @Route("/{number}", name="area_show", defaults={"page": 1}, requirements={"page": "\d"})
      */
-    public function showAction(Request $request, Area $area)
+    public function showAction(Area $area, $page)
     {
-        $pageSize = 10;
-        $pageIndex = $request->query->get('page', 1);
-
-        $payments = $this->paymentRepository->paginatePurposesByArea($area, $pageSize, $pageIndex);
+        $payments = $this->paymentRepository->paginatePurposesByArea($area, $page);
         $balance = $this->paymentRepository->getBalanceFromActivePurposesByArea($area);
 
         return $this->render(':area:show.html.twig', [
@@ -104,7 +101,7 @@ final class AreaController extends BaseController
                 $this->userRepository->save($user);
             }
 
-            return $this->redirectToRoute('area_list');
+            return $this->redirectToRoute('area_index');
         }
 
         return $this->render(':area:edit.html.twig', [

@@ -10,6 +10,8 @@ use Ramsey\Uuid\UuidInterface;
  */
 class Payment
 {
+    const NUM_ITEMS = 50;
+
     /**
      * @var UuidInterface
      *

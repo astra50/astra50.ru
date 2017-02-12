@@ -44,6 +44,22 @@ abstract class EntityRepository
 
     /**
      * @param UuidInterface $id
+     *
+     * @throws EntityNotFoundException
+     *
+     * @return mixed
+     */
+    public function get(UuidInterface $id)
+    {
+        if (null === $entity = $this->find($id)) {
+            throw new EntityNotFoundException();
+        }
+
+        return $entity;
+    }
+
+    /**
+     * @param UuidInterface $id
      */
     public function find(UuidInterface $id)
     {
@@ -54,22 +70,6 @@ abstract class EntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
-    }
-
-    /**
-     * @param UuidInterface $id
-     *
-     * @return mixed
-     *
-     * @throws EntityNotFoundException
-     */
-    public function get(UuidInterface $id)
-    {
-        if (null === $entity = $this->find($id)) {
-            throw new EntityNotFoundException();
-        }
-
-        return $entity;
     }
 
     /**
@@ -103,16 +103,15 @@ abstract class EntityRepository
 
     /**
      * @param QueryBuilder $qb
-     * @param int          $pageSize
-     * @param int          $pageIndex
      *
      * @return Pagerfanta
+     *
+     * @internal param int $pageSize
+     * @internal param int $pageIndex
      */
-    protected function paginate(QueryBuilder $qb, int $pageSize, int $pageIndex): Pagerfanta
+    protected function paginate(QueryBuilder $qb, $fetchJoinCollection = true, $useOutputWalkers = null): Pagerfanta
     {
-        return (new Pagerfanta(new DoctrineORMAdapter($qb)))
-            ->setMaxPerPage($pageSize)
-            ->setCurrentPage($pageIndex);
+        return new Pagerfanta(new DoctrineORMAdapter($qb, $fetchJoinCollection, $useOutputWalkers));
     }
 
     /**
@@ -131,5 +130,20 @@ abstract class EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $page
+     *
+     * @return Pagerfanta
+     */
+    public function findLatest(int $page): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->orderBy('e.id', 'DESC');
+
+        return $this->paginate($qb)
+            ->setMaxPerPage(constant($this->getClass().'::NUM_ITEMS'))
+            ->setCurrentPage($page);
     }
 }

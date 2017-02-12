@@ -28,3 +28,6 @@ web/config.php
 
 # Drone secret valiables
 /.drone.sec.yml
+
+# php-cs-fixer
+.php_cs.cache

@@ -3,13 +3,13 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\News;
-use AppBundle\Form\Type\NewsType;
-use AppBundle\Form\Model\NewsModel;
 use AppBundle\Entity\Repository\NewsRepository;
-use Uuid\Uuid;
+use AppBundle\Form\Model\NewsModel;
+use AppBundle\Form\Type\NewsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Uuid\Uuid;
 
 /**
  * @Route(service="app.controller.news")
@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class NewsController extends BaseController
 {
-    const NEWS_PER_PAGE = 3;
-
     /**
      * @var NewsRepository
      */
@@ -34,17 +32,19 @@ class NewsController extends BaseController
     }
 
     /**
-     * @Route("/", name="news_list")
+     * @Route("/", name="news_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="news_index_paginated")
      */
-    public function listAction(Request $request)
+    public function indexAction($page)
     {
-        $pageSize = self::NEWS_PER_PAGE;
-        $pageIndex = $request->query->get('page', 1);
+        $news = $this->newsRepository->findLatest(
+            $page,
+            !$this->isGranted(\AppRoles::NEWS_WRITER),
+            !$this->isGranted(\AppRoles::COMMUNITY)
+        );
 
-        $news = $this->newsRepository->paginateLatest($pageSize, $pageIndex, !$this->isGranted(\AppRoles::NEWS_WRITER), !$this->isGranted(\AppRoles::COMMUNITY));
-
-        return $this->render('news/list.html.twig', [
-            'pagerfanta' => $news,
+        return $this->render('news/index.html.twig', [
+            'news' => $news,
         ]);
     }
 

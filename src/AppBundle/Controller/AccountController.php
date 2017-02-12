@@ -2,9 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Type\AccountType;
-use AppBundle\Form\Model\AccountModel;
 use AppBundle\Entity\Repository\UserRepository;
+use AppBundle\Form\Model\AccountModel;
+use AppBundle\Form\Type\AccountType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;

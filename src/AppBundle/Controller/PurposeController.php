@@ -41,15 +41,13 @@ final class PurposeController extends BaseController
     }
 
     /**
-     * @Route(name="purpose_list")
+     * @Route(name="purpose_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="purposes_index_paginated")
      */
-    public function listAction(Request $request)
+    public function indexAction($page)
     {
-        $pageSize = 20;
-        $pageIndex = $request->query->get('page', 1);
-
-        return $this->render(':purpose:list.html.twig', [
-            'pagerfanta' => $this->purposeRepository->paginateLatest($pageSize, $pageIndex),
+        return $this->render(':purpose:index.html.twig', [
+            'purposes' => $this->purposeRepository->findLatest($page),
         ]);
     }
 
@@ -74,7 +72,7 @@ final class PurposeController extends BaseController
 
             $this->success(sprintf('Платежная цель "%s" создана!', $model->name));
 
-            return $this->redirectToRoute('purpose_list');
+            return $this->redirectToRoute('purpose_index');
         }
 
         return $this->render(':purpose:edit.html.twig', [

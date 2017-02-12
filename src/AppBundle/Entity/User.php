@@ -2,10 +2,10 @@
 
 namespace AppBundle\Entity;
 
-use Uuid\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Ramsey\Uuid\UuidInterface;
+use Uuid\Uuid;
 
 /**
  * @method UuidInterface getId()
@@ -82,6 +82,8 @@ class User extends BaseUser
      * @param $provider
      * @param $id
      * @param $token
+     *
+     * @throws \InvalidArgumentException
      */
     public function updateOauth2($provider, $id, $token)
     {

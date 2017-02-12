@@ -10,6 +10,8 @@ use Ramsey\Uuid\UuidInterface;
  */
 class Purpose
 {
+    const NUM_ITEMS = 20;
+
     const SCHEDULE_ONCE = 1;
     const SCHEDULE_MONTHLY = 2;
 

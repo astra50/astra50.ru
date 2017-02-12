@@ -23,27 +23,12 @@ final class PaymentRepository extends EntityRepository
     }
 
     /**
-     * @param int $pageSize
-     * @param int $pageIndex
-     *
-     * @return Pagerfanta
-     */
-    public function paginateLatest(int $pageSize, int $pageIndex)
-    {
-        $qb = $this->createQueryBuilder('pt')
-            ->orderBy('pt.id', 'DESC');
-
-        return $this->paginate($qb, $pageSize, $pageIndex);
-    }
-
-    /**
      * @param Area $area
-     * @param int  $pageSize
-     * @param int  $pageIndex
+     * @param int  $page
      *
      * @return Pagerfanta
      */
-    public function paginatePurposesByArea(Area $area, int $pageSize, int $pageIndex)
+    public function paginatePurposesByArea(Area $area, int $page): Pagerfanta
     {
         $qb = $this->em->createQueryBuilder()
             ->select('purpose')
@@ -56,7 +41,9 @@ final class PaymentRepository extends EntityRepository
             ->groupBy('purpose')
             ->orderBy('purpose.id', 'DESC');
 
-        return $this->paginate($qb, $pageSize, $pageIndex);
+        return $this->paginate($qb)
+            ->setMaxPerPage(Purpose::NUM_ITEMS)
+            ->setCurrentPage($page);
     }
 
     /**

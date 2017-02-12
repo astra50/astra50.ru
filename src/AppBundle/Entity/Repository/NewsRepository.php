@@ -4,13 +4,10 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
 use AppBundle\Entity\News;
-use AppBundle\Entity\User;
+use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Pagerfanta;
-use Ramsey\Uuid\UuidInterface;
 
 /**
- * @method News create(UuidInterface $id, User $author, string $title, string $content, bool $published, bool $internal)
- *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
 final class NewsRepository extends EntityRepository
@@ -24,14 +21,26 @@ final class NewsRepository extends EntityRepository
     }
 
     /**
-     * @param int  $pageSize
      * @param int  $pageIndex
      * @param bool $publishedOnly
      * @param bool $withInternal
      *
      * @return Pagerfanta
      */
-    public function paginateLatest(int $pageSize, int $pageIndex, $publishedOnly = true, $withInternal = false)
+    public function findLatest(int $pageIndex, $publishedOnly = true, $withInternal = false): Pagerfanta
+    {
+        return $this->paginate($this->queryLatest($publishedOnly, $withInternal))
+            ->setMaxPerPage(News::NUM_ITEMS)
+            ->setCurrentPage($pageIndex);
+    }
+
+    /**
+     * @param $publishedOnly
+     * @param $withInternal
+     *
+     * @return QueryBuilder
+     */
+    private function queryLatest($publishedOnly, $withInternal): QueryBuilder
     {
         $qb = $this->createQueryBuilder('n')
             ->addSelect('u')
@@ -45,8 +54,10 @@ final class NewsRepository extends EntityRepository
         if (!$withInternal) {
             $qb->andWhere('n.internal = :internal')
                 ->setParameter('internal', false);
+
+            return $qb;
         }
 
-        return $this->paginate($qb, $pageSize, $pageIndex);
+        return $qb;
     }
 }
