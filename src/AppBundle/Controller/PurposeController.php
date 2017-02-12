@@ -11,7 +11,6 @@ use AppBundle\Form\Type\PurposeType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Uuid\Uuid;
 
 /**
  * @Route("/payment/type", service="app.controller.purpose")
@@ -65,7 +64,7 @@ final class PurposeController extends BaseController
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $entity = new Purpose(Uuid::create(), $model->name, $model->amount, $model->schedule, $model->calculation);
+            $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
 
             $this->purposeRepository->save($entity);
             $this->dispatch(\AppEvents::PAYMENT_TYPE_NEW, new PurposeEvent($entity, $model, $this->getUser()));

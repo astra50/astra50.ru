@@ -8,7 +8,6 @@ use AppBundle\Form\Model\StreetModel;
 use AppBundle\Form\Type\StreetType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Uuid\Uuid;
 
 /**
  * @Route("/street", service="app.controller.street")
@@ -49,7 +48,7 @@ class StreetController extends BaseController
         $form = $this->createForm(StreetType::class, $streetModel);
 
         if ($form->handleRequest($request)->isValid()) {
-            $street = new Street(Uuid::create(), $streetModel->name);
+            $street = new Street($streetModel->name);
             $this->streetRepository->save($street);
 
             return $this->redirectToRoute('street_index');

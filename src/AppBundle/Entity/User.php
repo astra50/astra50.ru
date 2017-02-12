@@ -5,7 +5,6 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Ramsey\Uuid\UuidInterface;
-use Uuid\Uuid;
 
 /**
  * @method UuidInterface getId()
@@ -24,6 +23,8 @@ class User extends BaseUser
      *
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     protected $id;
 
@@ -61,16 +62,10 @@ class User extends BaseUser
      */
     private $vkontakteAccessToken;
 
-    /**
-     * @param null $id
-     * @param      $username
-     * @param      $email
-     */
-    public function __construct($id = null, $email = null, $realname = null, $password = null, $enabled = false)
+    public function __construct($email = null, $realname = null, $password = null, $enabled = false)
     {
         parent::__construct();
 
-        $this->id = $id ?? Uuid::create();
         $this->username = $email;
         $this->email = $email;
         $this->realname = $realname;

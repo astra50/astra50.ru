@@ -15,6 +15,8 @@ class Street
      *
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -25,13 +27,8 @@ class Street
      */
     private $name;
 
-    /**
-     * @param UuidInterface $id
-     * @param string        $name
-     */
-    public function __construct(UuidInterface $id, string $name)
+    public function __construct(string $name)
     {
-        $this->id = $id;
         $this->name = $name;
     }
 

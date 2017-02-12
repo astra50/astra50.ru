@@ -20,6 +20,8 @@ class News
      *
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     protected $id;
 
@@ -82,19 +84,8 @@ class News
      */
     protected $updatedAt;
 
-    /**
-     * @param UuidInterface $id
-     * @param User          $author
-     * @param string        $title
-     * @param string        $slug
-     * @param string        $content
-     * @param bool          $published
-     * @param bool          $internal
-     * @param \DateTime     $createdAt
-     */
-    public function __construct(UuidInterface $id, User $author, string $title, string $content, bool $internal)
+    public function __construct(User $author, string $title, string $content, bool $internal)
     {
-        $this->id = $id;
         $this->author = $author;
         $this->title = $title;
         $this->content = $content;

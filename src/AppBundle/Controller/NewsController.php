@@ -9,7 +9,6 @@ use AppBundle\Form\Type\NewsType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Uuid\Uuid;
 
 /**
  * @Route(service="app.controller.news")
@@ -61,7 +60,7 @@ class NewsController extends BaseController
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
-            $entity = new News(Uuid::create(), $this->getUser(), $model->title, $model->content, $model->internal);
+            $entity = new News($this->getUser(), $model->title, $model->content, $model->internal);
             if ($model->published) {
                 $entity->publish();
             }

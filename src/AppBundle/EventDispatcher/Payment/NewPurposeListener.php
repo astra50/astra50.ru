@@ -6,7 +6,6 @@ use AppBundle\Entity\Payment;
 use AppBundle\Entity\Purpose;
 use AppBundle\Entity\Repository\PaymentRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Uuid\Uuid;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -67,7 +66,7 @@ final class NewPurposeListener implements EventSubscriberInterface
                 $amount *= -1;
             }
 
-            $this->paymentRepository->save(new Payment(Uuid::create(), $area, $purpose, $user, $amount));
+            $this->paymentRepository->save(new Payment($area, $purpose, $user, $amount));
         }
     }
 }

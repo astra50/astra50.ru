@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Uuid\Uuid;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -64,10 +63,9 @@ class AreaImportCommand extends Command
         $array = (array) json_decode(file_get_contents($input->getArgument('path')), false);
 
         $io->progressStart(count($array));
-        foreach ($array as $item) {
-            list($number, $size) = $item;
+        foreach ($array as [$number, $size]) {
 
-            $this->areaRepository->save(new Area(Uuid::create(), $number, $size));
+            $this->areaRepository->save(new Area($number, $size));
             $io->progressAdvance();
         }
         $io->progressFinish();

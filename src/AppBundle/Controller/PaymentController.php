@@ -10,7 +10,6 @@ use AppBundle\Form\Model\PaymentModel;
 use AppBundle\Form\Type\PaymentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Uuid\Uuid;
 
 /**
  * @Route("/payment", service="app.controller.payment")
@@ -76,7 +75,7 @@ final class PaymentController extends BaseController
             $user = $this->getUser();
             $amount = $model->isPositive ? $model->amount : $model->amount * -1;
 
-            $entity = new Payment(Uuid::create(), $area, $purpose, $user, $amount);
+            $entity = new Payment($area, $purpose, $user, $amount);
 
             $this->paymentRepository->save($entity);
 

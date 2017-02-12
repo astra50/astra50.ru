@@ -5,8 +5,6 @@ namespace AppBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Nelmio\Alice\Fixtures;
-use Ramsey\Uuid\UuidInterface;
-use Uuid\Uuid;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -24,14 +22,6 @@ class LoadFixtures implements FixtureInterface
         }
 
         Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
-    }
-
-    /**
-     * @return UuidInterface
-     */
-    public function uuid4()
-    {
-        return Uuid::create();
     }
 
     /**

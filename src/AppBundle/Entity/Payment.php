@@ -17,6 +17,8 @@ class Payment
      *
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -65,16 +67,8 @@ class Payment
      */
     private $createdAt;
 
-    /**
-     * @param UuidInterface $id
-     * @param Area          $area
-     * @param Purpose       $purpose
-     * @param User          $user
-     * @param int           $amount
-     */
-    public function __construct(UuidInterface $id, Area $area, Purpose $purpose, User $user, $amount)
+    public function __construct(Area $area, Purpose $purpose, User $user, $amount)
     {
-        $this->id = $id;
         $this->area = $area;
         $this->purpose = $purpose;
         $this->user = $user;

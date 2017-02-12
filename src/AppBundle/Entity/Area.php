@@ -16,6 +16,8 @@ class Area
      *
      * @ORM\Id()
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -49,15 +51,8 @@ class Area
      */
     private $users;
 
-    /**
-     * @param UuidInterface $id
-     * @param string        $number
-     * @param int           $size
-     * @param Street        $street
-     */
-    public function __construct(UuidInterface $id, string $number, int $size, Street $street = null)
+    public function __construct(string $number, int $size, Street $street = null)
     {
-        $this->id = $id;
         $this->number = $number;
         $this->size = $size;
         $this->street = $street;

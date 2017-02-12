@@ -24,6 +24,8 @@ class Purpose
      *
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -69,14 +71,8 @@ class Purpose
      */
     private $archivedAt;
 
-    /**
-     * @param UuidInterface $id
-     * @param string        $name
-     * @param int           $amount
-     */
-    public function __construct(UuidInterface $id, string $name, int $amount, int $schedule, int $calculation)
+    public function __construct(string $name, int $amount, int $schedule, int $calculation)
     {
-        $this->id = $id;
         $this->name = $name;
         $this->amount = $amount;
         $this->schedule = $schedule;
