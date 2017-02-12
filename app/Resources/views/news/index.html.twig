@@ -1,5 +1,7 @@
 {% extends '::layout.html.twig' %}
 
+{% set title = 'Новости' %}
+
 {% block content %}
     {% if is_granted('ROLE_NEWS_WRITER') %}
         <a class="btn btn-primary" href="{{ path('news_new') }}">Добавить новость</a>
