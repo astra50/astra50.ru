@@ -82,6 +82,9 @@ fos_user:
     registration:
         form:
             type: AppBundle\Form\Type\RegistrationFormType
+    from_email:
+        address: "info@astra50.ru"
+        sender_name: "info@astra50.ru"
 
 hwi_oauth:
     firewall_names: [main]
