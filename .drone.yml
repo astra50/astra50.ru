@@ -9,6 +9,7 @@ pipeline:
       - |
         cat << ListEOF
         58c2644c928cc4772e45973e2e3d0da8  .drone.env
+        6169a17aa2981b9d3e0761d8ce17df7e  .drone.ssh
         ea74a6e24f1baaa4ea0afd2bcf7f6820  docker/docker-entrypoint.sh
         cdda80cb2966b96965357b9c576bd492  docker/Dockerfile
         ListEOF | md5sum -wc -
@@ -71,14 +72,11 @@ pipeline:
       status: [ failure, success ]
 
   deploy:
-    image: plugins/ssh
-    host:
-      - s2.automagistre.ru
-    user: premier
-    port: 22
-    script:
+    image: docker
+    commands:
       - source .drone.env
-      - docker service update --image "$IMAGE_PUSH" astra50_app
+      - source .drone.ssh
+      - ssh premier@astra50.ru docker service update --image "$IMAGE_PUSH" astra50_app
       - docker rmi `docker images -q --filter "before=$IMAGE_PUSH" "$IMAGE"` 2> /dev/null || true
     when:
       branch: master
