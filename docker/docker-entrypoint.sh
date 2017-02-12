@@ -58,9 +58,14 @@ fi
 OPCACHE=${OPCACHE:=true}
 MIGRATION=${MIGRATION:=true}
 
+ext-enable() {
+    extension=$1
+    docker-php-ext-enable ${extension}
+    echo -e " > $extension enabled"
+}
+
 if [ "$OPCACHE" == "true" ]; then
-    docker-php-ext-enable opcache
-    echo -e '\n > opcache enabled\n'
+    ext-enable opcache
 fi
 
 if [ "$COMPOSER_EXEC" != "false" ]; then
@@ -76,8 +81,7 @@ if [ "$FIXTURES" == "true" ]; then
 fi
 
 if [ "$XDEBUG" == "true" ]; then
-    docker-php-ext-enable xdebug
-    echo -e '\n> xdebug enabled\n'
+    ext-enable xdebug
 fi
 
 if [ -f ${APP_DIR}/web/config.php ]; then
