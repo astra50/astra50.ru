@@ -9,7 +9,7 @@ pipeline:
       - |
         cat << ListEOF
         58c2644c928cc4772e45973e2e3d0da8  .drone.env
-        6169a17aa2981b9d3e0761d8ce17df7e  .drone.ssh
+        ce7587933f230a57d9d003b2d38a5192  .drone.ssh
         ea74a6e24f1baaa4ea0afd2bcf7f6820  docker/docker-entrypoint.sh
         cdda80cb2966b96965357b9c576bd492  docker/Dockerfile
         ListEOF | md5sum -wc -
