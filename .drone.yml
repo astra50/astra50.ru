@@ -32,6 +32,7 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
       - source .drone.env
+      - while ! nc -z 127.0.0.1 3306; do sleep 1; done
       - >-
         docker run --rm --network "container:$HOSTNAME"
         -e SYMFONY_ENV=test
