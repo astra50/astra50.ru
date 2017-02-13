@@ -41,10 +41,10 @@ class Builder
 
         $menu
             ->addChild('News', ['label' => 'Новости', 'route' => 'news_index'])->getParent()
-            ->addChild('Finance', ['label' => 'Финансовая отчетность', 'route' => 'under_construction'])->getParent()
+            ->addChild('Finance', ['label' => 'Финансовая отчетность', 'route' => 'report_index'])->getParent()
             ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'gallery_index'])->getParent()
-            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'under_construction'])->getParent()
-            ->addChild('Payment', ['label' => 'Оплата', 'route' => 'under_construction'])->getParent()
+            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])->getParent()
+            ->addChild('Payment', ['label' => 'Оплата', 'route' => 'payment_index'])->getParent()
             ->addChild('Contacts', ['label' => 'Контакты', 'route' => 'contacts'])->getParent()
             ;
 
