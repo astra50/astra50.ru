@@ -39,6 +39,7 @@ esac
 if [ "$SYMFONY_ENV" == "dev" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-dist --verbose --profile"}
     XDEBUG=${XDEBUG:=true}
+	OPCACHE=${OPCACHE:=false}
 
     COMMAND=${COMMAND:=start-develop}
 
