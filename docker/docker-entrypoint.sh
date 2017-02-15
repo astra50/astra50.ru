@@ -39,24 +39,26 @@ esac
 if [ "$SYMFONY_ENV" == "dev" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --prefer-dist --verbose --profile"}
     XDEBUG=${XDEBUG:=true}
-	OPCACHE=${OPCACHE:=false}
+    OPCACHE=${OPCACHE:=false}
+    APCU=${APCU:=false}
 
-    COMMAND=${COMMAND:=start-develop}
+    COMMAND=${COMMAND:=php-server}
 
 elif [ "$SYMFONY_ENV" == "prod" ]; then
-    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
+    COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-dev --no-interaction --apcu-autoloader --no-progress --prefer-dist"}
 
-    COMMAND=${COMMAND:=start-apache}
+    COMMAND=${COMMAND:=apache}
 
 elif [ "$SYMFONY_ENV" == "test" ]; then
 	COMPOSER_EXEC=${COMPOSER_EXEC:="composer install --no-interaction --optimize-autoloader --no-progress --prefer-dist"}
 	REQUIREMENTS=${REQUIREMENTS:=true}
 	FIXTURES=${FIXTURES:=true}
 
-	COMMAND=${COMMAND:=start-testing}
+	COMMAND=${COMMAND:=test}
 fi
 
 OPCACHE=${OPCACHE:=true}
+APCU=${APCU:=true}
 MIGRATION=${MIGRATION:=true}
 
 ext-enable() {
