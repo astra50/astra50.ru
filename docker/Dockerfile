@@ -1,10 +1,10 @@
 FROM php:7.1.1-apache
 
-MAINTAINER Konstantin Grachev <me@grachevko.ru>
+LABEL MAINTAINER="Konstantin Grachev <me@grachevko.ru>"
 
 ENV APP_DIR=/usr/local/app \
-  COMPOSER_CACHE_DIR=/var/cache/composer \
-  COMPOSER_ALLOW_SUPERUSER=1
+    COMPOSER_CACHE_DIR=/var/cache/composer \
+    COMPOSER_ALLOW_SUPERUSER=1
 
 ENV PATH=${APP_DIR}/bin:${APP_DIR}/vendor/bin:${PATH}
 
