@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 final class UnderConstructionController extends BaseController
 {
     /**
-     * @Route("/suggestions", name="suggestions_index")
      * @Route("/payment", name="payment_index")
      * @Route("/report", name="report_index")
      */

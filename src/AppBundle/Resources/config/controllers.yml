@@ -51,3 +51,9 @@ services:
         parent: app.controller.base
         arguments:
             - '@vk.photos'
+
+    app.controller.suggestion:
+        class: AppBundle\Controller\SuggestionsController
+        parent: app.controller.base
+        arguments:
+            - '@app.repository.suggestion'

@@ -1,0 +1,14 @@
+{% extends '::layout.html.twig' %}
+
+{% set title = 'Оставить предложение' %}
+
+{% block content %}
+    {{ form_start(form) }}
+
+    {{ form_widget(form) }}
+    <div class="text-right">
+        <button class="btn btn-success" type="submit">Отправить</button>
+    </div>
+
+    {{ form_end(form) }}
+{% endblock %}

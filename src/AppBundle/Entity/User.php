@@ -24,7 +24,7 @@ class User extends BaseUser
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\CustomIdGenerator("\AppBundle\Doctrine\UuidGenerator")
      */
     protected $id;
 

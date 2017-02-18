@@ -27,3 +27,7 @@ services:
     app.repository.street:
         class: AppBundle\Entity\Repository\StreetRepository
         parent: app.doctrine.entity_repository
+
+    app.repository.suggestion:
+        class: AppBundle\Entity\Repository\SuggestionRepository
+        parent: app.doctrine.entity_repository

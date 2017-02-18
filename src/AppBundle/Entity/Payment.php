@@ -18,7 +18,7 @@ class Payment
      * @ORM\Id
      * @ORM\Column(type="uuid_binary")
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\CustomIdGenerator("\AppBundle\Doctrine\UuidGenerator")
      */
     private $id;
 

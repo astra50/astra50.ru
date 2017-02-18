@@ -43,7 +43,7 @@ class Builder
             ->addChild('News', ['label' => 'Новости', 'route' => 'news_index'])->getParent()
             ->addChild('Finance', ['label' => 'Финансовая отчетность', 'route' => 'report_index'])->getParent()
             ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'gallery_index'])->getParent()
-            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])->getParent()
+            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_new'])->getParent()
             ->addChild('Payment', ['label' => 'Оплата', 'route' => 'payment_index'])->getParent()
             ->addChild('Contacts', ['label' => 'Контакты', 'route' => 'contacts'])->getParent();
 
@@ -54,7 +54,7 @@ class Builder
     {
         $menu = $this->factory->createItem('root', [
             'childrenAttributes' => [
-                'class' => 'nav navbar-nav navbar-right',
+                'class' => 'dropdown-menu',
             ],
         ]);
 
@@ -62,7 +62,8 @@ class Builder
             ->addChild('Payment', ['label' => 'Платежи', 'route' => 'transaction_index'])->getParent()
             ->addChild('Purpose', ['label' => 'Платежные цели', 'route' => 'purpose_index'])->getParent()
             ->addChild('Area', ['label' => 'Участки', 'route' => 'area_index'])->getParent()
-            ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_index'])->getParent();
+            ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_index'])->getParent()
+            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])->getParent();
 
         return $menu;
     }

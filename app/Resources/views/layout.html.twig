@@ -52,13 +52,16 @@
 
                     {% if is_granted(constant('AppRoles::EMPLOYEE')) %}
 
-                    {{ knp_menu_render('manager') }}
 
-                    {#<ul class="nav navbar-nav navbar-right">#}
-                    {#<li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>#}
-                    {#<li><a href="../navbar-static-top/">Static top</a></li>#}
-                    {#<li><a href="../navbar-fixed-top/">Fixed top</a></li>#}
-                    {#</ul>#}
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">
+                                Управление <span class="caret"></span>
+                            </a>
+                            {{ knp_menu_render('manager', {'attr': {'class': 'dropdown-menu'}}) }}
+                        </li>
+                    </ul>
 
                 </div>
                 {% endif %}
@@ -91,7 +94,7 @@
         {% block content %}{% endblock %}
 
         <footer class="footer">
-            <p>&copy; 2016 СНТ Астра</p>
+            <p>&copy; {{ 'now'|date('Y') }} СНТ Астра</p>
         </footer>
     </div>
 {% endblock %}

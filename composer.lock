@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c975b9b25b9b09d765dea6fc17e484f5",
+    "content-hash": "28836202dccfa7b243a391a7d2e685de",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1105,6 +1105,50 @@
                 "uploadable"
             ],
             "time": "2016-12-21T13:46:54+00:00"
+        },
+        {
+            "name": "grachevko/enum",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/grachevko/Enum.git",
+                "reference": "f25dc41d979cb23f1c181547302a03ba8845053c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/grachevko/Enum/zipball/f25dc41d979cb23f1c181547302a03ba8845053c",
+                "reference": "f25dc41d979cb23f1c181547302a03ba8845053c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.1",
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Grachevko\\Enum\\": "src/"
+                },
+                "exclude-from-classmap": [
+                    "/tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Grachev",
+                    "email": "me@grachevko.ru"
+                }
+            ],
+            "description": "Enum class.",
+            "time": "2017-02-18T17:10:37+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3281,16 +3325,16 @@
         },
         {
             "name": "white-october/pagerfanta-bundle",
-            "version": "v1.0.7",
+            "version": "v1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/whiteoctober/WhiteOctoberPagerfantaBundle.git",
-                "reference": "f7e0fdf94a763a21a7c4c36ec9d9b5bcf4e12521"
+                "reference": "ba78522935b141e7e3dee637dc0095fb44fde65b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/whiteoctober/WhiteOctoberPagerfantaBundle/zipball/f7e0fdf94a763a21a7c4c36ec9d9b5bcf4e12521",
-                "reference": "f7e0fdf94a763a21a7c4c36ec9d9b5bcf4e12521",
+                "url": "https://api.github.com/repos/whiteoctober/WhiteOctoberPagerfantaBundle/zipball/ba78522935b141e7e3dee637dc0095fb44fde65b",
+                "reference": "ba78522935b141e7e3dee637dc0095fb44fde65b",
                 "shasum": ""
             },
             "require": {
@@ -3329,7 +3373,7 @@
                 "page",
                 "paging"
             ],
-            "time": "2016-08-04T15:48:14+00:00"
+            "time": "2017-02-10T16:54:59+00:00"
         },
         {
             "name": "zendframework/zend-code",
