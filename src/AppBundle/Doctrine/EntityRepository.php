@@ -3,13 +3,14 @@
 namespace AppBundle\Doctrine;
 
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @author Konstantin Grachev <ko@grachev.io>
+ * @author Konstantin Grachev <me@grachevko.ru>
  */
 abstract class EntityRepository
 {
@@ -102,25 +103,28 @@ abstract class EntityRepository
     }
 
     /**
-     * @param QueryBuilder $qb
+     * @param Query $query
+     * @param int   $pageSize
+     * @param int   $page
      *
      * @return Pagerfanta
-     *
-     * @internal param int $pageSize
-     * @internal param int $pageIndex
      */
-    protected function paginate(QueryBuilder $qb, $fetchJoinCollection = true, $useOutputWalkers = null): Pagerfanta
+    protected function createPaginator(Query $query, int $pageSize, int $page): Pagerfanta
     {
-        return new Pagerfanta(new DoctrineORMAdapter($qb, $fetchJoinCollection, $useOutputWalkers));
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($query, false));
+        $paginator->setMaxPerPage($pageSize);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
     }
 
     /**
-     * @param       $displayField
-     * @param array $orderBy
+     * @param string $displayField
+     * @param array  $orderBy
      *
      * @return array
      */
-    public function findAllForChoices($displayField, array $orderBy = [])
+    public function findAllForChoices(string $displayField, array $orderBy = []): array
     {
         $qb = $this->createQueryBuilder('e')
             ->select('e.id', 'e.'.$displayField);
@@ -139,11 +143,10 @@ abstract class EntityRepository
      */
     public function findLatest(int $page): Pagerfanta
     {
-        $qb = $this->createQueryBuilder('e')
-            ->orderBy('e.id', 'DESC');
+        $query = $this->createQueryBuilder('e')
+            ->orderBy('e.id', 'DESC')
+            ->getQuery();
 
-        return $this->paginate($qb)
-            ->setMaxPerPage(constant($this->getClass().'::NUM_ITEMS'))
-            ->setCurrentPage($page);
+        return $this->createPaginator($query, constant($this->getClass().'::NUM_ITEMS'), $page);
     }
 }

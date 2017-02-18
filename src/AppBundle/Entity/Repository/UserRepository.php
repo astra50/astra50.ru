@@ -4,9 +4,10 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
 use AppBundle\Entity\User;
+use Ramsey\Uuid\UuidInterface;
 
 /**
- * @method User get($id)
+ * @method User get(UuidInterface $id)
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */

@@ -45,11 +45,12 @@ final class AreaRepository extends EntityRepository
     }
 
     /**
-     * @param $displayField
+     * @param string $displayField
+     * @param array  $orderBy
      *
      * @return array
      */
-    public function findAllForChoices($displayField, array $orderBy = [])
+    public function findAllForChoices(string $displayField, array $orderBy = []): array
     {
         return $this->createQueryBuilder('a')
             ->select('a.id', 'ABS(a.number) as number')

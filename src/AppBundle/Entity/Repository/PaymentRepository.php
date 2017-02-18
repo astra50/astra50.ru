@@ -30,7 +30,7 @@ final class PaymentRepository extends EntityRepository
      */
     public function paginatePurposesByArea(Area $area, int $page): Pagerfanta
     {
-        $qb = $this->em->createQueryBuilder()
+        $query = $this->em->createQueryBuilder()
             ->select('purpose')
             ->addSelect('SUM(CASE WHEN payment.amount < 0 THEN payment.amount ELSE 0 END) AS bill')
             ->addSelect('SUM(CASE WHEN payment.amount > 0 THEN payment.amount ELSE 0 END) AS paid')
@@ -39,11 +39,10 @@ final class PaymentRepository extends EntityRepository
             ->where('payment.area = :area')
             ->setParameter('area', $area)
             ->groupBy('purpose')
-            ->orderBy('purpose.id', 'DESC');
+            ->orderBy('purpose.id', 'DESC')
+            ->getQuery();
 
-        return $this->paginate($qb)
-            ->setMaxPerPage(Purpose::NUM_ITEMS)
-            ->setCurrentPage($page);
+        return $this->createPaginator($query, Purpose::NUM_ITEMS, $page);
     }
 
     /**

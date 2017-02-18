@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Repository;
 
 use AppBundle\Doctrine\EntityRepository;
 use AppBundle\Entity\News;
-use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Pagerfanta;
 
 /**
@@ -21,26 +20,13 @@ final class NewsRepository extends EntityRepository
     }
 
     /**
-     * @param int  $pageIndex
+     * @param int  $page
      * @param bool $publishedOnly
      * @param bool $withInternal
      *
      * @return Pagerfanta
      */
-    public function findLatest(int $pageIndex, $publishedOnly = true, $withInternal = false): Pagerfanta
-    {
-        return $this->paginate($this->queryLatest($publishedOnly, $withInternal))
-            ->setMaxPerPage(News::NUM_ITEMS)
-            ->setCurrentPage($pageIndex);
-    }
-
-    /**
-     * @param $publishedOnly
-     * @param $withInternal
-     *
-     * @return QueryBuilder
-     */
-    private function queryLatest($publishedOnly, $withInternal): QueryBuilder
+    public function findLatest(int $page, $publishedOnly = true, $withInternal = false): Pagerfanta
     {
         $qb = $this->createQueryBuilder('n')
             ->addSelect('u')
@@ -54,10 +40,8 @@ final class NewsRepository extends EntityRepository
         if (!$withInternal) {
             $qb->andWhere('n.internal = :internal')
                 ->setParameter('internal', false);
-
-            return $qb;
         }
 
-        return $qb;
+        return $this->createPaginator($qb->getQuery(), News::NUM_ITEMS, $page);
     }
 }
