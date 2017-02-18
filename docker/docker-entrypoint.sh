@@ -11,9 +11,6 @@ fi
 # Skip entrypoint if first argument exist in $PATH
 if which "$1" > /dev/null; then exec "$@" && exit 0; fi
 
-if [ -z "$APP_ENV" ]; then APP_ENV=prod; fi
-if [ -z "$APP_DEBUG" ]; then APP_DEBUG=0; fi
-
 case "$APP_ENV" in
    prod|dev|test) ;;
    *) >&2 echo env "APP_ENV" must be in \"prod, dev, test\" && exit 1;;
@@ -71,7 +68,7 @@ fi
 if [ "$APCU" == "true" ]; then
     enableExt apcu
 fi
-
+env | fgrep _ENV
 if [ "$COMPOSER_EXEC" != "false" ]; then
     ${COMPOSER_EXEC}
 fi

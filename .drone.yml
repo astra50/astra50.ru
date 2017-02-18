@@ -35,8 +35,8 @@ pipeline:
       - while ! nc -z 127.0.0.1 3306; do sleep 1; done
       - >-
         docker run --rm --network "container:$HOSTNAME"
-        -e SYMFONY_ENV=test
-        -e SYMFONY_DEBUG=0
+        -e APP_ENV=test
+        -e APP_DEBUG=0
         "$IMAGE_BUILD"
 
   publish:
