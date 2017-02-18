@@ -12,11 +12,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/payments", service="app.controller.payment")
+ * @Route("/transaction", service="app.controller.transaction")
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PaymentController extends BaseController
+final class TransactionController extends BaseController
 {
     /**
      * @var PaymentRepository
@@ -44,18 +44,18 @@ final class PaymentController extends BaseController
     }
 
     /**
-     * @Route("/", name="payment_index", defaults={"page": 1})
-     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="payment_index_paginated")
+     * @Route("/", name="transaction_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="transaction_index_paginated")
      */
     public function indexAction($page)
     {
-        return $this->render(':payment:index.html.twig', [
+        return $this->render(':transaction:index.html.twig', [
             'payments' => $this->paymentRepository->findLatest($page),
         ]);
     }
 
     /**
-     * @Route("/new", name="payment_new")
+     * @Route("/new", name="transaction_new")
      */
     public function newAction(Request $request)
     {
@@ -64,7 +64,7 @@ final class PaymentController extends BaseController
         $purposes = $this->purposeRepository->findActive();
 
         $form = $this->createForm(PaymentType::class, $model, [
-            'action' => $this->generateUrl('payment_new'),
+            'action' => $this->generateUrl('transaction_new'),
             'areas' => $areas,
             'purposes' => $purposes,
         ]);
@@ -81,10 +81,10 @@ final class PaymentController extends BaseController
 
             $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
 
-            return $this->redirectToRoute('payment_index');
+            return $this->redirectToRoute('transaction_index');
         }
 
-        return $this->render(':payment:edit.html.twig', [
+        return $this->render(':transaction:edit.html.twig', [
             'form' => $form->createView(),
         ]);
     }

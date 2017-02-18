@@ -2,7 +2,7 @@
 
 {% block content %}
     {% if is_granted(constant('AppRoles::CASHIER')) %}
-        <a href="{{ path('payment_new') }}" class="btn btn-success">
+        <a href="{{ path('transaction_new') }}" class="btn btn-success">
             <i class="fa fa-plus"></i> Создать платёж
         </a>
 
@@ -35,7 +35,7 @@
 
         {% if payments.haveToPaginate %}
             <div class="text-center">
-                {{ pagerfanta(payments, 'twitter_bootstrap3_translated', { routeName: 'payment_index_paginated' }) }}
+                {{ pagerfanta(payments, 'twitter_bootstrap3_translated', { routeName: 'transaction_index_paginated' }) }}
             </div>
         {% endif %}
     {% else %}

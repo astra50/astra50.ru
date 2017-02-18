@@ -26,7 +26,7 @@ services:
             - '@app.repository.user'
 
     app.controller.payment:
-        class: AppBundle\Controller\PaymentController
+        class: AppBundle\Controller\TransactionController
         parent: app.controller.base
         arguments:
             - '@app.repository.payment'
