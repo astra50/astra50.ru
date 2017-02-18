@@ -56,7 +56,7 @@ MIGRATION=${MIGRATION:=true}
 
 enableExt() {
     extension=$1
-    docker-php-enableExt ${extension}
+    docker-php-ext-enable ${extension}
     echo -e " > $extension enabled"
 }
 
