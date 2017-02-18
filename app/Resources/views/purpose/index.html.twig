@@ -10,31 +10,32 @@
     {% endif %}
 
     {% if 0 < purposes.count %}
-        <table class="table ">
-            <thead>
-            <tr>
-                <th>Наименование</th>
-                <th>Сумма (руб.)</th>
-                <th>Расписание</th>
-                <th>Начисление</th>
-                <th>Дата создания</th>
-                <th>Дата архивации</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for purpose in purposes %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                 <tr>
-                    <td>{{ purpose.name }}</td>
-                    <td>{{ (purpose.amount / 100)|number_format }}</td>
-                    <td>{{ purpose.schedule|payment_schedule }}</td>
-                    <td>{{ purpose.calculation|payment_calculation }}</td>
-                    <td>{{ purpose.createdAt|localizeddate }}</td>
-                    <td>{{ purpose.archivedAt ? purpose.archivedAt|localizeddate : '-' }}</td>
+                    <th>Наименование</th>
+                    <th>Сумма (руб.)</th>
+                    <th>Расписание</th>
+                    <th>Начисление</th>
+                    <th>Дата создания</th>
+                    <th>Дата архивации</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                {% for purpose in purposes %}
+                    <tr>
+                        <td>{{ purpose.name }}</td>
+                        <td>{{ (purpose.amount / 100)|number_format }}</td>
+                        <td>{{ purpose.schedule|payment_schedule }}</td>
+                        <td>{{ purpose.calculation|payment_calculation }}</td>
+                        <td>{{ purpose.createdAt|localizeddate }}</td>
+                        <td>{{ purpose.archivedAt ? purpose.archivedAt|localizeddate : '-' }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% if purposes.haveToPaginate %}
             <div class="text-center">
                 {{ pagerfanta(purposes, 'twitter_bootstrap3_translated', { routeName: 'purposes_index_paginated' }) }}
