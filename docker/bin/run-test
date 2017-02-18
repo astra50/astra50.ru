@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 bin/symfony_requirements
 
 php-cs-fixer fix --dry-run

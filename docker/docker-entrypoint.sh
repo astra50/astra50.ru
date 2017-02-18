@@ -8,26 +8,30 @@ if [ ! -z "$GITHUB_AUTH_TOKEN" ]; then
     composer config -g github-oauth.github.com ${GITHUB_AUTH_TOKEN}
 fi
 
-# Skip entrypoint if running composer, php or sh
-case "$1" in
-   composer|php|sh) exec "$@" && exit 0;;
-esac
+# Skip entrypoint if first argument exist in $PATH
+if which "$1" > /dev/null; then exec "$@" && exit 0; fi
 
-case "$SYMFONY_ENV" in
+if [ -z "$APP_ENV" ]; then APP_ENV=prod; fi
+if [ -z "$APP_DEBUG" ]; then APP_DEBUG=0; fi
+
+case "$APP_ENV" in
    prod|dev|test) ;;
-   *) >&2 echo env "SYMFONY_ENV" must be in \"prod, dev, test\" && exit 1;;
+   *) >&2 echo env "APP_ENV" must be in \"prod, dev, test\" && exit 1;;
 esac
 
-case "$SYMFONY_DEBUG" in
+case "$APP_DEBUG" in
    0) ;;
    1) touch ${APP_DIR}/web/config.php;;
-   *) >&2 echo env "SYMFONY_DEBUG" must be in \"1, 0\" && exit 1;;
+   *) >&2 echo env "APP_DEBUG" must be in \"1, 0\" && exit 1;;
 esac
+
+if [ -z "$SYMFONY_ENV" ]; then export SYMFONY_ENV=${APP_ENV}; fi
+if [ -z "$SYMFONY_DEBUG" ]; then export SYMFONY_DEBUG=${APP_DEBUG}; fi
 
 COMMAND="$@"
 COMPOSER_DEFAULT_EXEC=${COMPOSER_DEFAULT_EXEC:="composer install --no-interaction --prefer-dist"}
 
-if [ "$SYMFONY_ENV" == "dev" ]; then
+if [ "$APP_ENV" == "dev" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="$COMPOSER_DEFAULT_EXEC --optimize-autoloader --verbose --profile"}
 
     XDEBUG=${XDEBUG:=true}
@@ -36,15 +40,15 @@ if [ "$SYMFONY_ENV" == "dev" ]; then
 
     COMMAND=${COMMAND:=php-server}
 
-elif [ "$SYMFONY_ENV" == "test" ]; then
+elif [ "$APP_ENV" == "test" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="$COMPOSER_DEFAULT_EXEC --apcu-autoloader --no-progress"}
 
 	REQUIREMENTS=${REQUIREMENTS:=true}
 	FIXTURES=${FIXTURES:=true}
 
-	COMMAND=${COMMAND:=test}
+	COMMAND=${COMMAND:=run-test}
 
-elif [ "$SYMFONY_ENV" == "prod" ]; then
+elif [ "$APP_ENV" == "prod" ]; then
     COMPOSER_EXEC=${COMPOSER_EXEC:="$COMPOSER_DEFAULT_EXEC --no-dev --apcu-autoloader --no-progress"}
 
     COMMAND=${COMMAND:=apache}
