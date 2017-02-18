@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/payment", service="app.controller.payment")
+ * @Route("/payments", service="app.controller.payment")
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */
