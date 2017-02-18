@@ -48,8 +48,9 @@ final class SuggestionsController extends BaseController
         $model = new SuggestionModel();
 
         $form = $this->createForm(SuggestionType::class, $model);
+        $form->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->repository->save(new Suggestion($model));
 
             $this->addFlash('success', 'Ваша предложение отправлено.');
