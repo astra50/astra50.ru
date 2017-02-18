@@ -23,4 +23,5 @@ return PhpCsFixer\Config::create()
         'php_unit_strict' => true,
         'strict_comparison' => true,
     ])
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setCacheFile(__DIR__.'/var/.php_cs.cache');
