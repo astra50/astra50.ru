@@ -17,7 +17,7 @@
     <hr>
 
     <p class="lead">{{ news.shortContent|raw }}</p>
-    {{ news.mainContent|raw }}
+    {{ news.mainContent|nl2br|raw }}
 
     {% if is_granted('ROLE_NEWS_WRITER') %}
         <hr>
