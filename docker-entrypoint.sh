@@ -130,7 +130,7 @@ if [ -n "$WAIT_HOSTS" ]; then
 fi
 
 if [ "$MIGRATIONS" == "true" ]; then
-    console doctrine:migrations:migrate --no-interaction --allow-no-migration --quiet
+    console doctrine:migrations:migrate --no-interaction --allow-no-migration
 fi
 
 if [ "$FIXTURES" == "true" ]; then
