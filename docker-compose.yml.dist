@@ -19,7 +19,7 @@ services:
           - mysql
 
   mysql:
-      image: mariadb
+      image: mariadb:10.2.8
       hostname: mysql.astra50.local
       volumes:
           - mysql-db:/var/lib/mysql
