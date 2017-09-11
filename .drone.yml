@@ -105,14 +105,13 @@ pipeline:
             APP_ENV: 'test'
             FIXTURES: 'true'
 
-    clean branch:
+    clean:
         <<: *docker
         group: deploy
         commands:
-            - docker rmi --force `docker images --filter label="build=${DRONE_BUILD_NUMBER}" --format "{{ .Repository }}:{{ .Tag }}"`
+            - docker rmi --force `docker images --filter before=astra50/astra50:${DRONE_BUILD_NUMBER} --format "{{ .Repository }}:{{ .Tag }}" astra50/astra50`
         when:
-            branch:
-                exclude: master
+            branch: master
             status: [ success, failure ]
 
     deploy: &deploy_service
