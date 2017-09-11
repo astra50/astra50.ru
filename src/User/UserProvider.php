@@ -61,7 +61,7 @@ final class UserProvider extends FOSUBUserProvider
     }
 
     /**
-     * @param User                  $user
+     * @param User|UserInterface    $user
      * @param UserResponseInterface $response
      */
     public function disconnect(UserInterface $user, UserResponseInterface $response): void

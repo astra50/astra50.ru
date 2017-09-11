@@ -35,7 +35,6 @@
         "twig/extensions": "^1.5.1",
         "guzzlehttp/guzzle": "^6.3.0",
         "grachevko/enum": "^0",
-        "sentry/sentry": "^1.7.1",
         "sentry/sentry-symfony": "^0.8.6"
     },
     "require-dev": {
@@ -44,7 +43,9 @@
         "doctrine/data-fixtures": "^1.2.2",
         "phpunit/phpunit": "^5.7.21",
         "friendsofphp/php-cs-fixer": "^2.5.0",
-        "symfony/dotenv": "^3.3"
+        "symfony/dotenv": "^3.3",
+        "phpstan/phpstan": "^0.8.5",
+        "phpstan/phpstan-doctrine": "^0.8.0"
     },
     "scripts": {
         "symfony-scripts": [

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\App\Controller;
+namespace App\Tests\Controller;
 
+use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,7 +15,7 @@ class ControllerTest extends WebTestCase
 {
     public function testIndex(): void
     {
-        $app = new \AppKernel('test', false);
+        $app = new Kernel('test', false);
         $app->boot();
 
         foreach (['/contacts', '/suggestions', '/payment', '/report'] as $url) {

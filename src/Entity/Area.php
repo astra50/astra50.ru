@@ -46,7 +46,7 @@ class Area
     private $street;
 
     /**
-     * @var User[]
+     * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
      * @ORM\JoinTable(joinColumns={@ORM\JoinColumn}, inverseJoinColumns={@ORM\JoinColumn})

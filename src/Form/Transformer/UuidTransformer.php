@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Form\Transformer;
 
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Form\DataTransformerInterface;
-use Uuid\Uuid;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -19,7 +19,7 @@ final class UuidTransformer implements DataTransformerInterface
     public function transform($value)
     {
         if (is_array($value)) {
-            foreach ((array) $value as $key => $item) {
+            foreach ($value as $key => $item) {
                 $value[$key] = $this->doTransform($item);
             }
 
@@ -36,7 +36,7 @@ final class UuidTransformer implements DataTransformerInterface
     {
         try {
             if (is_array($value)) {
-                foreach ((array) $value as $key => $item) {
+                foreach ($value as $key => $item) {
                     $value[$key] = $this->doReverseTransform($item);
                 }
             } else {
@@ -48,22 +48,12 @@ final class UuidTransformer implements DataTransformerInterface
         return $value;
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    private function doTransform($value)
+    private function doTransform($value): string
     {
         return $value instanceof UuidInterface ? $value->toString() : $value;
     }
 
-    /**
-     * @param $value
-     *
-     * @return UuidInterface
-     */
-    private function doReverseTransform($value)
+    private function doReverseTransform($value): UuidInterface
     {
         return Uuid::fromString($value);
     }

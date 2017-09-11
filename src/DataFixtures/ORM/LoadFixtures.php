@@ -6,7 +6,6 @@ namespace App\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Nelmio\Alice\Fixtures;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -71,8 +70,7 @@ class LoadFixtures implements FixtureInterface
         if (!defined('GLOB_BRACE')) {
             define('GLOB_BRACE', 0);
         }
-
-        Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
+//        Fixtures::load(__DIR__.'/fixtures.yml', $manager, ['providers' => [$this]]);
     }
 
     /**

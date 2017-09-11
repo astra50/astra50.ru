@@ -118,7 +118,7 @@ class User extends BaseUser
      */
     public function getPhone(): string
     {
-        return (string) $this->phone;
+        return $this->phone;
     }
 
     /**
