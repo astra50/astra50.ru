@@ -18,7 +18,7 @@ class Version20161002181611 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE payment DROP FOREIGN KEY FK_6D28840D4A3490E4');
         $this->addSql('DROP INDEX IDX_6D28840D4A3490E4 ON payment');
@@ -33,7 +33,7 @@ class Version20161002181611 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE payment DROP FOREIGN KEY FK_6D28840D7FC21131');
         $this->addSql('DROP INDEX IDX_6D28840D7FC21131 ON payment');

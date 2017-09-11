@@ -18,7 +18,7 @@ class Version20161002105837 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE payment DROP FOREIGN KEY FK_6D28840DDC058279');
         $this->addSql('RENAME TABLE `payment_type` TO `payment_purpose`;');
@@ -34,7 +34,7 @@ class Version20161002105837 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE payment DROP FOREIGN KEY FK_6D28840D4A3490E4');
         $this->addSql('RENAME TABLE `payment_purpose` TO `payment_type`;');

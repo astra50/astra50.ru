@@ -50,7 +50,7 @@ final class NewPurposeListener implements EventSubscriberInterface
         $user = $event->getUser();
 
         $amount = null;
-        if ($model->calculation === Purpose::CALCULATION_SHARE) {
+        if (Purpose::CALCULATION_SHARE === $model->calculation) {
             $amount = (int) ceil($model->amount / count($model->areas));
         }
 
