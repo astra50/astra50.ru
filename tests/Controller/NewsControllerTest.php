@@ -20,7 +20,7 @@ class NewsControllerTest extends WebTestCase
         $app->boot();
 
         /** @var News $news */
-        $news = $app->getContainer()->get('app.repository.news')->createQueryBuilder('n')
+        $news = $app->getContainer()->get('doctrine')->getRepository(News::class)->createQueryBuilder('n')
             ->setMaxResults(1)
             ->getQuery()->getSingleResult();
 
