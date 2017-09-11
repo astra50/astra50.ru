@@ -45,10 +45,11 @@ down:
 terminate:
 	docker-compose down -v --remove-orphans --rmi all
 logs:
-	docker-compose logs --follow --tail 0
+	docker-compose logs --follow
 logs-app:
-	docker-compose logs --follow --tail 0 app
+	docker-compose logs --follow app
 logs-mysql:
+	docker-compose logs --follow mysql
 ###< DOCKER ###
 
 ###> API ###
