@@ -1,4 +1,4 @@
-FROM php:7.1.7-apache
+FROM php:7.1.9-apache
 
 LABEL MAINTAINER="Konstantin Grachev <me@grachevko.ru>"
 
@@ -11,19 +11,12 @@ ENV PATH=${APP_DIR}/bin:${APP_DIR}/vendor/bin:${PATH}
 WORKDIR ${APP_DIR}
 
 RUN set -ex \
-    && echo "deb http://cdn-fastly.deb.debian.org/debian experimental main" > /etc/apt/sources.list.d/experimental.list \
-    && echo "deb http://cdn-fastly.deb.debian.org/debian stretch main" > /etc/apt/sources.list.d/stretch.list \
-    && { \
-        echo 'Package: *'; \
-        echo 'Pin: release a=stable'; \
-        echo 'Pin-Priority: 900'; \
-    } > /etc/apt/preferences \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
         openssh-client \
         zlib1g-dev \
         netcat \
-    && apt-get install -y --no-install-recommends -t experimental libicu-dev \
+        libicu-dev \
     && docker-php-ext-install zip intl pdo_mysql iconv opcache pcntl \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
     && pecl install xdebug apcu \
