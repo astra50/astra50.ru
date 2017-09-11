@@ -1,0 +1,19 @@
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: App\Entity\User
+    use_flash_notifications: true
+    registration:
+        form:
+            type: App\Form\Type\RegistrationFormType
+    from_email:
+        address: "info@astra50.ru"
+        sender_name: "info@astra50.ru"
+
+services:
+    app.user.user_provider:
+        class: App\User\UserProvider
+        parent: hwi_oauth.user.provider.fosub_bridge
+
+    hwi_oauth.account.connector:
+        alias: app.user.user_provider

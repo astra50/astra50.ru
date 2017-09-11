@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        public: false
+
+    Symfony\Component\Intl\ResourceBundle\CurrencyBundle:
+        factory: [ 'Symfony\Component\Intl\Intl', getCurrencyBundle ]
+
+    Symfony\Component\Intl\ResourceBundle\LanguageBundle:
+        factory: [ 'Symfony\Component\Intl\Intl', getLanguageBundle ]
+
+    Symfony\Component\Intl\ResourceBundle\RegionBundle:
+        factory: [ 'Symfony\Component\Intl\Intl', getRegionBundle ]
+
+    Symfony\Component\Intl\ResourceBundle\LocaleBundle:
+        factory: [ 'Symfony\Component\Intl\Intl', getLocaleBundle ]

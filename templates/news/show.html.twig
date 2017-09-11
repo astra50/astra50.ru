@@ -1,0 +1,27 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>{{ news.title }}</h1>
+
+    <p class="lead">
+        автор {{ news.author.username }}
+    </p>
+
+    <hr>
+
+    <p>
+        <span class="glyphicon glyphicon-time"></span>
+        опубликовано {{ news.createdAt|localizeddate }}
+    </p>
+
+    <hr>
+
+    <p class="lead">{{ news.shortContent|raw }}</p>
+    {{ news.mainContent|nl2br|raw }}
+
+    {% if is_granted('ROLE_NEWS_WRITER') %}
+        <hr>
+
+        <a class="btn btn-default" href="{{ path('news_edit', {'slug': news.slug}) }}">Редактировать</a>
+    {% endif %}
+{% endblock %}

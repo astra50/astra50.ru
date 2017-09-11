@@ -1,0 +1,68 @@
+parameters:
+    locale: ru
+    knp_menu.renderer.twig.options:
+        currentClass: active
+
+services:
+    _defaults:
+        public: false
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        Symfony\Component\DependencyInjection\ContainerAwareInterface:
+            calls:
+                - ['setContainer', ['@service_container']]
+        Symfony\Component\Serializer\Normalizer\NormalizerInterface:
+            tags:
+                - { name: serializer.normalizer, priority: 10 }
+        Symfony\Component\Serializer\Normalizer\DenormalizerInterface:
+            tags:
+                - { name: serializer.normalizer, priority: 10 }
+
+    App\:
+        resource: '%kernel.project_dir%/src'
+        exclude: '%kernel.project_dir%/src/{Entity,EventDispatcher}'
+    App\Form\Type\RegistrationFormType:
+        autowire: false
+
+    App\Controller\:
+        resource: '%kernel.project_dir%/src/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    App\Menu\Builder:
+        public: true
+        tags:
+            - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
+            - { name: knp_menu.menu_builder, method: createManagerMenu, alias: manager }
+
+    vk.client:
+        class: GuzzleHttp\Client
+        public: false
+        arguments:
+            -
+              base_uri: 'https://api.vk.com'
+              headers:
+                Accept: '*/*'
+                Content-Type: 'application/json'
+              handler: '@vk.client.handler_stack'
+
+    vk.middleware.response_decoder_closure:
+        class: \Closure
+        public: false
+        factory: ['App\VK\Middleware', 'decodeResponse']
+
+    vk.middleware.response_decoder:
+        class: \Closure
+        public: false
+        factory: ['GuzzleHttp\Middleware', 'mapResponse']
+        arguments:
+            - '@vk.middleware.response_decoder_closure'
+
+    vk.client.handler_stack:
+        class: GuzzleHttp\HandlerStack
+        public: false
+        factory: ['GuzzleHttp\HandlerStack', 'create']
+        calls:
+            - ['unshift', ['@vk.middleware.response_decoder']]

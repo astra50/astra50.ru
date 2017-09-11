@@ -1,0 +1,54 @@
+{% extends 'layout.html.twig' %}
+
+{% form_theme form.areas 'area/form_choice_widget_expanded.html.twig' %}
+
+{% block content %}
+    <h1>Создать тип платежа</h1>
+
+    <hr>
+
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">
+            {{ form_row(form.name) }}
+            {{ form_row(form.amount) }}
+            {{ form_row(form.schedule) }}
+            {{ form_row(form.calculation) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                <a href="#" class="area_selector" data-action="check">Выбрать Все</a> /
+                <a href="#" class="area_selector" data-action="un-check">Убрать Все</a>
+                (Кроме 0)
+            </p>
+
+            <script>
+                $('.area_selector').on('click', function (e) {
+                    e.preventDefault();
+                    var button = this;
+
+                    $('input[name="{{ form.areas.vars.full_name }}[]"').each(function () {
+                        var input = $(this);
+
+                        var arr = input.attr('id').split('_');
+                        if ("0" != arr[arr.length - 1]) {
+                            input.prop('checked', 'check' == $(button).data('action'));
+                        }
+                    });
+                });
+            </script>
+
+            {{ form_row(form.areas) }}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-10 col-sm-offset-2">
+            <button class="btn btn-success" type="submit">Отправить</button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
