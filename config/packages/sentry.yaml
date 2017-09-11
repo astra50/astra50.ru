@@ -9,3 +9,6 @@ sentry:
     skip_capture:
         - 'Symfony\Component\HttpKernel\Exception\HttpExceptionInterface'
         - 'Symfony\Component\Security\\Core\Exception\AccessDeniedException'
+    options:
+        processors:
+            - 'Raven_Processor_SanitizeDataProcessor'
