@@ -1,0 +1,20 @@
+App\Entity\User:
+    User_{1..20}:
+        __construct: ['<email()>', '<firstName()> <lastName()>', '<city()>', true]
+
+App\Entity\News:
+    News_{1..10}:
+        __construct: ['@User*', '<city()>',  '<text()>',  false]
+
+App\Entity\Purpose:
+    Purpose_{1..30}:
+        __construct: ['<purpose()>', '<numberBetween(500000, 5000000)>', '<numberBetween(1, 2)>', '<numberBetween(1, 2)>']
+
+App\Entity\Street:
+    Street_{1..5}:
+        __construct: ['<street()>']
+
+App\Entity\Area:
+    Area_{0..125}:
+        __construct: ['<current()>', '<numberBetween(600, 1200)>', '@Street*']
+        replaceUsers: [['@User*', '@User*']]

@@ -1,0 +1,7 @@
+framework:
+    router:
+        strict_requirements: true
+    profiler: { only_exceptions: false }
+    session:
+        handler_id: session.handler.native_file
+        save_path: '/tmp/sessions'

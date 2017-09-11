@@ -1,0 +1,33 @@
+services:
+    app.doctrine.entity_repository:
+        class: App\Doctrine\EntityRepository
+        calls:
+            - ['setEntityManager', ['@doctrine.orm.entity_manager']]
+
+    app.repository.news:
+        class: App\Entity\Repository\NewsRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.user:
+        class: App\Entity\Repository\UserRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.area:
+        class: App\Entity\Repository\AreaRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.payment_type:
+        class: App\Entity\Repository\PurposeRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.payment:
+        class: App\Entity\Repository\PaymentRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.street:
+        class: App\Entity\Repository\StreetRepository
+        parent: app.doctrine.entity_repository
+
+    app.repository.suggestion:
+        class: App\Entity\Repository\SuggestionRepository
+        parent: app.doctrine.entity_repository

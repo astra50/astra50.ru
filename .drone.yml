@@ -1,92 +1,135 @@
+clone:
+    git:
+        image: plugins/git
+        depth: 1
+
+_docker: &docker
+    image: docker
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    secrets: [ HUB_LOGIN, HUB_PASSWORD ]
+
+_when_master: &when-master
+    when:
+        event: push
+        branch: master
+        status: success
+
 pipeline:
-  clone:
-    image: plugins/git
-    depth: 1
+    build app:
+        <<: *docker
+        group: build
+        commands:
+            - >-
+                docker build -t "astra50/astra50:${DRONE_BUILD_NUMBER}"
+                --label build=${DRONE_BUILD_NUMBER}
+                --build-arg APP_BUILD="$DRONE_BUILD_NUMBER"
+                .
 
-  check:
-    image: docker
-    commands:
-      - |
-        cat << ListEOF
-        58c2644c928cc4772e45973e2e3d0da8  .drone.env
-        ce7587933f230a57d9d003b2d38a5192  .drone.ssh
-        3d926902c6db02fcc6d17f487ed6cc77  docker/docker-entrypoint.sh
-        cdda80cb2966b96965357b9c576bd492  docker/Dockerfile
-        ListEOF | md5sum -wc -
+    validate php-cs-fixer:
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - >-
+                php-cs-fixer fix
+                --config=./.php_cs.dist
+                --verbose
+                --dry-run
+                --using-cache=no
+        when:
+            branch:
+                exclude: master
 
-  build:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - source .drone.env
-      - >-
-        docker build -t "$IMAGE_BUILD"
-        --file docker/Dockerfile
-        --label branch="$DRONE_COMMIT_BRANCH"
-        --build-arg GITHUB_AUTH_TOKEN="$GITHUB_AUTH_TOKEN" .
+    validate blank end line:
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - >-
+                find . -type f -exec grep -Iq . {} \; -and -print0
+                | xargs -0 -L1 bash -c 'test -z "$(tail -c 1 "$0")"
+                || (echo "No new line at end of $0" && exit 1)'
+                || exit 1
+        when:
+            branch:
+                exclude: master
 
-  test:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - source .drone.env
-      - while ! nc -z 127.0.0.1 3306; do sleep 1; done
-      - >-
-        docker run --rm --network "container:$HOSTNAME"
-        -e APP_ENV=test
-        -e APP_DEBUG=0
-        "$IMAGE_BUILD"
+    validate phpstan:
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - cd "$APP_DIR"
+            - phpstan analyse --level 5 --configuration phpstan.neon --no-progress src tests
+        when:
+            branch:
+                exclude: master
 
-  publish:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - source .drone.env
-      - docker login -u"$HUB_LOGIN" -p"$HUB_PASSWORD" registry.gitlab.com
-      - docker tag "$IMAGE_BUILD" "$IMAGE_PUSH"
-      - docker push "$IMAGE_PUSH" > /dev/null
-      - >+
-        if [ "master" == "$DRONE_COMMIT_BRANCH" ]; then
-          docker rmi --force "$IMAGE_PUSH"
+    validate symfony requirements:
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - /docker-entrypoint.sh symfony_requirements
+        environment:
+            APP_ENV: 'test'
+        when:
+            branch:
+                exclude: master
 
-          docker tag "$IMAGE_BUILD" "$IMAGE_LATEST"
-          docker push "$IMAGE_LATEST" > /dev/null
-        fi
-    when:
-      event: push
+    validate yaml lint:
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - /docker-entrypoint.sh console lint:yaml config
+        environment:
+            APP_ENV: 'test'
+        when:
+            branch:
+                exclude: master
 
-  clean:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - source .drone.env
-      - >+
-        if [ "success" == "$DRONE_BUILD_STATUS" ] && [ "push" == "$DRONE_BUILD_EVENT" ]; then
-          (docker rmi `docker images -q --filter before="$IMAGE_BUILD" --filter label="branch=$DRONE_COMMIT_BRANCH" "$IMAGE"`)
-        fi
-      - docker rmi --force "$IMAGE_BUILD"
-    when:
-      status: [ failure, success ]
+    validate doctrine: &validate-doctrine
+        group: validate
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - /docker-entrypoint.sh console doctrine:schema:validate
+        environment:
+            APP_ENV: 'test'
+            MIGRATIONS: 'true'
+            WAIT_HOSTS: 'mysql:3306'
 
-  deploy:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    commands:
-      - source .drone.env
-      - source .drone.ssh
-      - ssh premier@astra50.ru docker service update --image "$IMAGE_PUSH" astra50_app
-      - docker rmi `docker images -q --filter "before=$IMAGE_PUSH" "$IMAGE"` 2> /dev/null || true
-    when:
-      branch: master
+    test phpunit: &test-phpunit
+        group: test
+        image: astra50/astra50:${DRONE_BUILD_NUMBER}
+        commands:
+            - cd "$APP_DIR"
+            - /docker-entrypoint.sh phpunit
+        environment:
+            APP_ENV: 'test'
+            FIXTURES: 'true'
+
+    clean branch:
+        <<: *docker
+        group: deploy
+        commands:
+            - docker rmi --force `docker images --filter label="build=${DRONE_BUILD_NUMBER}" --format "{{ .Repository }}:{{ .Tag }}"`
+        when:
+            branch:
+                exclude: master
+            status: [ success, failure ]
+
+    deploy: &deploy_service
+        <<: *docker
+        <<: *when-master
+        commands:
+            - docker service ls --filter label="image=$IMAGE" -q | xargs -n 1 -P 10 docker service update --detach=false --image "$IMAGE:$DRONE_BUILD_NUMBER"
+            - docker rmi `docker images -q --filter "before=$IMAGE:$DRONE_BUILD_NUMBER" "$IMAGE"` 2> /dev/null || true
+            - docker service update --force haproxy
+        environment:
+            IMAGE: astra50/astra50
 
 services:
-  mysql:
-    image: mariadb
-    environment:
-      MYSQL_DATABASE: db
-      MYSQL_ALLOW_EMPTY_PASSWORD: true
+    mysql:
+        image: mariadb:10.2.8
+        environment:
+            MYSQL_DATABASE: 'db'
+            MYSQL_USER: 'db'
+            MYSQL_PASSWORD: 'db'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'true'

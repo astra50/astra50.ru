@@ -1,0 +1,46 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    {% if is_granted(constant('App\Roles::CASHIER')) %}
+        <a href="{{ path('transaction_new') }}" class="btn btn-success">
+            <i class="fa fa-plus"></i> Создать платёж
+        </a>
+
+        <hr>
+    {% endif %}
+
+    {% if 0 < payments.count %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Участок</th>
+                <th>Наименование</th>
+                <th>Сумма (руб.)</th>
+                <th>Дата создания</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payment in payments %}
+                <tr>
+                    <td>
+                        <a href="{{ path('area_show', {'number': payment.area.number}) }}">{{ payment.area.number }}</a>
+                    </td>
+                    <td>{{ payment.purpose.name }}</td>
+                    <td>{{ (payment.amount / 100)|number_format }}</td>
+                    <td>{{ payment.createdAt|localizeddate }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% if payments.haveToPaginate %}
+            <div class="text-center">
+                {{ pagerfanta(payments, 'twitter_bootstrap3_translated', { routeName: 'transaction_index_paginated' }) }}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="jumbotron">
+            <h2>Записей нет</h2>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,8 @@
+# Symfony
+var/cache
+var/sessions
+var/logs
+public/bundles
+
+# Composer
+vendor

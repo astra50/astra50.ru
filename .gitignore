@@ -1,33 +1,14 @@
-!.gitkeep
+/var
+!/var/cache/.gitkeep
+!/var/logs/.gitkeep
+!/var/sessions/.gitkeep
+!/var/jwt/private-test.pem
+!/var/jwt/public-test.pem
+/public/bundles/
+/public/config.php
+/vendor/
+/.php_cs
+/.env
+/bin/symfony_requirements
 
-# Composer
-vendor/
-
-# Cache and logs (Symfony)
-/var/bootstrap.php.cache
-/var/cache
-!var/cache/.gitkeep
-!var/cache/composer.null
-/var/logs
-!var/logs/.gitkeep
-/var/sessions
-/var/SymfonyRequirements.php
-
-# Assets and user uploads
-web/bundles/*
-!web/bundles/.gitkeep
-
-# Symfony parameters
-app/config/parameters.yml
-
-# Symfony config
-web/config.php
-
-# Docker compose
 /docker-compose.yml
-
-# Drone secret valiables
-/.drone.sec.yml
-
-# php-cs-fixer
-.php_cs.cache
