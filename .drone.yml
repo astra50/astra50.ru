@@ -118,11 +118,7 @@ pipeline:
         <<: *docker
         <<: *when-master
         commands:
-            - docker service ls --filter label="image=$IMAGE" -q | xargs -n 1 -P 10 docker service update --detach=false --image "$IMAGE:$DRONE_BUILD_NUMBER"
-            - docker rmi `docker images -q --filter "before=$IMAGE:$DRONE_BUILD_NUMBER" "$IMAGE"` 2> /dev/null || true
-            - docker service update --force haproxy
-        environment:
-            IMAGE: astra50/astra50
+            - docker service update --detach=false --image "astra50/astra50:${DRONE_BUILD_NUMBER}" astra50
 
 services:
     mysql:
