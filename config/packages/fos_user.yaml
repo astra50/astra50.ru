@@ -17,3 +17,6 @@ services:
 
     hwi_oauth.account.connector:
         alias: app.user.user_provider
+
+    FOS\UserBundle\Model\UserManagerInterface:
+        alias: fos_user.user_manager.default

@@ -1,3 +1,7 @@
 knp_menu:
     twig:
         template: knp_menu.html.twig
+
+services:
+    Knp\Menu\FactoryInterface:
+        alias: knp_menu.factory

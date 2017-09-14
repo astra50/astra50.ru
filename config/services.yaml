@@ -2,6 +2,7 @@ parameters:
     locale: ru
     knp_menu.renderer.twig.options:
         currentClass: active
+    env(APP_VERSION): null
 
 services:
     _defaults:
@@ -22,7 +23,7 @@ services:
 
     App\:
         resource: '%kernel.project_dir%/src'
-        exclude: '%kernel.project_dir%/src/{Entity,EventDispatcher}'
+        exclude: '%kernel.project_dir%/src/{Entity,EventDispatcher,Migrations}'
     App\Form\Type\RegistrationFormType:
         autowire: false
 
@@ -36,6 +37,9 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: createMainMenu, alias: main }
             - { name: knp_menu.menu_builder, method: createManagerMenu, alias: manager }
+
+    GuzzleHttp\Client:
+        alias: vk.client
 
     vk.client:
         class: GuzzleHttp\Client

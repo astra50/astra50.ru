@@ -6,7 +6,6 @@ namespace App\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -19,17 +18,11 @@ class Builder
     private $factory;
 
     /**
-     * @var AuthorizationChecker
-     */
-    private $authorizationChecker;
-
-    /**
      * @param FactoryInterface $factory
      */
-    public function __construct(FactoryInterface $factory, AuthorizationChecker $authorizationChecker)
+    public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -68,15 +61,5 @@ class Builder
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])->getParent();
 
         return $menu;
-    }
-
-    /**
-     * @param $role
-     *
-     * @return bool
-     */
-    private function isGranted($role)
-    {
-        return $this->authorizationChecker->isGranted($role);
     }
 }
