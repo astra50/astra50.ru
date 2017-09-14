@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\UuidInterface;
@@ -66,6 +67,13 @@ class News
     protected $published = false;
 
     /**
+     * @var DateTimeImmutable
+     *
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    protected $publishedAt;
+
+    /**
      * @var bool
      *
      * @ORM\Column(type="boolean")
@@ -73,16 +81,16 @@ class News
     protected $internal;
 
     /**
-     * @var \DateTime
+     * @var DateTimeImmutable
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime_immutable")
      */
     protected $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTimeImmutable
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     protected $updatedAt;
 
@@ -92,7 +100,7 @@ class News
         $this->title = $title;
         $this->content = $content;
         $this->internal = $internal;
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     /**
@@ -106,12 +114,16 @@ class News
         $this->title = $title;
         $this->content = $content;
         $this->internal = $internal;
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function publish(): void
     {
         $this->published = true;
+
+        if (!$this->publishedAt) {
+            $this->publishedAt = new DateTimeImmutable();
+        }
     }
 
     public function unPublish(): void
@@ -119,52 +131,36 @@ class News
         $this->published = false;
     }
 
-    /**
-     * @return UuidInterface
-     */
     public function getId(): UuidInterface
     {
         return $this->id;
     }
 
-    /**
-     * @return User
-     */
     public function getAuthor(): User
     {
         return $this->author;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @return string
-     */
-    public function getShortContent()
+    public function getShortContent(): ?string
     {
         if (strpos($this->content, '====')) {
             return explode('====', $this->content, 2)[0];
         }
+
+        return null;
     }
 
-    /**
-     * @return string
-     */
-    public function getMainContent()
+    public function getMainContent(): ?string
     {
         if (strpos($this->content, '====')) {
             return explode('====', $this->content, 2)[1];
@@ -173,42 +169,32 @@ class News
         return $this->content;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @return bool
-     */
     public function isPublished(): bool
     {
         return $this->published;
     }
 
-    /**
-     * @return bool
-     */
+    public function getPublishedAt(): DateTimeImmutable
+    {
+        return $this->publishedAt;
+    }
+
     public function isInternal(): bool
     {
         return $this->internal;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }

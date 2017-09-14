@@ -23,9 +23,6 @@ class NewsController extends BaseController
      */
     private $newsRepository;
 
-    /**
-     * @param NewsRepository $newsRepository
-     */
     public function __construct(NewsRepository $newsRepository)
     {
         $this->newsRepository = $newsRepository;
@@ -35,7 +32,7 @@ class NewsController extends BaseController
      * @Route("/", name="news_index", defaults={"page" : 1})
      * @Route("/page/{page}", requirements={"page" : "[1-9]\d*"}, name="news_index_paginated")
      */
-    public function indexAction($page)
+    public function indexAction(int $page)
     {
         $news = $this->newsRepository->findLatest(
             $page,

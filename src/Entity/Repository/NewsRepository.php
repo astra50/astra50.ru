@@ -24,7 +24,8 @@ final class NewsRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('n')
             ->addSelect('u')
-            ->join('n.author', 'u');
+            ->join('n.author', 'u')
+            ->orderBy('n.publishedAt', 'DESC');
 
         if ($publishedOnly) {
             $qb->where('n.published = :published')

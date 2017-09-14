@@ -21,13 +21,18 @@ class LoadNewsData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('ru');
-
         /** @var User $user */
         $user = $this->getReference('user-1');
 
-        $manager->persist(new News($user, $faker->title, $faker->text, true));
-        $manager->persist(new News($user, $faker->title, $faker->text, false));
+        foreach ($this->generateNews() as [$title, $text, $internal, $published]) {
+            $news = new News($user, $title, $text, $internal);
+
+            if ($published) {
+                $news->publish();
+            }
+
+            $manager->persist($news);
+        }
 
         $manager->flush();
     }
@@ -35,5 +40,17 @@ class LoadNewsData extends AbstractFixture implements OrderedFixtureInterface
     public function getOrder(): int
     {
         return 2;
+    }
+
+    /**
+     * @return \Generator|News[]
+     */
+    private function generateNews(): \Generator
+    {
+        $faker = Factory::create('ru');
+
+        for ($i = 0; $i < 4; ++$i) {
+            yield [$faker->title, $faker->text, $i >= 2, true];
+        }
     }
 }

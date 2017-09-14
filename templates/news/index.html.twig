@@ -2,6 +2,8 @@
 
 {% set title = 'Новости' %}
 
+{# @var news \App\Entity\News[] #}
+
 {% block content %}
     {% if is_granted('ROLE_NEWS_WRITER') %}
         <a class="btn btn-primary" href="{{ path('news_new') }}">Добавить новость</a>
@@ -20,7 +22,7 @@
         {% if item.published %}
             <p>
                 <span class="glyphicon glyphicon-time"></span>
-                Опубликовано: {{ item.createdAt|localizeddate }}
+                Опубликовано: {{ item.publishedAt|localizeddate }}
             </p>
         {% else %}
             <h3>
