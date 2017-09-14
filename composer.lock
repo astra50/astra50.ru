@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b08dea8d9d4993cede88ce47a65ff89d",
+    "content-hash": "c561efbbfa56f7057242798e899fb0e1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1230,16 +1230,16 @@
         },
         {
             "name": "grachevko/enum",
-            "version": "0.8",
+            "version": "0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/grachevko/Enum.git",
-                "reference": "2f3730eec5536269e732ee3ea5fdd2325adc1a99"
+                "reference": "d2af2e37370059d031cf57545c6589f7035fe9b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/grachevko/Enum/zipball/2f3730eec5536269e732ee3ea5fdd2325adc1a99",
-                "reference": "2f3730eec5536269e732ee3ea5fdd2325adc1a99",
+                "url": "https://api.github.com/repos/grachevko/Enum/zipball/d2af2e37370059d031cf57545c6589f7035fe9b9",
+                "reference": "d2af2e37370059d031cf57545c6589f7035fe9b9",
                 "shasum": ""
             },
             "require": {
@@ -1270,7 +1270,7 @@
                 }
             ],
             "description": "Enum class.",
-            "time": "2017-04-11T21:15:01+00:00"
+            "time": "2017-09-13T13:57:18+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -4920,16 +4920,16 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c"
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
                 "shasum": ""
             },
             "require": {
@@ -4970,7 +4970,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2017-09-11T18:02:19+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
