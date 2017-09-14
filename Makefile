@@ -77,6 +77,7 @@ migration-rollback:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console doctrine:migration:execute --down --no-interaction $(latest)
 migration-diff:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console doctrine:migration:diff
+	@$(MAKE) cs
 	@$(MAKE) permissions > /dev/null
 migration-diff-dry:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console doctrine:schema:update --dump-sql
