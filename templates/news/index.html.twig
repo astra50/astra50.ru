@@ -33,7 +33,7 @@
         <hr>
 
         {% set content = item.shortContent ?? item.mainContent %}
-        <p>{{ content|nl2br|raw }}</p>
+        <p>{{ content|markdown|raw }}</p>
 
         <hr>
     {% else %}

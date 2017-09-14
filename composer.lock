@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c561efbbfa56f7057242798e899fb0e1",
+    "content-hash": "f5bb61ab3323656d88f64dfc268c89fd",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -49,6 +49,66 @@
                 "transliterator"
             ],
             "time": "2017-04-04T11:38:05+00:00"
+        },
+        {
+            "name": "cebe/markdown",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cebe/markdown.git",
+                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cebe/markdown/zipball/25b28bae8a6f185b5030673af77b32e1163d5c6e",
+                "reference": "25b28bae8a6f185b5030673af77b32e1163d5c6e",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "cebe/indent": "*",
+                "facebook/xhprof": "*@dev",
+                "phpunit/phpunit": "4.1.*"
+            },
+            "bin": [
+                "bin/markdown"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "cebe\\markdown\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carsten Brandt",
+                    "email": "mail@cebe.cc",
+                    "homepage": "http://cebe.cc/",
+                    "role": "Creator"
+                }
+            ],
+            "description": "A super fast, highly extensible markdown parser for PHP",
+            "homepage": "https://github.com/cebe/markdown#readme",
+            "keywords": [
+                "extensible",
+                "fast",
+                "gfm",
+                "markdown",
+                "markdown-extra"
+            ],
+            "time": "2017-07-16T21:13:23+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1151,6 +1211,65 @@
             "time": "2017-05-31T11:50:14+00:00"
         },
         {
+            "name": "fxp/composer-asset-plugin",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fxpio/composer-asset-plugin.git",
+                "reference": "dd559b0f69628277c868dcf3deeb17948e3e9b19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fxpio/composer-asset-plugin/zipball/dd559b0f69628277c868dcf3deeb17948e3e9b19",
+                "reference": "dd559b0f69628277c868dcf3deeb17948e3e9b19",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "composer/composer": "^1.4.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Fxp\\Composer\\AssetPlugin\\FxpAssetPlugin",
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fxp\\Composer\\AssetPlugin\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Pluchino",
+                    "email": "francois.pluchino@gmail.com"
+                }
+            ],
+            "description": "NPM/Bower Dependency Manager for Composer",
+            "homepage": "https://github.com/fxpio/composer-asset-plugin",
+            "keywords": [
+                "asset",
+                "bower",
+                "composer",
+                "dependency manager",
+                "nodejs",
+                "npm",
+                "package"
+            ],
+            "time": "2017-09-07T09:01:09+00:00"
+        },
+        {
             "name": "gedmo/doctrine-extensions",
             "version": "v2.4.30",
             "source": {
@@ -1901,6 +2020,44 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
+        },
+        {
+            "name": "npm-asset/bootstrap-markdown",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/toopay/bootstrap-markdown.git",
+                "reference": "a20ef2db4eeddde8de2bb4e4455aaaa3086fea95"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/toopay/bootstrap-markdown/zipball/a20ef2db4eeddde8de2bb4e4455aaaa3086fea95",
+                "reference": "a20ef2db4eeddde8de2bb4e4455aaaa3086fea95",
+                "shasum": ""
+            },
+            "type": "npm-asset-library",
+            "extra": {
+                "npm-asset-main": "js/bootstrap-markdown.js",
+                "npm-asset-repository": {
+                    "type": "git",
+                    "url": "https://github.com/toopay/bootstrap-markdown.git"
+                },
+                "branch-alias": {
+                    "dev-master": "2.10.0-dev"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "A bootstrap plugin for markdown editing",
+            "homepage": "https://github.com/toopay/bootstrap-markdown",
+            "keywords": [
+                "bootstrap",
+                "editor",
+                "markdown",
+                "twitter"
+            ],
+            "time": "2017-08-21T12:44:29+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -6388,7 +6545,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "npm-asset/bootstrap-markdown": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

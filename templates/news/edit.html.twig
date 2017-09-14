@@ -1,5 +1,9 @@
 {% extends 'layout.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap-markdown/css/bootstrap-markdown.min.css') }}">
+{% endblock %}
+
 {% block content %}
     <h1>Создать новость</h1>
 
@@ -13,5 +17,42 @@
             <button class="btn btn-success" type="submit">Отправить</button>
         </div>
     </div>
+
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/vendor/bootstrap-markdown/js/bootstrap-markdown.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap-markdown/locale/bootstrap-markdown.ru.js') }}"></script>
+
+    <script>
+        $("#{{ form.content.vars.id }}").markdown({
+            autofocus: false,
+            savable: false,
+            iconlibrary: 'fa',
+            language: '{{ app.request.locale }}',
+            onPreview: function (e, preview) {
+                let previewContent;
+
+                if (e.isDirty()) {
+                    const originalContent = e.getContent();
+
+                    $.ajax({
+                        url: '{{ path('markdown') }}',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {'markdown': originalContent},
+
+                    }).done(function (res) {
+                        console.log(res);
+
+                        preview.html(res.html);
+                    });
+
+                }
+
+                return 'Загрузка...';
+            }
+        });
+    </script>
 {% endblock %}
