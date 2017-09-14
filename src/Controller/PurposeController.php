@@ -56,7 +56,7 @@ final class PurposeController extends BaseController
     /**
      * @Route("/new", name="purpose_new")
      *
-     * @Security("is_granted(constant('App\Roles::CHAIRMAN'))")
+     * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
      */
     public function newAction(Request $request)
     {

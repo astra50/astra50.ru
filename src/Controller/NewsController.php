@@ -48,7 +48,7 @@ class NewsController extends BaseController
     /**
      * @Route("/news/new", name="news_new")
      *
-     * @Security("is_granted(constant('App\Roles::NEWS_WRITER'))")
+     * @Security("is_granted(constant('App\\Roles::NEWS_WRITER'))")
      */
     public function newAction(Request $request)
     {
@@ -85,7 +85,7 @@ class NewsController extends BaseController
     /**
      * @Route("/news/{slug}/edit", name="news_edit")
      *
-     * @Security("is_granted(constant('App\Roles::NEWS_WRITER'))")
+     * @Security("is_granted(constant('App\\Roles::NEWS_WRITER'))")
      */
     public function editAction(Request $request, News $news)
     {
