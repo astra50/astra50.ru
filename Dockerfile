@@ -24,7 +24,7 @@ RUN set -ex \
 
 RUN a2enmod rewrite
 
-ENV COMPOSER_VERSION 1.5.1
+ENV COMPOSER_VERSION 1.5.2
 COPY docker/composer.sh ./composer.sh
 RUN ./composer.sh --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION}  \
     && composer global require "hirak/prestissimo:^0.3" \
