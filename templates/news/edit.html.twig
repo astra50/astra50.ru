@@ -32,24 +32,19 @@
             iconlibrary: 'fa',
             language: '{{ app.request.locale }}',
             onPreview: function (e, preview) {
-                let previewContent;
+                const originalContent = e.getContent();
 
-                if (e.isDirty()) {
-                    const originalContent = e.getContent();
+                $.ajax({
+                    url: '{{ path('markdown') }}',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {'markdown': originalContent},
 
-                    $.ajax({
-                        url: '{{ path('markdown') }}',
-                        method: 'POST',
-                        dataType: 'json',
-                        data: {'markdown': originalContent},
+                }).done(function (res) {
+                    console.log(res);
 
-                    }).done(function (res) {
-                        console.log(res);
-
-                        preview.html(res.html);
-                    });
-
-                }
+                    preview.html(res.html);
+                });
 
                 return 'Загрузка...';
             }
