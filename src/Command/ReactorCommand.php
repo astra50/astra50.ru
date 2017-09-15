@@ -80,7 +80,7 @@ final class ReactorCommand extends Command
                     return $next($request);
                 }
 
-                return new Response(200, [], file_get_contents($path));
+                return new Response(200, [], fopen($path, 'rb'));
             },
             function (ServerRequestInterface $serverRequest) use ($loop) {
                 $request = $this->httpFoundationFactory->createRequest($serverRequest);
