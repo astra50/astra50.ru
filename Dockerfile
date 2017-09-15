@@ -17,11 +17,15 @@ RUN set -ex \
         zlib1g-dev \
         netcat \
         libicu-dev \
-    && docker-php-ext-install zip intl pdo_mysql iconv opcache pcntl \
+        libevent-dev \
+    && docker-php-ext-install zip intl pdo_mysql iconv opcache sockets \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
     && pecl install xdebug apcu \
+    && printf "no\nyes\n/usr\nno\nyes\nno\nno" | pecl install event \
+    && docker-php-ext-enable event \
     && rm -r /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools
 RUN a2enmod rewrite
 
 ENV COMPOSER_VERSION 1.5.2
