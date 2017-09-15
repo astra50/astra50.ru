@@ -1,7 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    {% if is_granted(constant('App\Roles::CASHIER')) %}
+    {% if is_granted(constant('App\\Roles::CASHIER')) %}
         <a href="{{ path('transaction_new') }}" class="btn btn-success">
             <i class="fa fa-plus"></i> Создать платёж
         </a>
