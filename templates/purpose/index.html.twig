@@ -1,7 +1,7 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    {% if is_granted(constant('App\Roles::CHAIRMAN')) %}
+    {% if is_granted(constant('App\\Roles::CHAIRMAN')) %}
         <a href="{{ path('purpose_new') }}" class="btn btn-success">
             <i class="fa fa-plus"></i> Создать цель
         </a>
