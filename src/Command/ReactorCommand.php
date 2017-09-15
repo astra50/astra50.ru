@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -29,7 +30,7 @@ final class ReactorCommand extends Command
     private $io;
 
     /**
-     * @var KernelInterface
+     * @var KernelInterface|TerminableInterface
      */
     private $kernel;
 
@@ -81,10 +82,18 @@ final class ReactorCommand extends Command
 
                 return new Response(200, [], file_get_contents($path));
             },
-            function (ServerRequestInterface $request) {
-                $response = $this->kernel->handle($this->httpFoundationFactory->createRequest($request));
+            function (ServerRequestInterface $serverRequest) use ($loop) {
+                $request = $this->httpFoundationFactory->createRequest($serverRequest);
+                $response = $this->kernel->handle($request);
+                $serverResponse = $this->psr7Factory->createResponse($response);
 
-                return $this->psr7Factory->createResponse($response);
+                if ($this->kernel instanceof TerminableInterface) {
+                    $loop->addTimer(1, function () use ($request, $response) {
+                        $this->kernel->terminate($request, $response);
+                    });
+                }
+
+                return $serverResponse;
             },
         ]));
 
