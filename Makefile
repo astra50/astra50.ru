@@ -20,6 +20,8 @@ update: pull docker-build install
 permissions:
 	docker run --rm -v `pwd`:/app -w /app alpine sh -c "chown $(shell id -u):$(shell id -g) -R ./ && chmod 777 -R ./var || true"
 
+cli: cli-app
+
 ###> GIT ###
 pull:
 	git fetch origin
@@ -37,6 +39,8 @@ docker-pull:
 	docker-compose pull
 up:
 	docker-compose up -d
+up-mysql:
+	docker-compose up -d mysql
 serve: up
 restart:
 	docker-compose restart app
@@ -70,7 +74,7 @@ composer-update-lock:
 
 fixtures:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:fixtures:load --fixtures=src/DataFixtures/ORM/ --no-interaction
-migration:
+migrations:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:migration:migrate --no-interaction --allow-no-migration
 migration-rollback:latest = $(shell docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:migration:latest | tr '\r' ' ')
 migration-rollback:
@@ -84,9 +88,11 @@ migration-diff-dry:
 schema-update:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:schema:update --force
 
-cli:
+cli-app:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app bash
 	@$(MAKE) permissions > /dev/null
+cli-mysql:
+	docker-compose exec mysql bash
 
 check: cs-check phpstan yaml-lint cache-clear schema-check phpunit-check
 
@@ -108,8 +114,7 @@ yaml-lint:
 schema-check:
 	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false app console doctrine:schema:validate
 
-cache-clear:
-	@$(MAKE) cache-clear-exec || $(MAKE) cache-clear-run
+cache-clear: cache-clear-run
 cache-clear-run:
 	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console cache:clear --no-warmup
 	@$(MAKE) permissions > /dev/null
