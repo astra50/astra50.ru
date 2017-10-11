@@ -18,6 +18,10 @@ final class UuidTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
+        if (null === $value) {
+            return $value;
+        }
+
         if (is_array($value)) {
             foreach ($value as $key => $item) {
                 $value[$key] = $this->doTransform($item);
@@ -34,6 +38,10 @@ final class UuidTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value)
     {
+        if (null === $value) {
+            return $value;
+        }
+
         try {
             if (is_array($value)) {
                 foreach ($value as $key => $item) {
