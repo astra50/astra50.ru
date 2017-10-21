@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Kernel;
 use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\Factory;
 use React\Http\MiddlewareRunner;
@@ -16,7 +17,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
@@ -30,7 +30,7 @@ final class ReactorCommand extends Command
     private $io;
 
     /**
-     * @var KernelInterface|TerminableInterface
+     * @var Kernel
      */
     private $kernel;
 
@@ -80,7 +80,14 @@ final class ReactorCommand extends Command
                     return $next($request);
                 }
 
-                return new Response(200, [], fopen($path, 'rb'));
+                $hash = hash_file('md5', $path);
+
+                $tags = $request->getHeader('If-None-Match');
+                if ($tags && in_array($hash, $tags, true)) {
+                    return new Response(304);
+                }
+
+                return new Response(200, ['ETag' => $hash], fopen($path, 'rb'));
             },
             function (ServerRequestInterface $serverRequest) use ($loop) {
                 $request = $this->httpFoundationFactory->createRequest($serverRequest);

@@ -7,6 +7,7 @@ namespace App;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
@@ -44,6 +45,15 @@ class Kernel extends SymfonyKernel
     public function getRootDir(): string
     {
         return $this->getProjectDir().'/public';
+    }
+
+    public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = true)
+    {
+        if ($this->debug) {
+            $this->startTime = microtime(true);
+        }
+
+        return parent::handle($request, $type, $catch);
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes): void
