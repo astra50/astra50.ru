@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\User;
 
 use App\Entity\User;
+use FOS\UserBundle\Model\UserInterface as FOSUserInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
+use LogicException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -63,10 +65,22 @@ final class UserProvider extends FOSUBUserProvider
     /**
      * @param User|UserInterface    $user
      * @param UserResponseInterface $response
+     *
+     * @throws LogicException
      */
     public function disconnect(UserInterface $user, UserResponseInterface $response): void
     {
         $user->updateOauth2($response->getResourceOwner()->getName(), null, null);
+
+        if (!$user instanceof FOSUserInterface) {
+            throw new LogicException(
+                sprintf(
+                    'User instanceof "%s" required, but instanceof "%s" given.',
+                    FOSUserInterface::class,
+                    get_class($user)
+                )
+            );
+        }
 
         $this->userManager->updateUser($user);
     }

@@ -15,7 +15,6 @@ un-init:
 re-init: un-init init
 
 install: install-backend up db-wait migration fixtures permissions
-update: pull docker-build install
 
 permissions:
 	docker run --rm -v `pwd`:/app -w /app alpine sh -c "chown $(shell id -u):$(shell id -g) -R ./ && chmod 777 -R ./var || true"
@@ -74,7 +73,7 @@ composer-update-lock:
 
 fixtures:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:fixtures:load --fixtures=src/DataFixtures/ORM/ --no-interaction
-migrations:
+migration:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:migration:migrate --no-interaction --allow-no-migration
 migration-rollback:latest = $(shell docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:migration:latest | tr '\r' ' ')
 migration-rollback:
@@ -102,7 +101,7 @@ cs:
 cs-check:
 	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app php-cs-fixer fix --config=.php_cs.dist --verbose --dry-run
 phpstan:
-	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app phpstan analyse --level 5 --configuration phpstan.neon src tests
+	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon src tests
 phpunit:
 	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false app phpunit --debug --stop-on-failure
 phpunit-check:
@@ -114,12 +113,9 @@ yaml-lint:
 schema-check:
 	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false app console doctrine:schema:validate
 
-cache-clear: cache-clear-run
-cache-clear-run:
-	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console cache:clear --no-warmup
-	@$(MAKE) permissions > /dev/null
-cache-clear-exec:
-	docker-compose exec app console cache:clear --no-warmup
+cache: cache-warmup
+cache-clear:
+	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app rm -rf ./var/cache/dev ./var/cache/test ./var/cache/prod
 	@$(MAKE) permissions > /dev/null
 cache-warmup: cache-clear
 	docker-compose run --rm --no-deps -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console cache:warmup
