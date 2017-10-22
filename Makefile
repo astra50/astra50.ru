@@ -20,6 +20,11 @@ permissions:
 	docker run --rm -v `pwd`:/app -w /app alpine sh -c "chown $(shell id -u):$(shell id -g) -R ./ && chmod 777 -R ./var || true"
 
 cli: cli-app
+cli-app:
+	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app bash
+	@$(MAKE) permissions > /dev/null
+cli-mysql:
+	docker-compose exec mysql bash
 
 ###> GIT ###
 pull:
@@ -86,12 +91,6 @@ migration-diff-dry:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:schema:update --dump-sql
 schema-update:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:schema:update --force
-
-cli-app:
-	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app bash
-	@$(MAKE) permissions > /dev/null
-cli-mysql:
-	docker-compose exec mysql bash
 
 check: cs-check phpstan yaml-lint cache-clear schema-check phpunit-check
 
