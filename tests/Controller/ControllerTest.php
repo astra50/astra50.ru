@@ -18,7 +18,7 @@ class ControllerTest extends WebTestCase
         $app = new Kernel('test', false);
         $app->boot();
 
-        foreach (['/contacts', '/suggestions', '/payment', '/report'] as $url) {
+        foreach (['/contacts', '/suggestions', '/payment', '/reports'] as $url) {
             self::assertTrue($app->handle(Request::create($url))->isSuccessful());
         }
     }
