@@ -34,3 +34,9 @@ contacts:
     defaults:
         _controller: FrameworkBundle:Template:template
         template: static/contacts.html.twig
+
+report_index:
+    path: /reports
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: report.html.twig

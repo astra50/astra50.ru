@@ -13,7 +13,6 @@ final class UnderConstructionController extends BaseController
 {
     /**
      * @Route("/payment", name="payment_index")
-     * @Route("/report", name="report_index")
      */
     public function indexAction()
     {
