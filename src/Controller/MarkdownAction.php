@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Controller;
 
 use App\Markdown\MarkdownInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
