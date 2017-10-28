@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class ControllerTest extends WebTestCase
+class SmokeTest extends WebTestCase
 {
     public function testIndex(): void
     {
