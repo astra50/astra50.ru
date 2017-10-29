@@ -9,15 +9,36 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @author Konstantin Grachev <me@grachevko.ru>
+ * @Route("/payment")
  */
 final class PaymentController extends Controller
 {
     /**
-     * @Route("/payment/{type}", name="payment_index")
+     * @Route(name="payment_index")
      */
-    public function indexAction(string $type = null): Response
+    public function indexAction()
     {
-        return $this->render('payment/index.html.twig');
+        $payments = [
+            'sbrf' => 'Оплата в отделении СберБанка',
+            'sbrf-mobile' => 'Мобильном приложении СберБанка',
+            'sbrf-online' => 'СберБанк Онлайн',
+            'transfer' => 'Оплата по реквизитам СНТ «Астра»',
+            'tinkoff' => 'Перевод на карту Tinkoff',
+            'cash' => 'Наличные средства',
+        ];
+
+        return $this->render('payment/index.html.twig', [
+            'payments' => $payments,
+        ]);
+    }
+
+    /**
+     * @Route("/{type}", name="payment_type",
+     *     requirements={"type" : "sbrf|sbrf-mobile|sbrf-online|transfer|tinkoff|cash"}
+     * )
+     */
+    public function typeAction(string $type): Response
+    {
+        return $this->render(sprintf('payment/type-%s.html.twig', $type));
     }
 }

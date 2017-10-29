@@ -1,0 +1,53 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>Оплата через мобильное приложение СберБанк Онлайн.</h1>
+
+    <ol>
+        <li>
+            Откройте приложение на своем смартфоне. <br>
+            Для того, чтобы корректно найти СНТ "Астра" среди поставщиков услуг, необходимо выставить регион оплаты "Все регионы" или "Московская область" <br>
+            Для этого нажмите кнопку настроек в приложении СберБанк Онлайн
+
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-1.png') } only %}
+        </li>
+
+        <li>Выберите пункт "Настройки"
+
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-2.png') } only %}
+        </li>
+            <li>
+            Далее убедитесь, что у вас выставлен правильный регион для оплаты.
+            Если он отличен от регионов "Все регион" или "Московская область", то измените на нужный. <br>
+
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-3.png') } only %}
+        </li>
+
+        <li>
+            Выйти из настроек на главный экран приложения и перейти в раздел "Платежи". В разделе "Платежи" нужно нажать кнопку "Остальное"
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-4.png') } only %}
+
+        </li>
+
+        <li>
+            В строке поиска введите "снт астра" без кавычек. В появившимся списке выберите нужный пункт для оплаты "Ежемесячных взносов" либо оплаты "Целевых взносов".
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-5.png') } only %}
+        </li>
+
+        <li>
+            В поле "Лицевой счет" укажите свой четырехзначный лицевой счет, который формируется по правилу <br>
+            Для ежемесячных взносов (1000+Номер Участка) <br>
+            Для целевых взносов (2000+Номер Участка) <br>
+            <h5>Например:</h5>
+            <ul>
+                <li>Для участка №5 лицевые счета 1005 и 2005 соответственно.</li>
+                <li>Для участка №16 лицевые счета 1016 и 2016 соответственно.</li>
+                <li>Для участка №104 лицевые счета 1104 и 2104 соответственно. <br></li>
+            </ul>
+
+            И нажмите кнопку "Продолжить"
+
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/sbrf-mobile-6.png') } only %}
+        </li>
+    </ol>
+{% endblock %}
