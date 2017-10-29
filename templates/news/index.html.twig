@@ -15,25 +15,19 @@
             <a href="{{ path('news_show', {'slug': item.slug}) }}">{{ item.title }}</a>
         </h2>
 
-        <p class="lead">
+        <p class="help-block small">
             автор {{ item.author.realname }}
-        </p>
 
-        {% if item.published %}
-            <p>
+            {% if item.published %}
                 <span class="glyphicon glyphicon-time"></span>
                 Опубликовано: {{ item.publishedAt|localizeddate }}
-            </p>
-        {% else %}
-            <h3>
+            {% else %}
                 <span class="label label-default">Не опубликовано</span>
-            </h3>
-        {% endif %}
-
-        <hr>
+            {% endif %}
+        </p>
 
         {% set content = item.shortContent ?? item.mainContent %}
-        <p>{{ content|markdown|raw }}</p>
+        {{ content|markdown|raw }}
 
         <hr>
     {% else %}
