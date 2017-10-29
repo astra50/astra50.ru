@@ -64,7 +64,7 @@ final class SuggestionsController extends BaseController
             $message = (new \Swift_Message())
                 ->setFrom('no-reply@astra50.ru')
                 ->setReplyTo($model->email)
-                ->setTo(['kirillsidorov@gmail.com', '9266681152@mail.ru'])
+                ->setTo(['kirillsidorov@gmail.com', '9266681152@mail.ru', 'preemiere@ya.ru'])
                 ->setSubject(sprintf('Новое обращение: %s от %s', $model->type->getName(), $model->name))
                 ->setBody(<<<TEXT
 Имя: $model->name
