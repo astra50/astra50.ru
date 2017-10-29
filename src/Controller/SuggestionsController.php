@@ -76,7 +76,7 @@ TEXT
 
             $this->mailer->send($message);
 
-            $this->addFlash('success', 'Ваша предложение отправлено.');
+            $this->addFlash('success', 'Ваше предложение отправлено.');
 
             return $this->redirectToRoute('suggestions_new');
         }
