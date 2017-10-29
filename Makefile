@@ -92,6 +92,9 @@ migration-diff-dry:
 schema-update:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true -e XDEBUG=false app console doctrine:schema:update --force
 
+test-command:
+	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console test -vvv
+
 check: cs-check phpstan yaml-lint cache-clear schema-check phpunit-check
 
 cs:
