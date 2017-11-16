@@ -40,6 +40,7 @@ class Builder
             ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'gallery_index'])->getParent()
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_new'])->getParent()
             ->addChild('Payment', ['label' => 'Оплата', 'route' => 'payment_index'])->getParent()
+            ->addChild('Documents', ['label' => 'Документы', 'route' => 'documents_index'])->getParent()
             ->addChild('Contacts', ['label' => 'Контакты', 'route' => 'contacts'])->getParent();
 
         return $menu;
