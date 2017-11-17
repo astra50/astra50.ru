@@ -52,7 +52,7 @@ final class PaymentModel
      *
      * @return PaymentModel
      */
-    public static function fromEntity(Payment $entity): PaymentModel
+    public static function fromEntity(Payment $entity): self
     {
         $model = new static();
         $model->area = $entity->getArea();

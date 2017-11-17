@@ -56,7 +56,7 @@ final class PurposeModel
      *
      * @return PurposeModel
      */
-    public static function fromEntity(Purpose $entity): PurposeModel
+    public static function fromEntity(Purpose $entity): self
     {
         $model = new static();
         $model->name = $entity->getName();
