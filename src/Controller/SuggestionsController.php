@@ -23,9 +23,15 @@ final class SuggestionsController extends BaseController
      */
     private $repository;
 
-    public function __construct(SuggestionRepository $repository)
+    /**
+     * @var \Swift_Mailer
+     */
+    private $mailer;
+
+    public function __construct(SuggestionRepository $repository, \Swift_Mailer $mailer)
     {
         $this->repository = $repository;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -55,7 +61,22 @@ final class SuggestionsController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->repository->save(new Suggestion($model));
 
-            $this->addFlash('success', 'Ваша предложение отправлено.');
+            $message = (new \Swift_Message())
+                ->setFrom('no-reply@astra50.ru')
+                ->setReplyTo($model->email)
+                ->setTo(['kirillsidorov@gmail.com', '9266681152@mail.ru', 'preemiere@ya.ru'])
+                ->setSubject(sprintf('Новое обращение: %s от %s', $model->type->getName(), $model->name))
+                ->setBody(<<<TEXT
+Имя: $model->name
+Почта: $model->email
+Телефон: $model->phone
+Сообщение: $model->text
+TEXT
+);
+
+            $this->mailer->send($message);
+
+            $this->addFlash('success', 'Ваше предложение отправлено.');
 
             return $this->redirectToRoute('suggestions_new');
         }

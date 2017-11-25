@@ -1,0 +1,53 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>Документы</h1>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1">
+            <h3>Юридические реквизиты</h3>
+            <p>
+                СНТ "АСТРА" <br>
+                ОГРН: 1025007516820 <br>
+                ИНН: 5074022777 <br>
+                КПП: 507401001 <br>
+                Юр. Адрес: 142143, МО, Подольский гор.округ, вблизи д. Борисовка <br>
+                Председатель: Тихонова Евгения Михайловна <br>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <h3>Банковские реквизиты</h3>
+            <p>
+                Расчетный счет: 40703810811010117536 <br>
+                Банк: ФИЛИАЛ «БИЗНЕС» ПАО «СОВКОМБАНК» г.Москва <br>
+                БИК: 044525058 <br>
+                Кор. Счет: 30101810045250000058 <br>
+
+                <a href="{{ asset('files/requisites.docx') }}">Карточка организации</a>
+            </p>
+        </div>
+    </div>
+
+
+    <h2>Файлы</h2>
+
+    <ul>
+        <li>
+            <a href="{{ asset('files/ogrn.pdf') }}">ОГРН</a>
+        </li>
+        <li>
+            <a href="{{ asset('files/inn.pdf') }}">ИНН</a>
+        </li>
+        <li>
+            <a href="{{ asset('files/ustav.pdf') }}">Устав</a>
+        </li>
+        <li>
+            <a href="{{ asset('files/protocol.pdf') }}">Протокол создания</a>
+        </li>
+        <li>
+            <a href="{{ asset('files/predsedatel.pdf') }}">Назначение председателя и правления</a>
+        </li>
+    </ul>
+{% endblock %}

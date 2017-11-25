@@ -1,11 +1,14 @@
 swiftmailer:
     transport: "%env(MAILER_TRANSPORT)%"
     host:      "%env(MAILER_HOST)%"
+    port:      "%env(MAILER_PORT)%"
     username:  "%env(MAILER_USER)%"
     password:  "%env(MAILER_PASSWORD)%"
+    auth_mode: login
     spool:     { type: memory }
 
 parameters:
-    env(MAILER_TRANSPORT): null
-    env(MAILER_HOST): null
-    env(MAILER_USER): null
+    env(MAILER_TRANSPORT): smtp
+    env(MAILER_HOST): ssl://smtp.yandex.ru
+    env(MAILER_PORT): 465
+    env(MAILER_USER): no-reply@astra50.ru

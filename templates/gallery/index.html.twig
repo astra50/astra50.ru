@@ -3,12 +3,12 @@
 {% set title = 'Галлерея' %}
 
 {% block stylesheets %}
+    {{ parent() }}
+
     <link rel="stylesheet" href="{{ asset('assets/css/blueimp-gallery.min.css') }}">
 {% endblock %}
 
 {% block content %}
-    <hr>
-
     <div id="blueimp-gallery" class="blueimp-gallery">
         <div class="slides"></div>
         <h3 class="title"></h3>
@@ -40,5 +40,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+
     <script src="{{ asset('assets/js/blueimp-gallery.min.js') }}"></script>
 {% endblock %}

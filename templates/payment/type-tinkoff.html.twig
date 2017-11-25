@@ -1,0 +1,36 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>Оплата с помощью перевода на карту Tinkoff Bank.</h1>
+
+    <h3>
+        <strong>Внимание</strong> данный вид оплаты доступен только для клиентов Tinkoff Bank, если вы произведете оплату с карты другого банка, то мы не сможем идентифицировать ваш платеж.
+    </h3>
+
+    <ol>
+        <li>Откройте приложение "Тинькофф" для физических лиц, либо войдите в <a href="//www.tinkoff.ru/login/">личный кабинет на сайте банка</a>.</li>
+        <li>
+            Выберите карту для оплаты взносов и нажмите кнопку "Оплатить"
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/tinkoff-1.png') } only %}
+        </li>
+
+        <li>
+            Выберите пункт оплатить "Людям"
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/tinkoff-2.png') } only %}
+        </li>
+
+        <li>
+            Выберите любой из пунктов "Оплатить по QR коду" либо "По номеру договора", который считаете для себя удобным.
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/tinkoff-3.png') } only %}
+        </li>
+
+        <li>
+            Сканируйте QR код на этой странице, либо укажите номер договора 5005388003. <br>
+            В поле "Сообщение получателю" укажите "Оплата ежемесячных взносов уч.ХХХ", либо "Оплата целевого взноса уч.ХХХ", где ХХХ - номер вашего участка. <br>
+            Сумму к оплате, вы можете узнать из последнего отчета в разделе "Финансовая отчетность"
+
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/tinkoff-4.png') } only %}
+            {% include 'payment/includes/image.html.twig' with {'url': asset('assets/img/payment/steps/tinkoff-5.png') } only %}
+        </li>
+    </ol>
+{% endblock %}

@@ -32,10 +32,6 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    App\Action\:
-        resource: '%kernel.project_dir%/src/Action'
-        public: true
-
     App\Menu\Builder:
         public: true
         tags:
@@ -74,3 +70,6 @@ services:
         factory: ['GuzzleHttp\HandlerStack', 'create']
         calls:
             - ['unshift', ['@vk.middleware.response_decoder']]
+
+    App\Markdown\MarkdownInterface:
+        alias: App\Markdown\CebeMarkdown
