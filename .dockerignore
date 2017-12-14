@@ -6,3 +6,6 @@ public/bundles
 
 # Composer
 vendor
+
+# CCTV
+public/cctv
