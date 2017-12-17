@@ -63,8 +63,8 @@ class LoadReportData extends AbstractFixture implements OrderedFixtureInterface
             $report->setType($typeGenerator->current());
             $report->setFinancing($financingGenerator->current());
             $report->setName($faker->name);
-            $report->setMonth((int) $faker->month);
-            $report->setYear((int) $faker->year);
+            $report->setMonth($faker->randomElement(range(1, 12)));
+            $report->setYear($faker->randomElement(Report::allowedYears()));
             $report->setUrl($faker->url);
 
             yield $report;

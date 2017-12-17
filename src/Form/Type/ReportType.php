@@ -18,8 +18,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ReportType extends AbstractType
 {
-    private const START_YEAR = 2000;
-
     /**
      * {@inheritdoc}
      */
@@ -28,7 +26,7 @@ class ReportType extends AbstractType
         $builder
             ->add('year', ChoiceType::class, [
                 'placeholder' => 'Выберите значение',
-                'choices' => array_reverse(range(self::START_YEAR, (new \DateTime('+1 year'))->format('Y'))),
+                'choices' => array_reverse(Report::allowedYears()),
                 'choice_label' => function ($value) {
                     return $value;
                 },

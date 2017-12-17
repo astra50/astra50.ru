@@ -19,6 +19,8 @@ class Report
     use Identity;
     use CreatedAt;
 
+    private const START_YEAR = 2000;
+
     /**
      * @var string
      *
@@ -73,6 +75,11 @@ class Report
      * @ORM\Column
      */
     private $url;
+
+    public static function allowedYears(): array
+    {
+        return range(self::START_YEAR, (new \DateTime('+1 year'))->format('Y'));
+    }
 
     public function getName(): ?string
     {

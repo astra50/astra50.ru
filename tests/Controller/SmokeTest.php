@@ -34,6 +34,9 @@ class SmokeTest extends WebTestCase
         yield ['/area'];
         yield ['/login'];
         yield ['/register/'];
+        yield ['/reports'];
+        yield ['/reports/new'];
+        yield ['/reports/1'];
 
         /** @var News $newsItem */
         $newsItem = static::createClient()->getContainer()->get('doctrine')->getRepository(News::class)->findOneBy([]);

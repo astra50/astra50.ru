@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Doctrine\DBAL\Types;
 
-use App\Entity\Enum\TelephoneEnum;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\Type;
@@ -49,14 +48,13 @@ abstract class EnumType extends Type
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?int
     {
-        /* @var TelephoneEnum $value */
         if (null === $value) {
             return null;
         }
 
         $class = $this->getClass();
 
-        if ($value instanceof $class) {
+        if ($value instanceof Enum && $value instanceof $class) {
             return $value->getId();
         }
 
