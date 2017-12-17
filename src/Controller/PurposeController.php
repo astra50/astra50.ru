@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Purpose;
-use App\Repository\AreaRepository;
-use App\Repository\PurposeRepository;
 use App\EventDispatcher\Payment\PurposeEvent;
 use App\Events;
 use App\Form\Model\PurposeModel;
 use App\Form\Type\PurposeType;
+use App\Repository\AreaRepository;
+use App\Repository\PurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,8 +43,8 @@ final class PurposeController extends BaseController
     }
 
     /**
-     * @Route(name="purpose_index", defaults={"page" : 1})
-     * @Route("/page/{page}", requirements={"page" : "[1-9]\d*"}, name="purposes_index_paginated")
+     * @Route(name="purpose_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="purposes_index_paginated")
      */
     public function indexAction($page)
     {

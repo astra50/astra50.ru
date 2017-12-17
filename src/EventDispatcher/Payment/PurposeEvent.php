@@ -29,9 +29,6 @@ final class PurposeEvent extends Event
      */
     private $user;
 
-    /**
-     * @param PurposeModel $PurposeModel
-     */
     public function __construct(Purpose $purpose, PurposeModel $purposeModel, User $user)
     {
         $this->purpose = $purpose;

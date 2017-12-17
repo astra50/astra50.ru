@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\News;
-use App\Repository\NewsRepository;
 use App\Form\Model\NewsModel;
 use App\Form\Type\NewsType;
+use App\Repository\NewsRepository;
 use App\Roles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -29,8 +29,8 @@ class NewsController extends BaseController
     }
 
     /**
-     * @Route("/", name="news_index", defaults={"page" : 1})
-     * @Route("/page/{page}", requirements={"page" : "[1-9]\d*"}, name="news_index_paginated")
+     * @Route("/", name="news_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="news_index_paginated")
      */
     public function indexAction(int $page)
     {

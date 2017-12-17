@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Area;
+use App\Entity\Street;
+use App\Form\Model\AreaModel;
+use App\Form\Type\AreaType;
 use App\Repository\AreaRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\StreetRepository;
 use App\Repository\UserRepository;
-use App\Form\Model\AreaModel;
-use App\Form\Type\AreaType;
 use App\Roles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,7 +65,7 @@ final class AreaController extends BaseController
     }
 
     /**
-     * @Route("/{number}", name="area_show", defaults={"page" : 1}, requirements={"page" : "\d"})
+     * @Route("/{number}", name="area_show", defaults={"page": 1}, requirements={"page": "\d"})
      */
     public function showAction(Area $area, $page)
     {
@@ -92,7 +93,13 @@ final class AreaController extends BaseController
 
         if ($form->handleRequest($request)->isValid()) {
             $area->setSize($model->size);
-            $area->setStreet($model->street ? $this->streetRepository->getReference($model->street) : null);
+            if ($model->street) {
+                /** @var Street $street */
+                $street = $this->streetRepository->getReference($model->street);
+
+                $area->setStreet($street);
+            }
+
             $area->replaceUsers($this->userRepository->getReferences($model->users));
 
             $this->areaRepository->save($area);

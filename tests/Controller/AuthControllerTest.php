@@ -32,7 +32,9 @@ class AuthControllerTest extends WebTestCase
             'fos_user_registration_form[plainPassword]' => $password,
         ]);
 
-        $user = $client->getContainer()->get(EntityManager::class)->getConnection()->executeQuery('SELECT id FROM user WHERE email = :email', [
+        /** @var EntityManager $em */
+        $em = $client->getContainer()->get(EntityManager::class);
+        $user = $em->getConnection()->executeQuery('SELECT id FROM user WHERE email = :email', [
             'email' => $email,
         ])->fetch();
 

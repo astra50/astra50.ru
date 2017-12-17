@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\StreetRepository;
 use App\Entity\Street;
 use App\Form\Model\StreetModel;
 use App\Form\Type\StreetType;
+use App\Repository\StreetRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 

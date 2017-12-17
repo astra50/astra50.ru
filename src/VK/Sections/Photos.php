@@ -6,6 +6,7 @@ namespace App\VK\Sections;
 
 use App\VK\Model\Album;
 use App\VK\Model\Photo;
+use Generator;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 
@@ -25,18 +26,18 @@ final class Photos
     }
 
     /**
-     * @param       $ownerId
-     * @param       $albumIds
+     * @param int   $owner
+     * @param array $albums
      * @param array $options
      *
-     * @return \Generator|Album[]
+     * @return Generator|Album[]
      */
-    public function getAlbums(int $owner, $albums, array $options = []): \Generator
+    public function getAlbums(int $owner, array $albums, array $options = []): Generator
     {
         $response = $this->client->get('/method/photos.getAlbums', [
             RequestOptions::QUERY => array_replace($options, [
                 'owner_id' => $owner,
-                'album_ids' => implode(',', (array) $albums),
+                'album_ids' => implode(',', $albums),
             ]),
         ]);
 
@@ -46,13 +47,13 @@ final class Photos
     }
 
     /**
-     * @param int   $owner
-     * @param int   $album
-     * @param array $options
+     * @param string $owner
+     * @param string $album
+     * @param array  $options
      *
-     * @return \Generator|Photo[]
+     * @return Generator|Photo[]
      */
-    public function get(string $owner, string $album, array $options = []): \Generator
+    public function get(string $owner, string $album, array $options = []): Generator
     {
         $response = $this->client->get('/method/photos.get', [
             RequestOptions::QUERY => array_replace($options, [
