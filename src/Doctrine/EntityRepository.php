@@ -20,7 +20,7 @@ abstract class EntityRepository
     /**
      * @var EntityManager
      */
-    private $em;
+    protected $em;
 
     public function __construct(EntityManager $em)
     {

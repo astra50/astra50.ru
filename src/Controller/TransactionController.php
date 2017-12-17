@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Payment;
-use App\Entity\Repository\AreaRepository;
-use App\Entity\Repository\PaymentRepository;
-use App\Entity\Repository\PurposeRepository;
+use App\Repository\AreaRepository;
+use App\Repository\PaymentRepository;
+use App\Repository\PurposeRepository;
 use App\Form\Model\PaymentModel;
 use App\Form\Type\PaymentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

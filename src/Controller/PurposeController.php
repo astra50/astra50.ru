@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Purpose;
-use App\Entity\Repository\AreaRepository;
-use App\Entity\Repository\PurposeRepository;
+use App\Repository\AreaRepository;
+use App\Repository\PurposeRepository;
 use App\EventDispatcher\Payment\PurposeEvent;
 use App\Events;
 use App\Form\Model\PurposeModel;

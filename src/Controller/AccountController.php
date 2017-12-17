@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Repository\UserRepository;
+use App\Repository\UserRepository;
 use App\Form\Model\AccountModel;
 use App\Form\Type\AccountType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Area;
-use App\Entity\Repository\AreaRepository;
-use App\Entity\Repository\PaymentRepository;
-use App\Entity\Repository\StreetRepository;
-use App\Entity\Repository\UserRepository;
+use App\Repository\AreaRepository;
+use App\Repository\PaymentRepository;
+use App\Repository\StreetRepository;
+use App\Repository\UserRepository;
 use App\Form\Model\AreaModel;
 use App\Form\Type\AreaType;
 use App\Roles;

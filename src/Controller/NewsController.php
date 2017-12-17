@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\News;
-use App\Entity\Repository\NewsRepository;
+use App\Repository\NewsRepository;
 use App\Form\Model\NewsModel;
 use App\Form\Type\NewsType;
 use App\Roles;

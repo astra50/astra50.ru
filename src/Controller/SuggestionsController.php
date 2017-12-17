@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Repository\SuggestionRepository;
+use App\Repository\SuggestionRepository;
 use App\Entity\Suggestion;
 use App\Form\Model\Suggestion as SuggestionModel;
 use App\Form\Type\SuggestionType;

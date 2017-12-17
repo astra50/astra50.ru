@@ -6,7 +6,7 @@ namespace App\EventDispatcher\Payment;
 
 use App\Entity\Payment;
 use App\Entity\Purpose;
-use App\Entity\Repository\PaymentRepository;
+use App\Repository\PaymentRepository;
 use App\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
