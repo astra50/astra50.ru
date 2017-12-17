@@ -1,0 +1,13 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h1>Создать отчёт</h1>
+    <hr>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+
+    <button type="submit" class="btn btn-success">Отправить</button>
+    <button type="submit" class="btn btn-success" name="save_and_new" value="1">Отправить и создать ещё</button>
+    {{ form_end(form) }}
+{% endblock %}
