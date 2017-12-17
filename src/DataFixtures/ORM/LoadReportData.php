@@ -7,7 +7,6 @@ namespace App\DataFixtures\ORM;
 use App\Entity\Enum\Financing;
 use App\Entity\Enum\ReportType;
 use App\Entity\Report;
-use App\Entity\User;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
