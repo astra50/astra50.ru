@@ -138,7 +138,7 @@ cs:
 cs-check:
 	$(php-cs-fixer) fix --config=.php_cs.dist --verbose --dry-run
 phpstan:
-	docker-compose run --rm --no-deps -e XDEBUG=false app php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon src tests
+	docker-compose run --rm -e APP_ENV=test -e XDEBUG=false app php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon src tests
 phpunit:
 	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=1 -e FIXTURES=false -e XDEBUG=false app phpunit --debug --stop-on-failure
 phpunit-check:
