@@ -59,7 +59,6 @@ pipeline:
         commands:
             - cd "$APP_DIR"
             - /docker-entrypoint.sh php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon --no-progress src tests
-            - chmod -R 777 var
         environment:
             APP_ENV: 'test'
             APP_DEBUG: '1'
@@ -72,6 +71,7 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
+            - chmod -R 777 var
             - /docker-entrypoint.sh symfony_requirements
         environment:
             APP_ENV: 'test'
