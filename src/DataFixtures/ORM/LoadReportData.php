@@ -26,13 +26,7 @@ class LoadReportData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
-        /** @var User $user */
-        $user = $this->getReference('user-1');
-
-        $index = 0;
-        foreach ($this->generateReports() as $report) {
-            ++$index;
-
+        foreach ($this->generateReports() as $index => $report) {
             $manager->persist($report);
 
             if ($index >= self::REPORTS_COUNT) {
@@ -55,43 +49,21 @@ class LoadReportData extends AbstractFixture implements OrderedFixtureInterface
     {
         $faker = Factory::create('ru');
 
-        $typeGenerator = $this->generateReportType();
-        $financingGenerator = $this->generateFinancing();
+        $types = ReportType::all();
+        $financings = Financing::all();
+        $months = range(1, 12);
+        $years = Report::allowedYears();
 
         while (true) {
             $report = new Report();
-            $report->setType($typeGenerator->current());
-            $report->setFinancing($financingGenerator->current());
+            $report->setType($faker->randomElement($types));
+            $report->setFinancing($faker->randomElement($financings));
             $report->setName($faker->name);
-            $report->setMonth($faker->randomElement(range(1, 12)));
-            $report->setYear($faker->randomElement(Report::allowedYears()));
+            $report->setMonth($faker->randomElement($months));
+            $report->setYear($faker->randomElement($years));
             $report->setUrl($faker->url);
 
             yield $report;
-
-            $typeGenerator->next();
-            $financingGenerator->next();
-        }
-    }
-
-    /**
-     * @return Generator|ReportType[]
-     */
-    private function generateReportType(): Generator
-    {
-        while (true) {
-            foreach (ReportType::all() as $type) {
-                yield $type;
-            }
-        }
-    }
-
-    private function generateFinancing(): Generator
-    {
-        while (true) {
-            foreach (Financing::all() as $type) {
-                yield $type;
-            }
         }
     }
 }
