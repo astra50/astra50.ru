@@ -34,5 +34,4 @@ parameters:
     mysql_version: 10.1.23-MariaDB-1~jessie
 
 services:
-    Doctrine\ORM\EntityManager:
-        alias: doctrine.orm.default_entity_manager
+    Doctrine\ORM\EntityManager: '@doctrine.orm.default_entity_manager'

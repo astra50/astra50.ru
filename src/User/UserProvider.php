@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\User;
 
 use App\Entity\User;
-use FOS\UserBundle\Model\UserInterface as FOSUserInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
-use LogicException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -20,7 +18,7 @@ final class UserProvider extends FOSUBUserProvider
     /**
      * {@inheritdoc}
      */
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response)
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $username = $response->getUsername();
         $email = $response->getEmail();
@@ -35,6 +33,10 @@ final class UserProvider extends FOSUBUserProvider
             $user = new User($email, $response->getRealName(), uniqid('', true), true);
         }
 
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('$user must be instance of %s', User::class));
+        }
+
         $user->updateOauth2($response->getResourceOwner()->getName(), $username, $response->getAccessToken());
         $this->userManager->updateUser($user);
 
@@ -47,13 +49,15 @@ final class UserProvider extends FOSUBUserProvider
     public function connect(UserInterface $user, UserResponseInterface $response): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Expected an instance of FOS\UserBundle\Model\User, but got "%s".', get_class($user)));
+            throw new UnsupportedUserException(
+                sprintf('Expected an instance of %s, but got "%s".', User::class, \get_class($user))
+            );
         }
 
         $property = $this->getProperty($response);
         $username = $response->getUsername();
 
-        if (null !== $previousUser = $this->userManager->findUserBy([$property => $username])) {
+        if (!empty($previousUser = $this->userManager->findUserBy([$property => $username]))) {
             $this->disconnect($previousUser, $response);
         }
 
@@ -63,24 +67,15 @@ final class UserProvider extends FOSUBUserProvider
     }
 
     /**
-     * @param User|UserInterface    $user
-     * @param UserResponseInterface $response
-     *
-     * @throws LogicException
+     * {@inheritdoc}
      */
     public function disconnect(UserInterface $user, UserResponseInterface $response): void
     {
-        $user->updateOauth2($response->getResourceOwner()->getName(), null, null);
-
-        if (!$user instanceof FOSUserInterface) {
-            throw new LogicException(
-                sprintf(
-                    'User instanceof "%s" required, but instanceof "%s" given.',
-                    FOSUserInterface::class,
-                    get_class($user)
-                )
-            );
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('$user must be instance of %s', User::class));
         }
+
+        $user->updateOauth2($response->getResourceOwner()->getName(), null, null);
 
         $this->userManager->updateUser($user);
     }

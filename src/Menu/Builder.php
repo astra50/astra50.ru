@@ -25,11 +25,6 @@ class Builder
         $this->factory = $factory;
     }
 
-    /**
-     * @param array $options
-     *
-     * @return ItemInterface
-     */
     public function createMainMenu(): ItemInterface
     {
         $menu = $this->factory->createItem('root', ['childrenAttributes' => ['class' => 'nav navbar-nav']]);

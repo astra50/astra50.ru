@@ -11,9 +11,16 @@ hwi_oauth:
             client_id:           '%env(VKONTAKTE_OAUTH_ID)%'
             client_secret:       '%env(VKONTAKTE_OAUTH_SECRET)%'
     fosub:
-        properties:
-            google: googleId
-            vkontakte: vkontakteId
+        properties: '%hwi_oauth.fosub.properties%'
 
     connect:
         confirmation: false
+
+parameters:
+    env(GOOGLE_OAUTH_ID): null
+    env(GOOGLE_OAUTH_SECRET): null
+    env(VKONTAKTE_OAUTH_ID): null
+    env(VKONTAKTE_OAUTH_SECRET): null
+    hwi_oauth.fosub.properties:
+        google: googleId
+        vkontakte: vkontakteId

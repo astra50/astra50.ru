@@ -16,7 +16,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class News
 {
-    const NUM_ITEMS = 3;
+    public const NUM_ITEMS = 3;
 
     /**
      * @var UuidInterface
@@ -103,12 +103,6 @@ class News
         $this->createdAt = new DateTimeImmutable();
     }
 
-    /**
-     * @param string $title
-     * @param string $content
-     * @param bool   $published
-     * @param bool   $internal
-     */
     public function update(string $title, string $content, bool $internal): void
     {
         $this->title = $title;
