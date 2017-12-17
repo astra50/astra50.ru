@@ -3,5 +3,4 @@ knp_menu:
         template: knp_menu.html.twig
 
 services:
-    Knp\Menu\FactoryInterface:
-        alias: knp_menu.factory
+    Knp\Menu\FactoryInterface: '@knp_menu.factory'

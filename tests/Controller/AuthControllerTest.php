@@ -4,24 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
-use App\Kernel;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
 class AuthControllerTest extends WebTestCase
 {
-    public function testIndex(): void
-    {
-        $app = new Kernel('test', false);
-        $app->boot();
-
-        self::assertTrue($app->handle(Request::create('/login'))->isSuccessful());
-        self::assertTrue($app->handle(Request::create('/register/'))->isSuccessful());
-    }
-
     public function testRegistration(): void
     {
         $this->registration(true, 'Test user', 'test@example.com', '28942984239', 'Pa$$w0rd');
@@ -42,7 +32,7 @@ class AuthControllerTest extends WebTestCase
             'fos_user_registration_form[plainPassword]' => $password,
         ]);
 
-        $user = $client->getContainer()->get('doctrine.orm.entity_manager')->getConnection()->executeQuery('SELECT id FROM user WHERE email = :email', [
+        $user = $client->getContainer()->get(EntityManager::class)->getConnection()->executeQuery('SELECT id FROM user WHERE email = :email', [
             'email' => $email,
         ])->fetch();
 

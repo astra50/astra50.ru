@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Doctrine;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -16,7 +17,15 @@ use Ramsey\Uuid\UuidInterface;
  */
 abstract class EntityRepository
 {
-    use EntityManagerTrait;
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * @param UuidInterface $id

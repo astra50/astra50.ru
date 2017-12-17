@@ -14,11 +14,12 @@ class Kernel extends SymfonyKernel
 {
     use MicroKernelTrait;
 
-    const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
     public function registerBundles(): iterable
     {
-        $contents = require $this->getConfDir().'/bundles.php';
+        /** @noinspection PhpIncludeInspection */
+        $contents = require $this->getProjectDir().'/config/bundles.php';
         foreach ((array) $contents as $class => $envs) {
             if (isset($envs['all']) || isset($envs[$this->getEnvironment()])) {
                 yield new $class();
@@ -50,27 +51,27 @@ class Kernel extends SymfonyKernel
     {
         $confDir = $this->getConfDir();
 
-        if (is_dir($confDir.'/routing/'.$this->getEnvironment())) {
-            $routes->import($confDir.'/routing/'.$this->getEnvironment().'/**/*'.self::CONFIG_EXTS, '/', 'glob');
+        if (is_dir($confDir.'/routes/')) {
+            $routes->import($confDir.'/routes/*'.self::CONFIG_EXTS, '/', 'glob');
         }
-        $routes->import($confDir.'/routing'.self::CONFIG_EXTS, '/', 'glob');
+        if (is_dir($confDir.'/routes/'.$this->environment)) {
+            $routes->import($confDir.'/routes/'.$this->environment.'/**/*'.self::CONFIG_EXTS, '/', 'glob');
+        }
+        $routes->import($confDir.'/routes'.self::CONFIG_EXTS, '/', 'glob');
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
+        $container->setParameter('container.dumper.inline_class_loader', true);
         $confDir = $this->getConfDir();
 
         $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');
 
-        if ('test' === $this->getEnvironment() && is_dir($confDir.'/packages/dev')) {
-            $loader->load($confDir.'/packages/dev/*'.self::CONFIG_EXTS, 'glob');
-        }
-
         if (is_dir($confDir.'/packages/'.$this->getEnvironment())) {
-            $loader->load($confDir.'/packages/'.$this->getEnvironment().'/*'.self::CONFIG_EXTS, 'glob');
+            $loader->load($confDir.'/packages/'.$this->getEnvironment().'/**/*'.self::CONFIG_EXTS, 'glob');
         }
 
         $loader->load($confDir.'/services'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/conflicts'.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir.'/services_'.$this->getEnvironment().self::CONFIG_EXTS, 'glob');
     }
 }
