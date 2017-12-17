@@ -71,13 +71,11 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - chmod -R 777 var
             - /docker-entrypoint.sh symfony_requirements
         environment:
             APP_ENV: 'test'
             APP_DEBUG: '0'
             MIGRATIONS: 'false'
-            COMPOSER_SCRIPT: 'false'
         when:
             branch:
                 exclude: master
@@ -91,7 +89,6 @@ pipeline:
             APP_ENV: 'test'
             APP_DEBUG: '0'
             MIGRATIONS: 'false'
-            COMPOSER_SCRIPT: 'false'
         when:
             branch:
                 exclude: master
@@ -106,7 +103,6 @@ pipeline:
             APP_DEBUG: '0'
             MIGRATIONS: 'true'
             WAIT_HOSTS: 'mysql:3306'
-            COMPOSER_SCRIPT: 'false'
 
     test phpunit: &test-phpunit
         group: test
@@ -119,7 +115,6 @@ pipeline:
             APP_DEBUG: '0'
             FIXTURES: 'true'
             MIGRATIONS: 'false'
-            COMPOSER_SCRIPT: 'false'
 
     clean:
         <<: *docker
