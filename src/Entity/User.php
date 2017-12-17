@@ -75,13 +75,13 @@ class User extends BaseUser
         $this->enabled = $enabled;
     }
 
-    public function updateOauth2(string $provider, ?string $id, ?string $token): void
+    public function updateOauth2(string $provider, $id, ?string $token): void
     {
         if (!in_array($provider, self::SUPPORT_OAUTH_PROVIDERS, true)) {
             throw new \InvalidArgumentException(sprintf('Can\'t update undefined provider "%s"', $provider));
         }
 
-        $this->{sprintf('%sId', $provider)} = $id;
+        $this->{sprintf('%sId', $provider)} = (string) $id;
         $this->{sprintf('%sAccessToken', $provider)} = $token;
     }
 
