@@ -43,7 +43,7 @@ class Kernel extends SymfonyKernel implements CompilerPassInterface
         return $this->getProjectDir().'/config';
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('fos_user.registration.form.factory')->setPublic(true);
         $container->getAlias('fos_user.user_manager')->setPublic(true);
