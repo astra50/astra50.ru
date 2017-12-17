@@ -65,6 +65,8 @@ class Kernel extends SymfonyKernel implements CompilerPassInterface
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->setParameter('container.dumper.inline_class_loader', true);
+        $container->setParameter('container.autowiring.strict_mode', true);
+
         $confDir = $this->getConfDir();
 
         $loader->load($confDir.'/packages/*'.self::CONFIG_EXTS, 'glob');

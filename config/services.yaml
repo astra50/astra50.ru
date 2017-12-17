@@ -4,7 +4,6 @@ parameters:
         currentClass: active
     env(APP_VERSION): null
 
-    container.autowiring.strict_mode: true
 services:
     _defaults:
         public: false
