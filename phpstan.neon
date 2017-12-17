@@ -6,4 +6,4 @@ includes:
 
 parameters:
 	symfony:
-		srcDevDebugProjectContainerXml: %rootDir%/../../../var/cache/test/publicTestDebugProjectContainer.xml
+		srcDevDebugProjectContainerXml: %rootDir%/../../../var/cache/test/srcTestDebugProjectContainer.xml

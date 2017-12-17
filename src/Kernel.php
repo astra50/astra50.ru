@@ -42,11 +42,6 @@ class Kernel extends SymfonyKernel
         return $this->getProjectDir().'/config';
     }
 
-    public function getRootDir(): string
-    {
-        return $this->getProjectDir().'/public';
-    }
-
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $confDir = $this->getConfDir();
