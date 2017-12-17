@@ -34,7 +34,7 @@ final class PaymentController extends Controller
 
     /**
      * @Route("/{type}", name="payment_type",
-     *     requirements={"type" : "sbrf|sbrf-mobile|sbrf-online|transfer|tinkoff|cash"}
+     *     requirements={"type": "sbrf|sbrf-mobile|sbrf-online|transfer|tinkoff|cash"}
      * )
      */
     public function typeAction(string $type): Response

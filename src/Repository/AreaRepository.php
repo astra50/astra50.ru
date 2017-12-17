@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Repository;
+namespace App\Repository;
 
 use App\Doctrine\EntityRepository;
 use App\Entity\Area;

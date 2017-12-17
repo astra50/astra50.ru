@@ -8,14 +8,13 @@ services:
         autowire: false
         arguments:
             - '%locale%'
-            - !php/const:NumberFormatter::CURRENCY
+            - !php/const NumberFormatter::CURRENCY
 
     Money\Currencies\ISOCurrencies: ~
 
     Money\Formatter\IntlMoneyFormatter: ~
     Money\Formatter\DecimalMoneyFormatter: ~
-    Money\MoneyFormatter:
-        alias: Money\Formatter\IntlMoneyFormatter
+    Money\MoneyFormatter: '@Money\Formatter\IntlMoneyFormatter'
 
     Money\Exchange\SwapExchange: ~
     Money\Converter: ~

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Payment;
-use App\Entity\Repository\AreaRepository;
-use App\Entity\Repository\PaymentRepository;
-use App\Entity\Repository\PurposeRepository;
 use App\Form\Model\PaymentModel;
 use App\Form\Type\PaymentType;
+use App\Repository\AreaRepository;
+use App\Repository\PaymentRepository;
+use App\Repository\PurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -46,8 +46,8 @@ final class TransactionController extends BaseController
     }
 
     /**
-     * @Route("/", name="transaction_index", defaults={"page" : 1})
-     * @Route("/page/{page}", requirements={"page" : "[1-9]\d*"}, name="transaction_index_paginated")
+     * @Route("/", name="transaction_index", defaults={"page": 1})
+     * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="transaction_index_paginated")
      */
     public function indexAction($page)
     {

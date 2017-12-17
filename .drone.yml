@@ -23,11 +23,11 @@ pipeline:
             - >-
                 docker build -t "astra50/astra50:${DRONE_BUILD_NUMBER}"
                 --label build=${DRONE_BUILD_NUMBER}
-                --build-arg APP_BUILD="$DRONE_BUILD_NUMBER"
+                --build-arg APP_VERSION="$DRONE_BUILD_NUMBER"
                 .
 
-    validate php-cs-fixer:
-        group: validate
+    static php-cs-fixer:
+        group: static
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - >-
@@ -40,8 +40,8 @@ pipeline:
             branch:
                 exclude: master
 
-    validate blank end line:
-        group: validate
+    static blank end line:
+        group: static
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - >-
@@ -54,11 +54,15 @@ pipeline:
                 exclude: master
 
     validate phpstan:
-        group: validate
+        group: static
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - cd "$APP_DIR"
-            - php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon --no-progress src tests
+            - /docker-entrypoint.sh php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon --no-progress src tests
+        environment:
+            APP_ENV: 'test'
+            APP_DEBUG: '1'
+            MIGRATIONS: 'false'
         when:
             branch:
                 exclude: master
@@ -70,6 +74,8 @@ pipeline:
             - /docker-entrypoint.sh symfony_requirements
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
+            MIGRATIONS: 'false'
         when:
             branch:
                 exclude: master
@@ -81,6 +87,8 @@ pipeline:
             - /docker-entrypoint.sh console lint:yaml "$$APP_DIR/config"
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
+            MIGRATIONS: 'false'
         when:
             branch:
                 exclude: master
@@ -92,6 +100,7 @@ pipeline:
             - /docker-entrypoint.sh console doctrine:schema:validate
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
             MIGRATIONS: 'true'
             WAIT_HOSTS: 'mysql:3306'
 
@@ -103,7 +112,9 @@ pipeline:
             - /docker-entrypoint.sh phpunit
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
             FIXTURES: 'true'
+            MIGRATIONS: 'false'
 
     clean:
         <<: *docker

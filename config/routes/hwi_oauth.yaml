@@ -1,6 +1,3 @@
-fos_user:
-    resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
     prefix:   /connect
@@ -18,19 +15,3 @@ google_login:
 
 vkontakte_login:
     path: /login/check-vkontakte
-
-app:
-    resource: "../src/Controller/"
-    type:     annotation
-
-homepage:
-    path: /
-
-fos_user_registration_confirmed:
-    path: /
-
-contacts:
-    path: /contacts
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: static/contacts.html.twig
