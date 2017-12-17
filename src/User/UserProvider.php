@@ -37,6 +37,10 @@ final class UserProvider extends FOSUBUserProvider
             throw new UnsupportedUserException(sprintf('$user must be instance of %s', User::class));
         }
 
+        if (\is_int($username)) {
+            $username = (string) $username;
+        }
+
         $user->updateOauth2($response->getResourceOwner()->getName(), $username, $response->getAccessToken());
         $this->userManager->updateUser($user);
 
@@ -50,7 +54,7 @@ final class UserProvider extends FOSUBUserProvider
     {
         if (!$user instanceof User) {
             throw new UnsupportedUserException(
-                sprintf('Expected an instance of %s, but got "%s".', User::class, get_class($user))
+                sprintf('Expected an instance of %s, but got "%s".', User::class, \get_class($user))
             );
         }
 
