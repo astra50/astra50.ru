@@ -70,6 +70,8 @@ pipeline:
             - /docker-entrypoint.sh symfony_requirements
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
+            MIGRATIONS: 'false'
         when:
             branch:
                 exclude: master
@@ -81,6 +83,8 @@ pipeline:
             - /docker-entrypoint.sh console lint:yaml "$$APP_DIR/config"
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
+            MIGRATIONS: 'false'
         when:
             branch:
                 exclude: master
@@ -92,6 +96,7 @@ pipeline:
             - /docker-entrypoint.sh console doctrine:schema:validate
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
             MIGRATIONS: 'true'
             WAIT_HOSTS: 'mysql:3306'
 
@@ -103,7 +108,9 @@ pipeline:
             - /docker-entrypoint.sh phpunit
         environment:
             APP_ENV: 'test'
+            APP_DEBUG: '0'
             FIXTURES: 'true'
+            MIGRATIONS: 'false'
 
     clean:
         <<: *docker
