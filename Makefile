@@ -1,4 +1,4 @@
-ifeq ($(wildcard ./app/.php_cs),)
+ifeq ($(wildcard ./.php_cs),)
     php_cs_config = .php_cs.dist
 else
     php_cs_config = .php_cs
