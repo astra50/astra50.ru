@@ -8,6 +8,7 @@ use App\Entity\Enum\ReportType;
 use App\Entity\Report;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,6 +49,8 @@ final class ReportController extends Controller
 
     /**
      * @Route("/new", name="new")
+     *
+     * @Security("is_granted(constant('App\\Roles::REPORTS'))")
      */
     public function newAction(Request $request)
     {

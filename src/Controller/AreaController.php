@@ -14,12 +14,13 @@ use App\Repository\StreetRepository;
 use App\Repository\UserRepository;
 use App\Roles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/area")
  *
- * @author Konstantin Grachev <me@grachevko.ru>
+ * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
 final class AreaController extends BaseController
 {

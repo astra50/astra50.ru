@@ -9,6 +9,7 @@ use App\Form\Model\Suggestion as SuggestionModel;
 use App\Form\Type\SuggestionType;
 use App\Repository\SuggestionRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -37,6 +38,8 @@ final class SuggestionsController extends BaseController
     /**
      * @Route("/list", name="suggestions_index", defaults={"page": 1})
      * @Route("/list/page/{page}", name="suggestions_index_paginated")
+     *
+     * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
      */
     public function indexAction($page)
     {
