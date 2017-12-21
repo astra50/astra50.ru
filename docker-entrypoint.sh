@@ -31,7 +31,7 @@ if [ -d ${SWARM_SECRETS_DIR} ] && [[ $(ls -A "$SWARM_SECRETS_DIR") ]]; then
     done
 fi
 
-if [ -n "$WAIT_HOSTS" ]; then
+if [ -n "$WAIT_HOSTS" ] && [ "$WAIT_HOSTS" != "false" ]; then
     OLD_IFS=${IFS}
 
     IFS=',' read -ra HOSTS <<< "$WAIT_HOSTS"
