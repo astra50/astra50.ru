@@ -16,19 +16,23 @@ RUN set -ex \
         openssh-client \
         zlib1g-dev \
         netcat \
-	\
-	&& curl http://download.icu-project.org/files/icu4c/60.1/icu4c-60_1-src.tgz -o /tmp/icu4c.tgz \
-	&& tar zxvf /tmp/icu4c.tgz > /dev/null \
-	&& cd icu/source \
-	&& ./configure --prefix=/opt/icu && make && make install \
-	\
-	&& docker-php-ext-configure intl --with-icu-dir=/opt/icu \
-    && docker-php-ext-install zip intl pdo_mysql iconv opcache pcntl \
+        libevent-dev \
+	  \
+	  && curl http://download.icu-project.org/files/icu4c/60.2/icu4c-60_2-src.tgz -o /tmp/icu4c.tgz \
+	  && tar zxvf /tmp/icu4c.tgz > /dev/null \
+	  && cd icu/source \
+	  && ./configure --prefix=/opt/icu && make && make install \
+	  \
+	  && docker-php-ext-configure intl --with-icu-dir=/opt/icu \
+    && docker-php-ext-install zip intl pdo_mysql iconv opcache pcntl sockets \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
-    && pecl install xdebug-2.6.0alpha1 apcu \
+    && pecl install xdebug-2.6.0 apcu \
+    && printf "no\nyes\n/usr\nno\nyes\nno\nno" | pecl install event \
+    && docker-php-ext-enable event \
     \
     && rm -r /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools
 RUN a2enmod rewrite
 
 ENV COMPOSER_VERSION 1.5.5
