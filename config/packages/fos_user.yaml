@@ -15,8 +15,5 @@ services:
         class: App\User\UserProvider
         parent: hwi_oauth.user.provider.fosub_bridge
 
-    hwi_oauth.account.connector:
-        alias: app.user.user_provider
-
-    FOS\UserBundle\Model\UserManagerInterface:
-        alias: fos_user.user_manager.default
+    hwi_oauth.account.connector: '@app.user.user_provider'
+    FOS\UserBundle\Model\UserManagerInterface: '@fos_user.user_manager.default'

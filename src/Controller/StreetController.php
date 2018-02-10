@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Repository\StreetRepository;
 use App\Entity\Street;
 use App\Form\Model\StreetModel;
 use App\Form\Type\StreetType;
+use App\Repository\StreetRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/street")
+ *
+ * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
 class StreetController extends BaseController
 {

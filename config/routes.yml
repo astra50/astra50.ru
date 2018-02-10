@@ -1,0 +1,8 @@
+homepage:
+    path: /
+
+contacts:
+    path: /contacts
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: static/contacts.html.twig

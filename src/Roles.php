@@ -12,25 +12,30 @@ final class Roles
     /**
      * Член СНТ.
      */
-    const COMMUNITY = 'ROLE_COMMUNITY';
+    public const COMMUNITY = 'ROLE_COMMUNITY';
 
     /**
      * Писатель новостей.
      */
-    const NEWS_WRITER = 'ROLE_NEWS_WRITER';
+    public const NEWS_WRITER = 'ROLE_NEWS_WRITER';
 
     /**
      * Кассир
      */
-    const CASHIER = 'ROLE_CASHIER';
+    public const CASHIER = 'ROLE_CASHIER';
 
     /**
      * Председатель.
      */
-    const CHAIRMAN = 'ROLE_CHAIRMAN';
+    public const CHAIRMAN = 'ROLE_CHAIRMAN';
 
     /**
      * Роль для отображение админской панели навигации.
      */
-    const EMPLOYEE = 'ROLE_EMPLOYEE';
+    public const EMPLOYEE = 'ROLE_EMPLOYEE';
+
+    /**
+     * Доступ к публикации/редактированию отчётов.
+     */
+    public const REPORTS = 'ROLE_REPORTS';
 }

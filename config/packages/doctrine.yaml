@@ -2,6 +2,8 @@ doctrine:
     dbal:
         types:
             uuid_binary: Ramsey\Uuid\Doctrine\UuidBinaryType
+            report_type_enum: App\Doctrine\DBAL\Types\ReportTypeType
+            financing_enum: App\Doctrine\DBAL\Types\FinancingType
         driver:   pdo_mysql
         host:     "%env(DATABASE_HOST)%"
         port:     "%env(DATABASE_PORT)%"
@@ -34,5 +36,4 @@ parameters:
     mysql_version: 10.1.23-MariaDB-1~jessie
 
 services:
-    Doctrine\ORM\EntityManager:
-        alias: doctrine.orm.default_entity_manager
+    Doctrine\ORM\EntityManager: '@doctrine.orm.default_entity_manager'

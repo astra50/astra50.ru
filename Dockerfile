@@ -1,4 +1,4 @@
-FROM php:7.1.9-apache
+FROM php:7.2.0-apache-stretch
 
 LABEL MAINTAINER="Konstantin Grachev <me@grachevko.ru>"
 
@@ -16,19 +16,26 @@ RUN set -ex \
         openssh-client \
         zlib1g-dev \
         netcat \
-        libicu-dev \
         libevent-dev \
-    && docker-php-ext-install zip intl pdo_mysql iconv opcache sockets \
+	  \
+	  && curl http://download.icu-project.org/files/icu4c/60.2/icu4c-60_2-src.tgz -o /tmp/icu4c.tgz \
+	  && tar zxvf /tmp/icu4c.tgz > /dev/null \
+	  && cd icu/source \
+	  && ./configure --prefix=/opt/icu && make && make install \
+	  \
+	  && docker-php-ext-configure intl --with-icu-dir=/opt/icu \
+    && docker-php-ext-install zip intl pdo_mysql iconv opcache pcntl sockets \
     && rm -rf ${PHP_INI_DIR}/conf.d/docker-php-ext-opcache.ini \
-    && pecl install xdebug apcu \
+    && pecl install xdebug-2.6.0 apcu \
     && printf "no\nyes\n/usr\nno\nyes\nno\nno" | pecl install event \
     && docker-php-ext-enable event \
+    \
     && rm -r /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools
 RUN a2enmod rewrite
 
-ENV COMPOSER_VERSION 1.5.2
+ENV COMPOSER_VERSION 1.5.5
 COPY docker/composer.sh ./composer.sh
 RUN ./composer.sh --install-dir=/usr/local/bin --filename=composer --version=${COMPOSER_VERSION}  \
     && composer global require "hirak/prestissimo:^0.3" \
@@ -36,7 +43,7 @@ RUN ./composer.sh --install-dir=/usr/local/bin --filename=composer --version=${C
     && composer --version
 
 ARG SOURCE_DIR=.
-COPY $SOURCE_DIR/composer.* ${APP_DIR}/
+COPY ${SOURCE_DIR}/composer.* ${APP_DIR}/
 RUN if [ -f composer.json ]; then \
     mkdir -p var \
     && composer install --no-scripts --no-interaction --apcu-autoloader --no-progress --prefer-dist \
@@ -47,10 +54,10 @@ COPY docker/apache/apache.conf ${APACHE_CONFDIR}/sites-enabled/000-default.conf
 COPY docker/php/* ${PHP_INI_DIR}/
 COPY docker/bin/* /usr/local/bin/
 
-COPY $SOURCE_DIR/ ${APP_DIR}/
+COPY ${SOURCE_DIR}/ ${APP_DIR}/
 
-ARG APP_BUILD=dev
-ENV APP_BUILD ${APP_BUILD}
+ARG APP_VERSION=dev
+ENV APP_VERSION ${APP_VERSION}
 
 ENTRYPOINT ["bash", "/docker-entrypoint.sh"]
 CMD ["apache"]

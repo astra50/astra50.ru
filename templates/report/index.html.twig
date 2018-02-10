@@ -1,0 +1,38 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    {% if is_granted(constant('App\\Roles::REPORTS')) %}
+        <a class="btn btn-primary" href="{{ path('report_new') }}">Добавить отчёт</a>
+        <hr>
+    {% endif %}
+
+    <h1>Промежуточные и итоговые отчеты правления СНТ "АСТРА"</h1>
+    <h4>Все вопросы связанные с отчетностью просьба формулировать через форму <a href="{{ path('suggestions_new') }}">обратной связи</a> на сайте.</h4>
+    <hr>
+
+
+    <div class="row">
+        {% for reports in chunkedReports %}
+            {% if reports is not empty %}
+                <div class="col-md-4">
+                    <h3>{{ reports[0].type.getHeader }}</h3>
+
+                    <ul>
+                        {% for report in reports %}
+                            {# @var report \App\Entity\Report #}
+                            <li>
+                                <a href="{{ report.url }}">{{ report.name }} {{ report.month }}.{{ report.year }}</a>
+                                {% if is_granted(constant('App\\Roles::REPORTS')) %}
+                                    <a href="{{ path('report_edit', {'id': report.id}) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                {% endif %}
+                            </li>
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
