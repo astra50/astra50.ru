@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Ramsey\Uuid\UuidInterface;
@@ -12,21 +13,23 @@ use Ramsey\Uuid\UuidInterface;
  * @method UuidInterface getId()
  *
  * @ORM\Entity
+ * @ORM\Table(name="users")
  */
 class User extends BaseUser
 {
+    use Identity;
+
     public const SUPPORT_OAUTH_PROVIDERS = [
         'google',
         'vkontakte',
     ];
 
     /**
-     * @var UuidInterface
+     * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 

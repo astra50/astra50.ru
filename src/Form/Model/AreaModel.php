@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Form\Model;
 
 use App\Entity\Area;
-use Ramsey\Uuid\UuidInterface;
+use App\Entity\Street;
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -21,36 +22,27 @@ final class AreaModel
     public $size;
 
     /**
-     * @var UuidInterface
+     * @var Street
      *
-     * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * @Assert\Type("App\Entity\Street")
      */
     public $street;
 
     /**
-     * @var UuidInterface[]
+     * @var User[]
      *
      * @Assert\All({
-     *     @Assert\Type("Ramsey\Uuid\UuidInterface"),
+     *     @Assert\Type("App\Entity\User"),
      * })
      */
     public $users = [];
 
-    /**
-     * @param Area $area
-     *
-     * @return AreaModel
-     */
-    public static function fromEntity(Area $area)
+    public static function fromEntity(Area $area): self
     {
         $model = new self();
         $model->size = $area->getSize();
-        if ($street = $area->getStreet()) {
-            $model->street = $street->getId();
-        }
-        foreach ($area->getUsers() as $user) {
-            $model->users[] = $user->getId();
-        }
+        $model->street = $area->getStreet();
+        $model->users = $area->getUsers();
 
         return $model;
     }

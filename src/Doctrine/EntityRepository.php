@@ -13,7 +13,6 @@ use Generator;
 use InvalidArgumentException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -30,7 +29,7 @@ abstract class EntityRepository
         $this->em = $em;
     }
 
-    public function getReference(UuidInterface $id): ?object
+    public function getReference(int $id): ?object
     {
         return $this->em->getReference($this->getClass(), $id);
     }
@@ -42,7 +41,7 @@ abstract class EntityRepository
         }
     }
 
-    public function get(UuidInterface $id): object
+    public function get(int $id): object
     {
         if (null === $entity = $this->find($id)) {
             throw new EntityNotFoundException();
@@ -51,7 +50,7 @@ abstract class EntityRepository
         return $entity;
     }
 
-    public function find(UuidInterface $id)
+    public function find(int $id)
     {
         return $this->em->createQueryBuilder()
             ->select('c')

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Area;
 use App\Entity\Street;
+use App\Entity\User;
 use App\Form\Model\AreaModel;
 use App\Form\Type\AreaType;
 use App\Repository\AreaRepository;
@@ -13,6 +14,7 @@ use App\Repository\PaymentRepository;
 use App\Repository\StreetRepository;
 use App\Repository\UserRepository;
 use App\Roles;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -45,16 +47,23 @@ final class AreaController extends Controller
      */
     private $userRepository;
 
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
     public function __construct(
         AreaRepository $areaRepository,
         PaymentRepository $paymentRepository,
         StreetRepository $streetRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        EntityManagerInterface $em
     ) {
         $this->areaRepository = $areaRepository;
         $this->paymentRepository = $paymentRepository;
         $this->streetRepository = $streetRepository;
         $this->userRepository = $userRepository;
+        $this->em = $em;
     }
 
     /**
@@ -90,25 +99,21 @@ final class AreaController extends Controller
         $model = AreaModel::fromEntity($area);
 
         $form = $this->createForm(AreaType::class, $model, [
-            'streets' => $this->streetRepository->findAllForChoices('name'),
-            'users' => $this->userRepository->findAllForChoices('realname'),
+            'streets' => $this->em->getRepository(Street::class)->findAll(),
+            'users' => $this->em->getRepository(User::class)->findAll(),
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
             $area->setSize($model->size);
             if ($model->street) {
-                /** @var Street $street */
-                $street = $this->streetRepository->getReference($model->street);
-
-                $area->setStreet($street);
+                $area->setStreet($model->street);
             }
 
-            $area->replaceUsers($this->userRepository->getReferences($model->users));
+            $area->replaceUsers($model->users);
 
             $this->areaRepository->save($area);
 
-            foreach ($model->users as $id) {
-                $user = $this->userRepository->get($id);
+            foreach ($model->users as $user) {
                 $user->addRole(Roles::COMMUNITY);
 
                 $this->userRepository->save($user);

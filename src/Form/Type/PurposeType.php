@@ -62,7 +62,7 @@ class PurposeType extends AbstractType
                 'label' => 'Участки',
                 'choices' => $options['areas'],
                 'choice_label' => 'number',
-                'choice_value' => 'id.toString',
+                'choice_value' => 'id',
                 'group_by' => 'street.name',
                 'multiple' => true,
                 'expanded' => true,

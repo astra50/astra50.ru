@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
  */
 class Area
 {
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
-     */
-    private $id;
+    use Identity;
 
     /**
      * @var string
@@ -69,11 +61,6 @@ class Area
     public function setStreet(Street $street = null): void
     {
         $this->street = $street;
-    }
-
-    public function getId(): UuidInterface
-    {
-        return $this->id;
     }
 
     public function getNumber(): string

@@ -1,7 +1,6 @@
 doctrine:
     dbal:
         types:
-            uuid_binary: Ramsey\Uuid\Doctrine\UuidBinaryType
             report_type_enum: App\Doctrine\DBAL\Types\ReportTypeType
             financing_enum: App\Doctrine\DBAL\Types\FinancingType
         driver:   pdo_mysql

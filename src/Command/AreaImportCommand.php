@@ -23,9 +23,6 @@ class AreaImportCommand extends Command
      */
     private $areaRepository;
 
-    /**
-     * @param AreaRepository $areaRepository
-     */
     public function __construct(AreaRepository $areaRepository)
     {
         parent::__construct();

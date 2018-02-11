@@ -57,7 +57,11 @@
             </tbody>
         </table>
 
-        {% include ':blocks:pagerfanta.html.twig' %}
+        {% if pagerfanta.haveToPaginate %}
+                <div class="text-center">
+                    {{ pagerfanta(pagerfanta, 'twitter_bootstrap3_translated') }}
+                </div>
+            {% endif %}
     {% else %}
         <div class="jumbotron">
             <h2>Записей нет</h2>

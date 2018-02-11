@@ -96,7 +96,7 @@ final class PurposeController extends Controller
                     return $area->getSize() / 100 * $model->amount;
                 };
                 break;
-            case Purpose::CALCULATION_AREA === $model->calculation;
+            case Purpose::CALCULATION_AREA === $model->calculation:
                 $calc = function (Area $area, PurposeModel $model) {
                     return $model->amount;
                 };

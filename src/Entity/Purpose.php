@@ -4,32 +4,27 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\CreatedAt;
+use App\Doctrine\ORM\Mapping\Traits\Identity;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
  */
 class Purpose
 {
-    const NUM_ITEMS = 20;
+    use Identity;
+    use CreatedAt;
+    public const NUM_ITEMS = 20;
 
-    const SCHEDULE_ONCE = 1;
-    const SCHEDULE_MONTHLY = 2;
+    public const SCHEDULE_ONCE = 1;
+    public const SCHEDULE_MONTHLY = 2;
 
-    const CALCULATION_AREA = 1;
-    const CALCULATION_SIZE = 2;
-    const CALCULATION_SHARE = 3;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
-     */
-    private $id;
+    public const CALCULATION_AREA = 1;
+    public const CALCULATION_SIZE = 2;
+    public const CALCULATION_SHARE = 3;
 
     /**
      * @var string
@@ -60,16 +55,9 @@ class Purpose
     private $calculation;
 
     /**
-     * @var \DateTime
+     * @var DateTimeImmutable
      *
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $archivedAt;
 
@@ -79,66 +67,39 @@ class Purpose
         $this->amount = $amount;
         $this->schedule = $schedule;
         $this->calculation = $calculation;
-        $this->createdAt = new \DateTime();
     }
 
     public function archive(): void
     {
-        $this->archivedAt = new \DateTime();
+        $this->archivedAt = new DateTimeImmutable();
     }
 
-    /**
-     * @return UuidInterface
-     */
-    public function getId(): UuidInterface
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return int
-     */
     public function getAmount(): int
     {
         return $this->amount;
     }
 
-    /**
-     * @return int
-     */
     public function getSchedule(): int
     {
         return $this->schedule;
     }
 
-    /**
-     * @return int
-     */
     public function getCalculation(): int
     {
         return $this->calculation;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getArchivedAt()
+    public function getArchivedAt(): ?DateTimeImmutable
     {
         return $this->archivedAt;
     }
