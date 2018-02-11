@@ -115,6 +115,10 @@ final class PurposeController extends Controller
                 $amount *= -1;
             }
 
+            if (0 === $amount) {
+                continue;
+            }
+
             $this->em->persist(new Payment($area, $purpose, $user, $amount));
         }
     }
