@@ -18,6 +18,7 @@ final class AreaRepository extends EntityRepository
     public function findPayable(): array
     {
         return $this->createQueryBuilder('a')
+            ->orderBy('a.number + 0', 'ASC')
             ->getQuery()
             ->getResult();
     }
