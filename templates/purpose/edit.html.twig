@@ -34,8 +34,8 @@
                         var input = $(this);
 
                         var arr = input.attr('id').split('_');
-                        if ("0" != arr[arr.length - 1]) {
-                            input.prop('checked', 'check' == $(button).data('action'));
+                        if ("0" !== arr[arr.length - 1]) {
+                            input.prop('checked', 'check' === $(button).data('action'));
                         }
                     });
                 });
