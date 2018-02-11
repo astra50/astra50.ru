@@ -31,8 +31,6 @@ class AuthControllerTest extends WebTestCase
             'fos_user_registration_form[plainPassword]' => $password,
         ]);
 
-        $this->assertTrue($client->getResponse()->isSuccessful());
-
         $user = $client->getContainer()->get('doctrine')->getConnection()->executeQuery('SELECT id FROM users WHERE email = :email', [
             'email' => $email,
         ])->fetch();
