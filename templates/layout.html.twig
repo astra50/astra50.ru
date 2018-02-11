@@ -63,28 +63,7 @@
 
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         <ul class="nav navbar-nav navbar-right">
-                            {% set userAreas = app.user.areas %}
-
-                            {% if 1 == userAreas|length %}
-                                {% set area = userAreas|first %}
-                                <li>
-                                    <a href="{{ path('area_show', {'number': area.number}) }}">Мой участок</a>
-                                </li>
-                            {% elseif 1 < userAreas|length %}
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        Мои участки<span class="caret"></span>
-                                    </a>
-
-                                    <ul class="dropdown-menu">
-                                        {% for area in userAreas %}
-                                            <li>
-                                                <a href="{{ path('area_show', {'number': area.number}) }}">Участок №{{ area.number }}</a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endif %}
+                            {% include 'blocks/my_area.html.twig' with {} only %}
 
                             {% if is_granted(constant('App\\Roles::EMPLOYEE')) %}
 
