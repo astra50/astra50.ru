@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/transaction")
@@ -51,7 +52,7 @@ final class TransactionController extends Controller
      * @Route("/", name="transaction_index", defaults={"page": 1})
      * @Route("/page/{page}", requirements={"page": "[1-9]\d*"}, name="transaction_index_paginated")
      */
-    public function indexAction($page)
+    public function indexAction(int $page): Response
     {
         return $this->render('transaction/index.html.twig', [
             'payments' => $this->paymentRepository->findLatest($page),
@@ -61,7 +62,7 @@ final class TransactionController extends Controller
     /**
      * @Route("/new", name="transaction_new")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request): Response
     {
         $model = new PaymentModel();
         $areas = $this->areaRepository->findPayable();
