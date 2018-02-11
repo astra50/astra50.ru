@@ -24,6 +24,7 @@ services:
         hostname: mysql.astra50.local
         volumes:
             - mysql-db:/var/lib/mysql
+            - ./:/usr/local/app
         environment:
             MYSQL_DATABASE: db
             MYSQL_USER: db

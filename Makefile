@@ -180,6 +180,6 @@ logs-mysql:
 	docker-compose logs --follow mysql
 
 backup-restore:
-	test -s ./app/var/backup.sql.gz || exit 1
+	test -s ./var/backup.sql.gz || exit 1
 	docker-compose exec mysql bash -c "gunzip < /usr/local/app/var/backup.sql.gz | mysql db"
 ###< MYSQL ###
