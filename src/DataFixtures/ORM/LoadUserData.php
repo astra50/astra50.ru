@@ -22,8 +22,13 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface
     {
         $faker = Factory::create('ru');
 
-        $user = new User($faker->email, $faker->name, $faker->password, true);
+        $user = new User('preemiere@ya.ru', $faker->name, $faker->password, true);
+        $user->addRole('ROLE_ADMIN');
         $this->addReference('user-1', $user);
+        $manager->persist($user);
+
+        $user = new User($faker->email, $faker->name, $faker->password, true);
+        $this->addReference('user-2', $user);
 
         $manager->persist($user);
         $manager->flush();
