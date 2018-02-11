@@ -20,13 +20,10 @@ services:
         Symfony\Component\Serializer\Normalizer\DenormalizerInterface:
             tags:
                 - { name: serializer.normalizer, priority: 10 }
-        Doctrine\Common\DataFixtures\FixtureInterface:
-            tags:
-                - { name: 'doctrine.fixture.orm' }
 
     App\:
         resource: '%kernel.project_dir%/src'
-        exclude: '%kernel.project_dir%/src/{Entity,EventDispatcher,Migrations}'
+        exclude: '%kernel.project_dir%/src/{DataFixtures,Entity,Migrations}'
 
     App\Controller\:
         resource: '%kernel.project_dir%/src/Controller'
