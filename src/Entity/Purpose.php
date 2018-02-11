@@ -17,7 +17,7 @@ class Purpose
     const SCHEDULE_ONCE = 1;
     const SCHEDULE_MONTHLY = 2;
 
-    const CALCULATION_EACH = 1;
+    const CALCULATION_AREA = 1;
     const CALCULATION_SIZE = 2;
     const CALCULATION_SHARE = 3;
 

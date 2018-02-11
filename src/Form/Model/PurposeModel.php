@@ -83,7 +83,7 @@ final class PurposeModel
     public function getCalculations(): array
     {
         return [
-            Purpose::CALCULATION_EACH,
+            Purpose::CALCULATION_AREA,
             Purpose::CALCULATION_SIZE,
             Purpose::CALCULATION_SHARE,
         ];

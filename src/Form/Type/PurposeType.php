@@ -49,11 +49,11 @@ class PurposeType extends AbstractType
             ->add('calculation', Type\ChoiceType::class, [
                 'label' => 'Начисление',
                 'choices' => [
-                    'На участок' => Purpose::CALCULATION_EACH,
+                    'На участок' => Purpose::CALCULATION_AREA,
                     'На Сотку' => Purpose::CALCULATION_SIZE,
                     'Разделить между участками' => Purpose::CALCULATION_SHARE,
                 ],
-                'data' => Purpose::CALCULATION_EACH,
+                'data' => Purpose::CALCULATION_AREA,
                 'multiple' => false,
                 'expanded' => true,
                 'translation_domain' => false,

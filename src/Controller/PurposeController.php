@@ -98,7 +98,7 @@ final class PurposeController extends Controller
             if (!$amount) {
                 if (Purpose::CALCULATION_SIZE === $model->calculation) {
                     $amount = $area->getSize() / 100 * $model->amount;
-                } elseif (Purpose::CALCULATION_EACH === $model->calculation) {
+                } elseif (Purpose::CALCULATION_AREA === $model->calculation) {
                     $amount = $model->amount;
                 } else {
                     throw new \DomainException(sprintf('Unknown calculation: "%s"', $model->calculation));
