@@ -45,11 +45,12 @@ final class AreaController extends Controller
      */
     private $userRepository;
 
-    /**
-     * @param AreaRepository $areaRepository
-     */
-    public function __construct(AreaRepository $areaRepository, PaymentRepository $paymentRepository, StreetRepository $streetRepository, UserRepository $userRepository)
-    {
+    public function __construct(
+        AreaRepository $areaRepository,
+        PaymentRepository $paymentRepository,
+        StreetRepository $streetRepository,
+        UserRepository $userRepository
+    ) {
         $this->areaRepository = $areaRepository;
         $this->paymentRepository = $paymentRepository;
         $this->streetRepository = $streetRepository;
