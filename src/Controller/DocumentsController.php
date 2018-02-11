@@ -8,9 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * @author Konstantin Grachev <me@grachevko.ru>
- */
 final class DocumentsController extends Controller
 {
     /**

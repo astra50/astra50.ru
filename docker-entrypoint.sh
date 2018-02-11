@@ -64,14 +64,8 @@ if [ "$OPCACHE" == "true" ]; then
     enableExt opcache
 fi
 
-APCU=${APCU:=true}
-if [ "$APCU" == "true" ]; then
-    enableExt apcu
-fi
-
-COMPOSER_SCRIPT=${COMPOSER_SCRIPT:="post-install-cmd"}
-if [ "$COMPOSER_SCRIPT" != "false" ]; then
-    composer run-script ${COMPOSER_SCRIPT_OPTIONS} ${COMPOSER_SCRIPT} --working-dir=${APP_DIR}
+if [ "$APP_ENV" == "test" ] && [ -z "$COMPOSER_DISABLE" ]; then
+    composer install ${COMPOSER_INSTALL_OPTS} --working-dir=${APP_DIR}
 fi
 
 MIGRATIONS=${MIGRATIONS:=true}

@@ -4,8 +4,8 @@ else
     php_cs_config = .php_cs
 endif
 
-DOCKER_COMPOSE_VERSION=1.17.0
-DOCKER_UBUNTU_VERSION=17.11.0~ce-0~ubuntu
+DOCKER_COMPOSE_VERSION=1.18.0
+DOCKER_UBUNTU_VERSION=18.01.0~ce-0~ubuntu
 
 all: init docker-pull docker-build
 
@@ -36,7 +36,7 @@ vendor-phar-remove:
 ###> GIT ###
 pull:
 	git fetch origin
-	git pull origin $(shell git rev-parse --abbrev-ref HEAD) || true
+	if git branch -a | fgrep remotes/origin/$(shell git rev-parse --abbrev-ref HEAD); then git pull origin $(shell git rev-parse --abbrev-ref HEAD); fi
 empty-commit:
 	git commit --allow-empty -m "Empty commit."
 	git push
@@ -52,7 +52,8 @@ docker-install-compose:
 	sudo curl -L https://github.com/docker/compose/releases/download/$(DOCKER_COMPOSE_VERSION)/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
 	sudo curl -L https://raw.githubusercontent.com/docker/compose/$(DOCKER_COMPOSE_VERSION)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
-docker-upgrade:
+docker-upgrade: docker-upgrade-engine docker-install-compose
+docker-upgrade-engine:
 	sudo apt-get remove -y docker-ce && sudo apt-get install docker-ce=$(DOCKER_UBUNTU_VERSION)
 
 build: docker-build
@@ -76,6 +77,12 @@ logs:
 ###< DOCKER ###
 
 ###> APP ###
+app = docker-compose run --rm -e XDEBUG=false -e WAIT_HOSTS=false -e COMPOSER_DISABLE=true app
+app-test = docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=1 -e XDEBUG=false -e WAIT_HOSTS=false -e COMPOSER_DISABLE=true app
+php = docker-compose run --rm --entrypoint php app -d memory_limit=-1
+php-xdebug = docker-compose run --rm --entrypoint docker-entrypoint-xdebug.sh app php -d memory_limit=-1
+sh = docker-compose run --rm --entrypoint sh app -c
+
 cli-app:
 	docker-compose run --rm -e XDEBUG=false --entrypoint bash app
 	@$(MAKE) permissions > /dev/null
@@ -83,10 +90,12 @@ restart-app:
 	docker-compose restart app
 logs-app:
 	docker-compose logs --follow app
+pull-app:
+	docker-compose pull app
 
 install-app: composer
 
-composer=docker-compose run --rm --no-deps -e XDEBUG=false -e COMPOSER_SCRIPT=false -e MIGRATIONS=false app composer
+composer = docker-compose run --rm --no-deps -e XDEBUG=false -e MIGRATIONS=false -e WAIT_HOSTS=false app composer
 composer: composer-install
 composer-install:
 	$(composer) install --prefer-dist
@@ -104,26 +113,29 @@ composer-update-lock:
 composer-outdated:
 	$(composer) outdated
 
-fixtures:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:fixtures:load --env=dev --no-interaction
+fixtures: cache-test
+	$(app-test) console doctrine:fixtures:load --no-interaction
 
 migration:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:migration:migrate --no-interaction --allow-no-migration
+	$(app) console doctrine:migration:migrate --no-interaction --allow-no-migration
 migration-generate:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:migrations:generate
+	$(app) console doctrine:migrations:generate
 	@$(MAKE) permissions > /dev/null
 	@$(MAKE) cs
-migration-rollback:latest = $(shell docker-compose run --rm -e XDEBUG=false app console doctrine:migration:latest | tr '\r' ' ')
+migration-rollback:latest = $(shell $(app) console doctrine:migration:latest | tr '\r' ' ')
 migration-rollback:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:migration:execute --down --no-interaction $(latest)
+	$(app) console doctrine:migration:execute --down --no-interaction $(latest)
 migration-diff:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:migration:diff
+	$(app) console doctrine:migration:diff
 	@$(MAKE) permissions > /dev/null
 	@$(MAKE) cs
 migration-diff-dry:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:schema:update --dump-sql
+	$(app) console doctrine:schema:update --dump-sql
 schema-update:
-	docker-compose run --rm -e XDEBUG=false app console doctrine:schema:update --force
+	$(app) console doctrine:schema:update --force
+
+product-translate:
+	$(app) console product:translate
 
 test-command:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console test -vvv
@@ -137,37 +149,41 @@ cs:
 	@$(MAKE) permissions > /dev/null
 cs-check:
 	$(php-cs-fixer) fix --config=.php_cs.dist --verbose --dry-run
+phpstan = vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon src tests
 phpstan:
-	docker-compose run --rm -e APP_ENV=test -e XDEBUG=false app php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon src tests
+	$(php) $(phpstan)
+phpstan-xdebug:
+	$(php-xdebug) $(phpstan)
 phpunit:
-	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=1 -e FIXTURES=false -e XDEBUG=false app phpunit --debug --stop-on-failure
+	$(app-test) phpunit --debug --stop-on-failure
 phpunit-check:
-	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false -e XDEBUG=false app phpunit
+	$(app-test) phpunit
 requirements:
-	docker-compose run --rm --no-deps -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false -e XDEBUG=false app symfony_requirements
+	$(app-test) symfony_requirements
 schema-check:
-	docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=0 -e FIXTURES=false -e XDEBUG=false app console doctrine:schema:validate
+	$(app-test) console doctrine:schema:validate
 
 cache: cache-clear cache-warmup
 cache-test: cache-clear-test cache-warmup-test
 cache-clear:
-	docker-compose run --rm --no-deps --entrypoint sh app -c 'rm -rf ./var/cache/"$$APP_ENV"' || true
+	$(sh) 'rm -rf ./var/cache/"$$APP_ENV"' || true
 	@$(MAKE) permissions > /dev/null
 cache-warmup:
-	docker-compose run --rm --no-deps -e XDEBUG=false app console cache:warmup
+	$(app) console cache:warmup
 	@$(MAKE) permissions > /dev/null
 cache-clear-test:
-	docker-compose run --rm --no-deps -e APP_ENV=test --entrypoint sh app -c 'rm -rf ./var/cache/"$$APP_ENV"'
+	$(sh) 'rm -rf ./var/cache/test'
 	@$(MAKE) permissions > /dev/null
 cache-warmup-test:
-	docker-compose run --rm --no-deps -e XDEBUG=false -e APP_ENV=test app console cache:warmup
+	$(app-test) console cache:warmup
 	@$(MAKE) permissions > /dev/null
 
 flush: drop migration fixtures
+flush-backup: drop backup-restore migration
 drop:
-	docker-compose run --rm -e XDEBUG=false app  bash -c "console doctrine:database:drop --force || true && console doctrine:database:create"
+	$(sh) "console doctrine:database:drop --force || true && console doctrine:database:create"
 db-wait:
-	docker-compose run --rm -e COMPOSER_SCRIPT=false -e XDEBUG=false app echo OK
+	docker-compose run --rm -e XDEBUG=false app echo OK
 
 ###< APP ###
 
@@ -180,6 +196,6 @@ logs-mysql:
 	docker-compose logs --follow mysql
 
 backup-restore:
-	test -s ./app/var/backup.sql.gz || exit 1
+	test -s ./var/backup.sql.gz || exit 1
 	docker-compose exec mysql bash -c "gunzip < /usr/local/app/var/backup.sql.gz | mysql db"
 ###< MYSQL ###

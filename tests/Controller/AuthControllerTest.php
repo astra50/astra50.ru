@@ -31,7 +31,7 @@ class AuthControllerTest extends WebTestCase
             'fos_user_registration_form[plainPassword]' => $password,
         ]);
 
-        $user = $client->getContainer()->get('doctrine')->getConnection()->executeQuery('SELECT id FROM user WHERE email = :email', [
+        $user = $client->getContainer()->get('doctrine')->getConnection()->executeQuery('SELECT id FROM users WHERE email = :email', [
             'email' => $email,
         ])->fetch();
 

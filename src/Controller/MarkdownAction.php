@@ -10,25 +10,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-/**
- * @author Konstantin Grachev <me@grachevko.ru>
- */
 final class MarkdownAction
 {
     /**
-     * @var MarkdownInterface
-     */
-    private $markdown;
-
-    public function __construct(MarkdownInterface $markdown)
-    {
-        $this->markdown = $markdown;
-    }
-
-    /**
      * @Route("/markdown", name="markdown")
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, MarkdownInterface $markdown): JsonResponse
     {
         try {
             $content = $request->isMethod('POST')
@@ -38,6 +25,6 @@ final class MarkdownAction
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        return new JsonResponse(['html' => $this->markdown->toHtml($content)]);
+        return new JsonResponse(['html' => $markdown->toHtml($content)]);
     }
 }

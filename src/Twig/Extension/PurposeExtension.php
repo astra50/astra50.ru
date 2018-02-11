@@ -40,7 +40,7 @@ class PurposeExtension extends \Twig_Extension
     public function paymentCalculationToString(int $value): string
     {
         return [
-            Purpose::CALCULATION_EACH => 'За участок',
+            Purpose::CALCULATION_AREA => 'За участок',
             Purpose::CALCULATION_SIZE => 'За сотку',
             Purpose::CALCULATION_SHARE => 'Поровну',
         ][$value];

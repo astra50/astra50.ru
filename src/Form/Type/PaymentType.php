@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Form\Type;
 
+use App\Entity\Area;
+use App\Entity\Purpose;
 use App\Form\Model\PaymentModel;
 use App\Form\Transformer\MoneyTransformer;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,21 +26,30 @@ class PaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('purpose', Type\ChoiceType::class, [
+            ->add('purpose', EntityType::class, [
                 'label' => 'Платёжная цель',
-                'choices' => $options['purposes'],
+                'class' => Purpose::class,
+                'query_builder' => function (EntityRepository $repository) {
+                    return $repository->createQueryBuilder('entity')
+                        ->where('entity.archivedAt IS NULL')
+                        ->orderBy('entity.id', 'DESC');
+                },
                 'choice_label' => 'name',
-                'choice_value' => 'id.toString',
+                'choice_value' => 'id',
                 'multiple' => false,
                 'expanded' => false,
                 'placeholder' => 'Выберите платёжную цель',
                 'translation_domain' => false,
             ])
-            ->add('area', Type\ChoiceType::class, [
+            ->add('area', EntityType::class, [
                 'label' => 'Участки',
-                'choices' => $options['areas'],
+                'class' => Area::class,
+                'query_builder' => function (EntityRepository $repository) {
+                    return $repository->createQueryBuilder('entity')
+                        ->orderBy('entity.number + 0', 'ASC');
+                },
                 'choice_label' => 'number',
-                'choice_value' => 'id.toString',
+                'choice_value' => 'id',
                 'multiple' => false,
                 'expanded' => false,
                 'placeholder' => 'Выберите участок',
@@ -69,10 +82,6 @@ class PaymentType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => PaymentModel::class,
-            ])
-            ->setRequired([
-                'areas',
-                'purposes',
             ]);
     }
 }

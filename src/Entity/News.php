@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
@@ -16,17 +16,7 @@ use Ramsey\Uuid\UuidInterface;
  */
 class News
 {
-    public const NUM_ITEMS = 3;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
-     */
-    protected $id;
+    use Identity;
 
     /**
      * @var User
@@ -123,11 +113,6 @@ class News
     public function unPublish(): void
     {
         $this->published = false;
-    }
-
-    public function getId(): UuidInterface
-    {
-        return $this->id;
     }
 
     public function getAuthor(): User

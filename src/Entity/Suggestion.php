@@ -4,27 +4,17 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
 use App\Entity\Enum\SuggestionType;
 use App\Form\Model\Suggestion as Model;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
  */
 class Suggestion
 {
-    const NUM_ITEMS = 10;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
-     */
-    private $id;
+    use Identity;
 
     /**
      * @var string
@@ -82,14 +72,6 @@ class Suggestion
     }
 
     /**
-     * @return UuidInterface
-     */
-    public function getId(): UuidInterface
-    {
-        return $this->id;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -113,9 +95,6 @@ class Suggestion
         return $this->email;
     }
 
-    /**
-     * @return SuggestionType
-     */
     public function getType(): SuggestionType
     {
         return new SuggestionType($this->type);

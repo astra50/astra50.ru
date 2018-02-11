@@ -24,6 +24,7 @@ pipeline:
                 docker build -t "astra50/astra50:${DRONE_BUILD_NUMBER}"
                 --label build=${DRONE_BUILD_NUMBER}
                 --build-arg APP_VERSION="$DRONE_BUILD_NUMBER"
+                --build-arg APP_BUILD_TIME="`date --rfc-2822`"
                 .
 
     static php-cs-fixer:
@@ -147,3 +148,5 @@ services:
             MYSQL_USER: 'db'
             MYSQL_PASSWORD: 'db'
             MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+        tmpfs:
+            - /var/lib/mysql

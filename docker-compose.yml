@@ -15,15 +15,15 @@ services:
             APP_DEBUG: 1
             XDEBUG: 'true'
             OPCACHE: 'false'
-            APCU: 'false'
             MIGRATIONS: 'false'
-            COMPOSER_SCRIPT: 'false'
+            WAIT_HOSTS: 'mysql:3306'
 
     mysql:
         image: mariadb:10.1.23
         hostname: mysql.astra50.local
         volumes:
             - mysql-db:/var/lib/mysql
+            - ./:/usr/local/app
         environment:
             MYSQL_DATABASE: db
             MYSQL_USER: db

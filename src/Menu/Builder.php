@@ -32,7 +32,7 @@ class Builder
         $menu
             ->addChild('News', ['label' => 'Новости', 'route' => 'news_index'])->getParent()
             ->addChild('Finance', ['label' => 'Финансовая отчетность', 'route' => 'report_index'])->getParent()
-            ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'gallery_index'])->getParent()
+//            ->addChild('Gallery', ['label' => 'Галерея', 'route' => 'gallery_index'])->getParent()
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_new'])->getParent()
             ->addChild('Payment', ['label' => 'Оплата', 'route' => 'payment_index'])->getParent()
             ->addChild('Documents', ['label' => 'Документы', 'route' => 'documents_index'])->getParent()

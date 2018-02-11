@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity
  */
 class Area
 {
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
-     */
-    private $id;
+    use Identity;
 
     /**
      * @var string
@@ -48,7 +40,7 @@ class Area
     /**
      * @var User[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="areas")
      * @ORM\JoinTable(joinColumns={@ORM\JoinColumn}, inverseJoinColumns={@ORM\JoinColumn})
      */
     private $users;
@@ -71,11 +63,6 @@ class Area
         $this->street = $street;
     }
 
-    public function getId(): UuidInterface
-    {
-        return $this->id;
-    }
-
     public function getNumber(): string
     {
         return $this->number;
@@ -86,10 +73,7 @@ class Area
         return $this->size;
     }
 
-    /**
-     * @return Street
-     */
-    public function getStreet()
+    public function getStreet(): ?Street
     {
         return $this->street;
     }
@@ -113,6 +97,11 @@ class Area
     public function getUsers(): array
     {
         return $this->users->toArray();
+    }
+
+    public function isOwner(User $user): bool
+    {
+        return in_array($user, $this->users->toArray(), true);
     }
 
     private function addUser(User $user): void

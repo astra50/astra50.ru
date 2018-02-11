@@ -7,9 +7,10 @@ namespace App\Controller;
 use App\Entity\Street;
 use App\Form\Model\StreetModel;
 use App\Form\Type\StreetType;
-use App\Repository\StreetRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,19 +18,16 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
-class StreetController extends BaseController
+class StreetController extends Controller
 {
     /**
-     * @var StreetRepository
+     * @var EntityManagerInterface
      */
-    private $streetRepository;
+    private $em;
 
-    /**
-     * @param StreetRepository $streetRepository
-     */
-    public function __construct(StreetRepository $streetRepository)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->streetRepository = $streetRepository;
+        $this->em = $em;
     }
 
     /**
@@ -37,7 +35,7 @@ class StreetController extends BaseController
      */
     public function indexAction()
     {
-        $streets = $this->streetRepository->findAll();
+        $streets = $this->em->getRepository(Street::class)->findAll();
 
         return $this->render('street/index.html.twig', [
             'streets' => $streets,
@@ -54,7 +52,9 @@ class StreetController extends BaseController
 
         if ($form->handleRequest($request)->isValid()) {
             $street = new Street($streetModel->name);
-            $this->streetRepository->save($street);
+
+            $this->em->persist($street);
+            $this->em->flush();
 
             return $this->redirectToRoute('street_index');
         }

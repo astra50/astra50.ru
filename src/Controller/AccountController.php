@@ -6,31 +6,27 @@ namespace App\Controller;
 
 use App\Form\Model\AccountModel;
 use App\Form\Type\AccountType;
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/account")
  *
  * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
- *
- * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class AccountController extends BaseController
+final class AccountController extends Controller
 {
     /**
-     * @var UserRepository
+     * @var EntityManagerInterface
      */
-    private $userRepository;
+    private $em;
 
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->userRepository = $userRepository;
+        $this->em = $em;
     }
 
     /**
@@ -48,9 +44,9 @@ final class AccountController extends BaseController
                 ->setRealname($model->realname)
                 ->setPhone($model->phone);
 
-            $this->userRepository->save($user);
+            $this->em->flush();
 
-            $this->success('Изменения сохранены.');
+            $this->addFlash('success', 'Изменения сохранены.');
         }
 
         return $this->render('account/show.html.twig', [

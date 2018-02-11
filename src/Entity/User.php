@@ -4,29 +4,30 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Doctrine\ORM\Mapping\Traits\Identity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
-use Ramsey\Uuid\UuidInterface;
 
 /**
- * @method UuidInterface getId()
- *
  * @ORM\Entity
+ * @ORM\Table(name="users")
  */
 class User extends BaseUser
 {
+    use Identity;
+
     public const SUPPORT_OAUTH_PROVIDERS = [
         'google',
         'vkontakte',
     ];
 
     /**
-     * @var UuidInterface
+     * @var int
      *
      * @ORM\Id
-     * @ORM\Column(type="uuid_binary")
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator("\App\Doctrine\UuidGenerator")
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
@@ -43,6 +44,13 @@ class User extends BaseUser
      * @ORM\Column
      */
     private $realname;
+
+    /**
+     * @var Area[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Area", mappedBy="users")
+     */
+    private $areas;
 
     /**
      * @ORM\Column(nullable=true)
@@ -73,6 +81,7 @@ class User extends BaseUser
         $this->realname = $realname;
         $this->password = $password;
         $this->enabled = $enabled;
+        $this->areas = new ArrayCollection();
     }
 
     public function updateOauth2(string $provider, $id, ?string $token): void
@@ -96,9 +105,6 @@ class User extends BaseUser
     {
     }
 
-    /**
-     * @param string $phone
-     */
     public function setPhone(string $phone)
     {
         $this->phone = $phone;
@@ -106,17 +112,11 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    /**
-     * @param string $realname
-     */
     public function setRealname(string $realname)
     {
         $this->realname = $realname;
@@ -124,11 +124,16 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRealname()
+    public function getRealname(): ?string
     {
         return $this->realname;
+    }
+
+    /**
+     * @return Area[]
+     */
+    public function getAreas(): array
+    {
+        return $this->areas->toArray();
     }
 }
