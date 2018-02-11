@@ -61,6 +61,8 @@ COPY ${SOURCE_DIR}/ ${APP_DIR}/
 
 ARG APP_VERSION=dev
 ENV APP_VERSION ${APP_VERSION}
+ARG APP_BUILD_TIME=''
+ENV APP_BUILD_TIME ${APP_BUILD_TIME}
 
 RUN if [ -f composer.json ]; then \
     APP_ENV=prod APP_DEBUG=0 composer install ${COMPOSER_INSTALL_OPTS} --no-dev \
