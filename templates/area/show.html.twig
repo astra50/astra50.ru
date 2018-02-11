@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{% set hasDebt = 0 > balance %}
+
 {% block content %}
     <h1>Участок №{{ area.number }}</h1>
 
@@ -35,6 +37,9 @@
                 <th>Оплачено</th>
                 <th>Недоплата / Переплата</th>
                 <th>Дата создания</th>
+                {% if hasDebt %}
+                    <th>Оплата</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -51,8 +56,8 @@
                     <td>{{ (item.paid / 100)|number_format }}</td>
                     <td><strong>{{ pay|number_format }}</strong></td>
                     <td>{{ purpose.createdAt|localizeddate }}</td>
-                    <td>
-                        {% if not paid %}
+                    {% if not paid %}
+                        <td>
                             <form method="post" action="https://www.payanyway.ru/assistant.htm">
                                 <input type="hidden" name="MNT_ID" value="87482468">
                                 <input type="hidden" name="MNT_TEST_MODE" value="0">
@@ -76,12 +81,12 @@
 
                                 <button class="btn btn-success" type="submit">Оплатить</button>
                             </form>
-                        {% endif %}
-                    </td>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
 
-            <tr class="{{ 0 > balance ? 'danger' }}">
+            <tr class="{{ hasDebt ? 'danger' }}">
                 <td colspan="3">Баланс</td>
                 <td colspan="2">{{ (balance / 100)|number_format }}</td>
             </tr>
