@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-/**
- * @author Konstantin Grachev <me@grachevko.ru>
- */
-final class UnderConstructionController extends BaseController
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Response;
+
+final class UnderConstructionController
 {
-    public function indexAction()
+    public function __invoke(EngineInterface $engine): Response
     {
-        return $this->render('under_construction.html.twig');
+        return $engine->renderResponse('under_construction.html.twig');
     }
 }

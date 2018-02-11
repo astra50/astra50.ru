@@ -11,12 +11,10 @@ use App\Repository\NewsRepository;
 use App\Roles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @author Konstantin Grachev <me@grachevko.ru>
- */
-class NewsController extends BaseController
+class NewsController extends Controller
 {
     /**
      * @var NewsRepository

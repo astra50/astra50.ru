@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use App\Roles;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
-final class AreaController extends BaseController
+final class AreaController extends Controller
 {
     /**
      * @var AreaRepository

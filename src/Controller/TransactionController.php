@@ -12,6 +12,7 @@ use App\Repository\PaymentRepository;
 use App\Repository\PurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Security("is_granted(constant('App\\Roles::CASHIER'))")
  */
-final class TransactionController extends BaseController
+final class TransactionController extends Controller
 {
     /**
      * @var PaymentRepository
@@ -82,7 +83,7 @@ final class TransactionController extends BaseController
 
             $this->paymentRepository->save($entity);
 
-            $this->success(sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
+            $this->addFlash('success', sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
 
             return $this->redirectToRoute('transaction_index');
         }

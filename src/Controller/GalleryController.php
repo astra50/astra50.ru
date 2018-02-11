@@ -6,13 +6,12 @@ namespace App\Controller;
 
 use App\VK\Sections\Photos;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @Route("/gallery")
- *
- * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class GalleryController extends BaseController
+final class GalleryController extends Controller
 {
     /**
      * @var Photos

@@ -10,6 +10,7 @@ use App\Form\Type\StreetType;
 use App\Repository\StreetRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
-class StreetController extends BaseController
+class StreetController extends Controller
 {
     /**
      * @var StreetRepository

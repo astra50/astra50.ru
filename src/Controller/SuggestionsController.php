@@ -10,14 +10,13 @@ use App\Form\Type\SuggestionType;
 use App\Repository\SuggestionRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/suggestions")
- *
- * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class SuggestionsController extends BaseController
+final class SuggestionsController extends Controller
 {
     /**
      * @var SuggestionRepository

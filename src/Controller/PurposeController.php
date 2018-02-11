@@ -13,14 +13,14 @@ use App\Repository\AreaRepository;
 use App\Repository\PurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/payment/type")
- *
- * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PurposeController extends BaseController
+final class PurposeController extends Controller
 {
     /**
      * @var PurposeRepository
@@ -33,13 +33,18 @@ final class PurposeController extends BaseController
     private $areaRepository;
 
     /**
-     * @param PurposeRepository $purposeRepository
-     * @param AreaRepository    $areaRepository
+     * @var EventDispatcherInterface
      */
-    public function __construct(PurposeRepository $purposeRepository, AreaRepository $areaRepository)
-    {
+    private $dispatcher;
+
+    public function __construct(
+        PurposeRepository $purposeRepository,
+        AreaRepository $areaRepository,
+        EventDispatcherInterface $dispatcher
+    ) {
         $this->purposeRepository = $purposeRepository;
         $this->areaRepository = $areaRepository;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -70,15 +75,15 @@ final class PurposeController extends BaseController
             $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
 
             $this->purposeRepository->save($entity);
-            $this->dispatch(Events::PAYMENT_TYPE_NEW, new PurposeEvent($entity, $model, $this->getUser()));
+            $this->dispatcher->dispatch(Events::PAYMENT_TYPE_NEW, new PurposeEvent($entity, $model, $this->getUser()));
 
-            $this->success(sprintf('Платежная цель "%s" создана!', $model->name));
+            $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $model->name));
 
             return $this->redirectToRoute('purpose_index');
         }
 
         return $this->render('purpose/edit.html.twig', [
-           'form' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 }

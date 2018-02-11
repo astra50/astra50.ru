@@ -9,16 +9,15 @@ use App\Form\Type\AccountType;
 use App\Repository\UserRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/account")
  *
  * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
- *
- * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class AccountController extends BaseController
+final class AccountController extends Controller
 {
     /**
      * @var UserRepository
@@ -50,7 +49,7 @@ final class AccountController extends BaseController
 
             $this->userRepository->save($user);
 
-            $this->success('Изменения сохранены.');
+            $this->addFlash('success', 'Изменения сохранены.');
         }
 
         return $this->render('account/show.html.twig', [
