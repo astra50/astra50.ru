@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Form\Type;
 
+use App\Entity\Area;
 use App\Entity\Purpose;
 use App\Form\Model\PurposeModel;
 use App\Form\Transformer\MoneyTransformer;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,12 +61,23 @@ class PurposeType extends AbstractType
                 'expanded' => true,
                 'translation_domain' => false,
             ])
-            ->add('areas', Type\ChoiceType::class, [
+            ->add('areas', EntityType::class, [
                 'label' => 'Участки',
-                'choices' => $options['areas'],
+                'class' => Area::class,
+                'query_builder' => function (EntityRepository $repository) {
+                    return $repository->createQueryBuilder('entity')
+                        ->orderBy('entity.number + 0', 'ASC');
+                },
                 'choice_label' => 'number',
                 'choice_value' => 'id',
-                'group_by' => 'street.name',
+                'choice_attr' => function (Area $area) {
+                    return ['data-select-rule' => '0' === $area->getNumber() ? 'exclude' : 'include'];
+                },
+                'group_by' => function (Area $area) {
+                    $street = $area->getStreet();
+
+                    return $street ? $street->getName() : 'Без улицы';
+                },
                 'multiple' => true,
                 'expanded' => true,
                 'translation_domain' => false,
@@ -78,9 +92,6 @@ class PurposeType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => PurposeModel::class,
-            ])
-            ->setRequired([
-                'areas',
             ]);
     }
 }

@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Form\Model\AccountModel;
 use App\Form\Type\AccountType;
-use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,16 +20,13 @@ use Symfony\Component\HttpFoundation\Request;
 final class AccountController extends Controller
 {
     /**
-     * @var UserRepository
+     * @var EntityManagerInterface
      */
-    private $userRepository;
+    private $em;
 
-    /**
-     * @param UserRepository $userRepository
-     */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->userRepository = $userRepository;
+        $this->em = $em;
     }
 
     /**
@@ -47,7 +44,7 @@ final class AccountController extends Controller
                 ->setRealname($model->realname)
                 ->setPhone($model->phone);
 
-            $this->userRepository->save($user);
+            $this->em->flush();
 
             $this->addFlash('success', 'Изменения сохранены.');
         }

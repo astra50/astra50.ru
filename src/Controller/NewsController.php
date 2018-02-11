@@ -7,8 +7,10 @@ namespace App\Controller;
 use App\Entity\News;
 use App\Form\Model\NewsModel;
 use App\Form\Type\NewsType;
-use App\Repository\NewsRepository;
 use App\Roles;
+use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -16,14 +18,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 class NewsController extends Controller
 {
-    /**
-     * @var NewsRepository
-     */
-    private $newsRepository;
+    private const NEWS_PER_PAGE = 3;
 
-    public function __construct(NewsRepository $newsRepository)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->newsRepository = $newsRepository;
+        $this->em = $em;
     }
 
     /**
@@ -32,14 +36,28 @@ class NewsController extends Controller
      */
     public function indexAction(int $page)
     {
-        $news = $this->newsRepository->findLatest(
-            $page,
-            !$this->isGranted(Roles::NEWS_WRITER),
-            !$this->isGranted(Roles::COMMUNITY)
-        );
+        $qb = $this->em->createQueryBuilder()
+            ->select('entity')
+            ->from(News::class, 'entity')
+            ->join('entity.author', 'author')
+            ->orderBy('entity.publishedAt', 'DESC');
+
+        if (!$this->isGranted(Roles::NEWS_WRITER)) {
+            $qb->where('entity.published = :published')
+                ->setParameter('published', true);
+        }
+
+        if (!$this->isGranted(Roles::COMMUNITY)) {
+            $qb->andWhere('entity.internal = :internal')
+                ->setParameter('internal', false);
+        }
+
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb, false));
+        $paginator->setMaxPerPage(self::NEWS_PER_PAGE);
+        $paginator->setCurrentPage($page);
 
         return $this->render('news/index.html.twig', [
-            'news' => $news,
+            'news' => $paginator,
         ]);
     }
 
@@ -60,7 +78,9 @@ class NewsController extends Controller
             if ($model->published) {
                 $entity->publish();
             }
-            $this->newsRepository->save($entity);
+
+            $this->em->persist($entity);
+            $this->em->flush();
 
             return $this->redirectToRoute('news_show', ['slug' => $entity->getSlug()]);
         }
@@ -101,7 +121,7 @@ class NewsController extends Controller
                 $news->unPublish();
             }
 
-            $this->newsRepository->save($news);
+            $this->em->flush();
 
             return $this->redirectToRoute('news_show', ['slug' => $news->getSlug()]);
         }

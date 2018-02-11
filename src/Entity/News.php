@@ -18,8 +18,6 @@ class News
 {
     use Identity;
 
-    public const NUM_ITEMS = 3;
-
     /**
      * @var User
      *

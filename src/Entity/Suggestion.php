@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Suggestion
 {
     use Identity;
-    public const NUM_ITEMS = 10;
 
     /**
      * @var string

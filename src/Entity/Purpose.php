@@ -17,7 +17,6 @@ class Purpose
 {
     use Identity;
     use CreatedAt;
-    public const NUM_ITEMS = 20;
 
     public const SCHEDULE_ONCE = 1;
     public const SCHEDULE_MONTHLY = 2;

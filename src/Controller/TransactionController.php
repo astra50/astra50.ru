@@ -7,9 +7,9 @@ namespace App\Controller;
 use App\Entity\Payment;
 use App\Form\Model\PaymentModel;
 use App\Form\Type\PaymentType;
-use App\Repository\AreaRepository;
-use App\Repository\PaymentRepository;
-use App\Repository\PurposeRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,29 +23,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class TransactionController extends Controller
 {
-    /**
-     * @var PaymentRepository
-     */
-    private $paymentRepository;
+    private const PAYMENTS_PER_PAGe = 50;
 
     /**
-     * @var PurposeRepository
+     * @var EntityManagerInterface
      */
-    private $purposeRepository;
+    private $em;
 
-    /**
-     * @var AreaRepository
-     */
-    private $areaRepository;
-
-    public function __construct(
-        PaymentRepository $paymentRepository,
-        PurposeRepository $purposeRepository,
-        AreaRepository $areaRepository
-    ) {
-        $this->paymentRepository = $paymentRepository;
-        $this->purposeRepository = $purposeRepository;
-        $this->areaRepository = $areaRepository;
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
     }
 
     /**
@@ -54,8 +41,17 @@ final class TransactionController extends Controller
      */
     public function indexAction(int $page): Response
     {
+        $qb = $this->em->createQueryBuilder()
+            ->select('entity')
+            ->from(Payment::class, 'entity')
+            ->orderBy('entity.createdAt', 'DESC');
+
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb, false));
+        $paginator->setMaxPerPage(self::PAYMENTS_PER_PAGe);
+        $paginator->setCurrentPage($page);
+
         return $this->render('transaction/index.html.twig', [
-            'payments' => $this->paymentRepository->findLatest($page),
+            'payments' => $paginator,
         ]);
     }
 
@@ -65,13 +61,9 @@ final class TransactionController extends Controller
     public function newAction(Request $request): Response
     {
         $model = new PaymentModel();
-        $areas = $this->areaRepository->findPayable();
-        $purposes = $this->purposeRepository->findActive();
 
         $form = $this->createForm(PaymentType::class, $model, [
             'action' => $this->generateUrl('transaction_new'),
-            'areas' => $areas,
-            'purposes' => $purposes,
         ]);
 
         if ($form->handleRequest($request)->isValid()) {
@@ -80,9 +72,8 @@ final class TransactionController extends Controller
             $user = $this->getUser();
             $amount = $model->isPositive ? $model->amount : $model->amount * -1;
 
-            $entity = new Payment($area, $purpose, $user, $amount);
-
-            $this->paymentRepository->save($entity);
+            $this->em->persist(new Payment($area, $purpose, $user, $amount));
+            $this->em->flush();
 
             $this->addFlash('success', sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
 

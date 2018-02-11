@@ -15,7 +15,6 @@ class Payment
 {
     use Identity;
     use CreatedAt;
-    public const NUM_ITEMS = 50;
 
     /**
      * @var Area

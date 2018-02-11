@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Area;
+use App\Entity\Payment;
+use App\Entity\Purpose;
 use App\Entity\Street;
 use App\Entity\User;
 use App\Form\Model\AreaModel;
 use App\Form\Type\AreaType;
-use App\Repository\AreaRepository;
-use App\Repository\PaymentRepository;
-use App\Repository\StreetRepository;
-use App\Repository\UserRepository;
 use App\Roles;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,42 +28,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class AreaController extends Controller
 {
-    /**
-     * @var AreaRepository
-     */
-    private $areaRepository;
-
-    /**
-     * @var PaymentRepository
-     */
-    private $paymentRepository;
-
-    /**
-     * @var StreetRepository
-     */
-    private $streetRepository;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
+    private const PURPOSES_PER_PAGE = 10;
 
     /**
      * @var EntityManagerInterface
      */
     private $em;
 
-    public function __construct(
-        AreaRepository $areaRepository,
-        PaymentRepository $paymentRepository,
-        StreetRepository $streetRepository,
-        UserRepository $userRepository,
-        EntityManagerInterface $em
-    ) {
-        $this->areaRepository = $areaRepository;
-        $this->paymentRepository = $paymentRepository;
-        $this->streetRepository = $streetRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(EntityManagerInterface $em)
+    {
         $this->em = $em;
     }
 
@@ -71,8 +45,16 @@ final class AreaController extends Controller
      */
     public function indexAction()
     {
+        $areas = $this->em->createQueryBuilder()
+            ->select('entity', 'u')
+            ->from(Area::class, 'entity')
+            ->leftJoin('entity.users', 'u')
+            ->orderBy('entity.number + 0', 'ASC')
+            ->getQuery()
+            ->getResult();
+
         return $this->render('/area/index.html.twig', [
-            'areas' => $this->areaRepository->findAllWithOwners(),
+            'areas' => $areas,
         ]);
     }
 
@@ -81,12 +63,35 @@ final class AreaController extends Controller
      */
     public function showAction(Area $area, $page)
     {
-        $payments = $this->paymentRepository->paginatePurposesByArea($area, $page);
-        $balance = $this->paymentRepository->getBalanceFromActivePurposesByArea($area);
+        $qb = $this->em->createQueryBuilder()
+            ->select('purpose')
+            ->addSelect('SUM(CASE WHEN payment.amount < 0 THEN payment.amount ELSE 0 END) AS bill')
+            ->addSelect('SUM(CASE WHEN payment.amount > 0 THEN payment.amount ELSE 0 END) AS paid')
+            ->from(Purpose::class, 'purpose')
+            ->leftJoin(Payment::class, 'payment', Join::WITH, 'purpose = payment.purpose')
+            ->where('payment.area = :area')
+            ->setParameter('area', $area)
+            ->groupBy('purpose')
+            ->orderBy('purpose.id', 'DESC')
+            ->getQuery();
+
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb, false));
+        $paginator->setMaxPerPage(self::PURPOSES_PER_PAGE);
+        $paginator->setCurrentPage($page);
+
+        $balance = $this->em->createQueryBuilder()
+            ->select('SUM(p.amount)')
+            ->from(Payment::class, 'p')
+            ->join('p.purpose', 'purpose')
+            ->where('p.area = :area')
+            ->andWhere('purpose.archivedAt IS NULL')
+            ->setParameter('area', $area)
+            ->getQuery()
+            ->getSingleScalarResult();
 
         return $this->render('area/show.html.twig', [
             'area' => $area,
-            'pagerfanta' => $payments,
+            'pagerfanta' => $paginator,
             'balance' => $balance,
         ]);
     }
@@ -111,13 +116,11 @@ final class AreaController extends Controller
 
             $area->replaceUsers($model->users);
 
-            $this->areaRepository->save($area);
-
             foreach ($model->users as $user) {
                 $user->addRole(Roles::COMMUNITY);
-
-                $this->userRepository->save($user);
             }
+
+            $this->em->flush();
 
             return $this->redirectToRoute('area_index');
         }

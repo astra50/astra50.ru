@@ -7,7 +7,9 @@ namespace App\Controller;
 use App\Entity\Suggestion;
 use App\Form\Model\Suggestion as SuggestionModel;
 use App\Form\Type\SuggestionType;
-use App\Repository\SuggestionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,19 +20,21 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SuggestionsController extends Controller
 {
+    private const SUGGESTIONS_PER_PAGE = 10;
+
     /**
-     * @var SuggestionRepository
+     * @var EntityManagerInterface
      */
-    private $repository;
+    private $em;
 
     /**
      * @var \Swift_Mailer
      */
     private $mailer;
 
-    public function __construct(SuggestionRepository $repository, \Swift_Mailer $mailer)
+    public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer)
     {
-        $this->repository = $repository;
+        $this->em = $em;
         $this->mailer = $mailer;
     }
 
@@ -42,11 +46,17 @@ final class SuggestionsController extends Controller
      */
     public function indexAction($page)
     {
-        /** @var Suggestion[] $suggestions */
-        $suggestions = $this->repository->findLatest($page);
+        $qb = $this->em->createQueryBuilder()
+            ->select('entity')
+            ->from(Suggestion::class, 'entity')
+            ->orderBy('entity.createdAt', 'DESC');
+
+        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb, false));
+        $paginator->setMaxPerPage(self::SUGGESTIONS_PER_PAGE);
+        $paginator->setCurrentPage($page);
 
         return $this->render('suggestion/index.html.twig', [
-            'suggestions' => $suggestions,
+            'suggestions' => $paginator,
         ]);
     }
 
@@ -61,7 +71,8 @@ final class SuggestionsController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->repository->save(new Suggestion($model));
+            $this->em->persist(new Suggestion($model));
+            $this->em->flush();
 
             $message = (new \Swift_Message())
                 ->setFrom('no-reply@astra50.ru')
@@ -74,7 +85,7 @@ final class SuggestionsController extends Controller
 Телефон: $model->phone
 Сообщение: $model->text
 TEXT
-);
+                );
 
             $this->mailer->send($message);
 
