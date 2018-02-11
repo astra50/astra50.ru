@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Area;
 use App\Entity\Payment;
 use App\Entity\Purpose;
 use App\Entity\User;
@@ -89,21 +90,29 @@ final class PurposeController extends Controller
 
     public function createPayments(Purpose $purpose, PurposeModel $model, User $user): void
     {
-        $amount = null;
-        if (Purpose::CALCULATION_SHARE === $model->calculation) {
-            $amount = (int) ceil($model->amount / count($model->areas));
+        switch (true) {
+            case Purpose::CALCULATION_SIZE === $model->calculation:
+                $calc = function (Area $area, PurposeModel $model) {
+                    return $area->getSize() / 100 * $model->amount;
+                };
+                break;
+            case Purpose::CALCULATION_AREA === $model->calculation;
+                $calc = function (Area $area, PurposeModel $model) {
+                    return $model->amount;
+                };
+                break;
+            case Purpose::CALCULATION_SHARE === $model->calculation:
+                $shared = null;
+                $calc = function (Area $area, PurposeModel $model) use (&$shared) {
+                    return $shared ?: $shared = (int) ceil($model->amount / count($model->areas));
+                };
+                break;
+            default:
+                throw new \DomainException(sprintf('Unknown calculation: "%s"', $model->calculation));
         }
 
         foreach ($model->areas as $area) {
-            if (!$amount) {
-                if (Purpose::CALCULATION_SIZE === $model->calculation) {
-                    $amount = $area->getSize() / 100 * $model->amount;
-                } elseif (Purpose::CALCULATION_AREA === $model->calculation) {
-                    $amount = $model->amount;
-                } else {
-                    throw new \DomainException(sprintf('Unknown calculation: "%s"', $model->calculation));
-                }
-            }
+            $amount = $calc($area, $model);
 
             if (0 < $amount) {
                 $amount *= -1;
