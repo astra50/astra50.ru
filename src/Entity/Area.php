@@ -40,7 +40,7 @@ class Area
     /**
      * @var User[]|ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="areas")
      * @ORM\JoinTable(joinColumns={@ORM\JoinColumn}, inverseJoinColumns={@ORM\JoinColumn})
      */
     private $users;
