@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Payment;
 use App\Entity\Purpose;
-use App\EventDispatcher\Payment\PurposeEvent;
-use App\Events;
+use App\Entity\User;
 use App\Form\Model\PurposeModel;
 use App\Form\Type\PurposeType;
 use App\Repository\AreaRepository;
+use App\Repository\PaymentRepository;
 use App\Repository\PurposeRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -33,18 +33,18 @@ final class PurposeController extends Controller
     private $areaRepository;
 
     /**
-     * @var EventDispatcherInterface
+     * @var PaymentRepository
      */
-    private $dispatcher;
+    private $paymentRepository;
 
     public function __construct(
         PurposeRepository $purposeRepository,
         AreaRepository $areaRepository,
-        EventDispatcherInterface $dispatcher
+        PaymentRepository $paymentRepository
     ) {
         $this->purposeRepository = $purposeRepository;
         $this->areaRepository = $areaRepository;
-        $this->dispatcher = $dispatcher;
+        $this->paymentRepository = $paymentRepository;
     }
 
     /**
@@ -75,7 +75,7 @@ final class PurposeController extends Controller
             $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
 
             $this->purposeRepository->save($entity);
-            $this->dispatcher->dispatch(Events::PAYMENT_TYPE_NEW, new PurposeEvent($entity, $model, $this->getUser()));
+            $this->createPayments($entity, $model, $this->getUser());
 
             $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $model->name));
 
@@ -85,5 +85,31 @@ final class PurposeController extends Controller
         return $this->render('purpose/edit.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    public function createPayments(Purpose $purpose, PurposeModel $model, User $user): void
+    {
+        $amount = null;
+        if (Purpose::CALCULATION_SHARE === $model->calculation) {
+            $amount = (int) ceil($model->amount / count($model->areas));
+        }
+
+        foreach ($model->areas as $area) {
+            if (!$amount) {
+                if (Purpose::CALCULATION_SIZE === $model->calculation) {
+                    $amount = $area->getSize() / 100 * $model->amount;
+                } elseif (Purpose::CALCULATION_EACH === $model->calculation) {
+                    $amount = $model->amount;
+                } else {
+                    throw new \DomainException(sprintf('Unknown calculation: "%s"', $model->calculation));
+                }
+            }
+
+            if (0 < $amount) {
+                $amount *= -1;
+            }
+
+            $this->paymentRepository->save(new Payment($area, $purpose, $user, $amount));
+        }
     }
 }
