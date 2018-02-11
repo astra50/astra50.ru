@@ -20,11 +20,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/area")
- *
- * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
 final class AreaController extends Controller
 {
@@ -45,6 +44,8 @@ final class AreaController extends Controller
 
     /**
      * @Route(name="area_index")
+     *
+     * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
      */
     public function indexAction()
     {
@@ -64,9 +65,17 @@ final class AreaController extends Controller
     /**
      * @Route("/{number}", name="area_show", defaults={"page": 1}, requirements={"page": "\d"})
      * @Route("/{number}/{status}", defaults={"page": 1}, name="area_show_payment_return", requirements={"status": "1|2"})
+     *
+     * @Security("is_granted(constant('App\\Roles::COMMUNITY'))")
      */
     public function showAction(Area $area, int $page, int $status = null)
     {
+        $user = $this->getUser();
+
+        if (!$area->isOwner($user) && !$this->isGranted(Roles::CHAIRMAN)) {
+            throw new AccessDeniedException();
+        }
+
         if (null !== $status) {
             switch ($status) {
                 case self::PAYMENT_STATUS_SUCCESS:
@@ -118,6 +127,8 @@ final class AreaController extends Controller
 
     /**
      * @Route("/{number}/edit", name="area_edit")
+     *
+     * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
      */
     public function editAction(Request $request, Area $area)
     {

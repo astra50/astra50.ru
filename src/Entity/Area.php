@@ -73,10 +73,7 @@ class Area
         return $this->size;
     }
 
-    /**
-     * @return Street
-     */
-    public function getStreet()
+    public function getStreet(): ?Street
     {
         return $this->street;
     }
@@ -109,5 +106,10 @@ class Area
         }
 
         $this->users[] = $user;
+    }
+
+    public function isOwner(User $user): bool
+    {
+        return in_array($user, $this->users->toArray(), true);
     }
 }
