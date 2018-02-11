@@ -3,6 +3,7 @@ parameters:
     knp_menu.renderer.twig.options:
         currentClass: active
     env(APP_VERSION): null
+    env(MONETA_CODE): null
 
 services:
     _defaults:
@@ -71,3 +72,8 @@ services:
 
     App\Markdown\MarkdownInterface:
         alias: App\Markdown\CebeMarkdown
+
+    App\Controller\PayAction:
+        public: true
+        arguments:
+            $secret: '%env(MONETA_CODE)%'

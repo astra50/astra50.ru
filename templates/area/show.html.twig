@@ -39,18 +39,49 @@
             </thead>
             <tbody>
             {% for item in pagerfanta.currentPageResults %}
+                {# @var purpose \App\Entity\Purpose #}
                 {% set purpose = item|first %}
                 {% set sum = item.bill + item.paid %}
+                {% set paid = sum >= 0 %}
+                {% set pay = ((item.bill + item.paid) / 100)|round(0, 'ceil') %}
 
-                <tr class="{{ sum >= 0 ? 'success' : 'danger' }}">
+                <tr>
                     <td>{{ purpose.name }}</td>
                     <td>{{ (item.bill|abs / 100)|number_format }}</td>
                     <td>{{ (item.paid / 100)|number_format }}</td>
-                    <td><strong>{{ ((item.bill + item.paid) / 100)|number_format }}</strong></td>
+                    <td><strong>{{ pay|number_format }}</strong></td>
                     <td>{{ purpose.createdAt|localizeddate }}</td>
+                    <td>
+                        {% if not paid %}
+                            <form method="post" action="https://www.payanyway.ru/assistant.htm">
+                                <input type="hidden" name="MNT_ID" value="87482468">
+                                <input type="hidden" name="MNT_TEST_MODE" value="0">
+
+                                <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
+                                <input type="hidden" name="MNT_AMOUNT" value="{{ pay * -1 }}">
+
+                                <input type="hidden" name="MNT_SUCCESS_URL" value="{{ url('area_show_payment_return', {
+                                    'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_SUCCESS'),
+                                    'number': area.number
+                                }) }}">
+                                <input type="hidden" name="MNT_FAIL_URL" value="{{ url('area_show_payment_return', {
+                                    'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_FAILURE'),
+                                    'number': area.number
+                                }) }}">
+
+                                <input type="hidden" name="MNT_RETURN_URL" value="{{ app.request.uri }}">
+                                <input type="hidden" name="MNT_AREA" value="{{ area.id }}">
+                                <input type="hidden" name="MNT_PURPOSE" value="{{ purpose.id }}">
+                                <input type="hidden" name="MNT_USER" value="{{ app.user.id }}">
+
+                                <button class="btn btn-success" type="submit">Оплатить</button>
+                            </form>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
-            <tr class="{{ 0 > balance ? 'warning' : '' }}">
+
+            <tr class="{{ 0 > balance ? 'danger' }}">
                 <td colspan="3">Баланс</td>
                 <td colspan="2">{{ (balance / 100)|number_format }}</td>
             </tr>

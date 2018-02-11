@@ -28,7 +28,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class AreaController extends Controller
 {
-    private const PURPOSES_PER_PAGE = 10;
+    private const PURPOSES_PER_PAGE = 30;
+
+    public const PAYMENT_STATUS_SUCCESS = 1;
+    public const PAYMENT_STATUS_FAILURE = 2;
 
     /**
      * @var EntityManagerInterface
@@ -60,9 +63,26 @@ final class AreaController extends Controller
 
     /**
      * @Route("/{number}", name="area_show", defaults={"page": 1}, requirements={"page": "\d"})
+     * @Route("/{number}/{status}", defaults={"page": 1}, name="area_show_payment_return", requirements={"status": "1|2"})
      */
-    public function showAction(Area $area, $page)
+    public function showAction(Area $area, int $page, int $status = null)
     {
+        if (null !== $status) {
+            switch ($status) {
+                case self::PAYMENT_STATUS_SUCCESS:
+                    $this->addFlash('success', 'Платёж успешно проведён платежной системой!');
+                    break;
+                case self::PAYMENT_STATUS_FAILURE:
+                    $this->addFlash('danger', 'В процессе оплаты произошла ошибка!');
+                    break;
+            }
+
+            return $this->redirectToRoute('area_show', [
+                'number' => $area->getNumber(),
+                'page' => $page,
+            ]);
+        }
+
         $qb = $this->em->createQueryBuilder()
             ->select('purpose')
             ->addSelect('SUM(CASE WHEN payment.amount < 0 THEN payment.amount ELSE 0 END) AS bill')
