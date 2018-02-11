@@ -27,10 +27,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 final class AreaController extends Controller
 {
-    private const PURPOSES_PER_PAGE = 30;
-
     public const PAYMENT_STATUS_SUCCESS = 1;
     public const PAYMENT_STATUS_FAILURE = 2;
+
+    private const PURPOSES_PER_PAGE = 30;
 
     /**
      * @var EntityManagerInterface

@@ -99,6 +99,11 @@ class Area
         return $this->users->toArray();
     }
 
+    public function isOwner(User $user): bool
+    {
+        return in_array($user, $this->users->toArray(), true);
+    }
+
     private function addUser(User $user): void
     {
         if ($this->users->contains($user)) {
@@ -106,10 +111,5 @@ class Area
         }
 
         $this->users[] = $user;
-    }
-
-    public function isOwner(User $user): bool
-    {
-        return in_array($user, $this->users->toArray(), true);
     }
 }

@@ -46,7 +46,7 @@ class User extends BaseUser
     private $realname;
 
     /**
-     * @var Area[]
+     * @var Area[]|ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="App\Entity\Area", mappedBy="users")
      */
@@ -124,7 +124,7 @@ class User extends BaseUser
         return $this;
     }
 
-    public function getRealname(): string
+    public function getRealname(): ?string
     {
         return $this->realname;
     }
