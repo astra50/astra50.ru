@@ -48,6 +48,11 @@ final class PaymentModel
     public $isPositive;
 
     /**
+     * @var string
+     */
+    public $comment;
+
+    /**
      * @param Payment $entity
      *
      * @return PaymentModel
@@ -59,6 +64,7 @@ final class PaymentModel
         $model->purpose = $entity->getPurpose();
         $model->amount = abs($entity->getAmount());
         $model->isPositive = $entity->getAmount() > 0;
+        $model->comment = $entity->getComment();
 
         return $model;
     }

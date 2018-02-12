@@ -71,6 +71,9 @@ class PaymentType extends AbstractType
                 'expanded' => true,
                 'required' => true,
                 'translation_domain' => false,
+            ])
+            ->add('comment', Type\TextType::class, [
+                'label' => 'Комментарий',
             ]);
     }
 

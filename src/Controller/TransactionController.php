@@ -72,7 +72,7 @@ final class TransactionController extends Controller
             $user = $this->getUser();
             $amount = $model->isPositive ? $model->amount : $model->amount * -1;
 
-            $this->em->persist(new Payment($area, $purpose, $user, $amount));
+            $this->em->persist(new Payment($area, $purpose, $user, $amount, $model->comment));
             $this->em->flush();
 
             $this->addFlash('success', sprintf('Платеж по цели "%s" для участка "%s" на сумму "%s" создан!', $purpose->getName(), $area->getNumber(), $amount / 100));
