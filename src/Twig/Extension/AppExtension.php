@@ -12,7 +12,6 @@ use Twig\TwigFunction;
  */
 class AppExtension extends \Twig_Extension
 {
-
     public function getFunctions(): array
     {
         return [
