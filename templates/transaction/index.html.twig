@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{# @var payments \App\Entity\Payment[] #}
+
 {% block content %}
     {% if is_granted(constant('App\\Roles::CASHIER')) %}
         <a href="{{ path('transaction_new') }}" class="btn btn-success">
@@ -17,6 +19,7 @@
                 <th>Наименование</th>
                 <th>Сумма (руб.)</th>
                 <th>Дата создания</th>
+                <th>Создал</th>
             </tr>
             </thead>
             <tbody>
@@ -28,6 +31,11 @@
                     <td>{{ payment.purpose.name }}</td>
                     <td>{{ (payment.amount / 100)|number_format }}</td>
                     <td>{{ payment.createdAt|localizeddate }}</td>
+                    <td>
+                        {% if payment.user is not empty %}
+                            {{ payment.user.realname }}
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
