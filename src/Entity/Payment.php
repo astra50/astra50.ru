@@ -54,12 +54,13 @@ class Payment
      */
     private $amount;
 
-    public function __construct(Area $area, Purpose $purpose, User $user, $amount)
+    public function __construct(Area $area, Purpose $purpose, User $user, $amount, string $comment = null)
     {
         $this->area = $area;
         $this->purpose = $purpose;
         $this->user = $user;
         $this->amount = $amount;
+        $this->comment = $comment;
     }
 
     /**

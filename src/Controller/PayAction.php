@@ -52,16 +52,16 @@ final class PayAction
             'MNT_USER' => $userId,
         ] = $request->request->all();
 
-        $subscroberId = $request->request->get('MNT_SUBSCRIBER_ID', '');
+        $subscriberId = $request->request->get('MNT_SUBSCRIBER_ID', '');
 
-        $verification = md5($id.$transactionId.$operationId.$amount.$currencyCode.$subscroberId.$testMode.$secret);
+        $verification = md5($id.$transactionId.$operationId.$amount.$currencyCode.$subscriberId.$testMode.$secret);
 
         if ($signature === $verification) {
             $user = $em->getRepository(User::class)->find($userId);
             $area = $em->getRepository(Area::class)->find($areaId);
             $purpose = $em->getRepository(Purpose::class)->find($purposeId);
 
-            $em->persist(new Payment($area, $purpose, $user, $amount * 100));
+            $em->persist(new Payment($area, $purpose, $user, $amount * 100, '# Оплата через moneta.ru'));
             $em->flush();
 
             return new Response('SUCCESS');
