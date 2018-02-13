@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Menu;
 
+use App\Roles;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
@@ -18,11 +20,14 @@ class Builder
     private $factory;
 
     /**
-     * @param FactoryInterface $factory
+     * @var AuthorizationCheckerInterface
      */
-    public function __construct(FactoryInterface $factory)
+    private $authorizationChecker;
+
+    public function __construct(FactoryInterface $factory, AuthorizationCheckerInterface $authorizationChecker)
     {
         $this->factory = $factory;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function createMainMenu(): ItemInterface
@@ -50,11 +55,25 @@ class Builder
         ]);
 
         $menu
-            ->addChild('Payment', ['label' => 'Платежи', 'route' => 'transaction_index'])->getParent()
-            ->addChild('Purpose', ['label' => 'Платежные цели', 'route' => 'purpose_index'])->getParent()
-            ->addChild('Area', ['label' => 'Участки', 'route' => 'area_index'])->getParent()
-            ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_index'])->getParent()
-            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])->getParent();
+            ->addChild('Payment', ['label' => 'Платежи', 'route' => 'transaction_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CASHIER))
+            ->getParent()
+
+            ->addChild('Purpose', ['label' => 'Платежные цели', 'route' => 'purpose_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->getParent()
+
+            ->addChild('Area', ['label' => 'Участки', 'route' => 'area_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->getParent()
+
+            ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->getParent()
+
+            ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->getParent();
 
         return $menu;
     }
