@@ -48,13 +48,13 @@
                 {% set purpose = item|first %}
                 {% set sum = item.bill + item.paid %}
                 {% set paid = sum >= 0 %}
-                {% set pay = ((item.bill + item.paid) / 100)|round(0, 'ceil') %}
+                {% set pay = ((item.bill + item.paid) / 100) %}
 
                 <tr>
                     <td>{{ purpose.name }}</td>
-                    <td>{{ (item.bill|abs / 100)|number_format }}</td>
-                    <td>{{ (item.paid / 100)|number_format }}</td>
-                    <td><strong>{{ pay|number_format }}</strong></td>
+                    <td>{{ (item.bill|abs / 100) }}</td>
+                    <td>{{ (item.paid / 100) }}</td>
+                    <td><strong>{{ pay }}</strong></td>
                     <td>{{ purpose.createdAt|localizeddate }}</td>
                     {% if not paid %}
                         <td>
@@ -63,7 +63,7 @@
                                 <input type="hidden" name="MNT_TEST_MODE" value="0">
 
                                 <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
-                                <input type="hidden" name="MNT_AMOUNT" value="{{ pay * -1 }}">
+                                <input type="hidden" name="MNT_AMOUNT" value="{{ pay|abs }}">
 
                                 <input type="hidden" name="MNT_SUCCESS_URL" value="{{ url('area_show_payment_return', {
                                     'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_SUCCESS'),
@@ -88,7 +88,7 @@
 
             <tr class="{{ hasDebt ? 'danger' }}">
                 <td colspan="3">Баланс</td>
-                <td colspan="2">{{ (balance / 100)|number_format }}</td>
+                <td colspan="2">{{ (balance / 100) }}</td>
             </tr>
             </tbody>
         </table>
