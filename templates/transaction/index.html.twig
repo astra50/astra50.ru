@@ -20,6 +20,7 @@
                 <th>Сумма (руб.)</th>
                 <th>Дата создания</th>
                 <th>Создал</th>
+                <th>Комментарий</th>
             </tr>
             </thead>
             <tbody>
@@ -36,6 +37,7 @@
                             {{ payment.user.realname }}
                         {% endif %}
                     </td>
+                    <td>{{ payment.comment }}</td>
                 </tr>
             {% endfor %}
             </tbody>
