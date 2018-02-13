@@ -84,7 +84,7 @@ php-xdebug = docker-compose run --rm --entrypoint docker-entrypoint-xdebug.sh ap
 sh = docker-compose run --rm --entrypoint sh app -c
 
 cli-app:
-	docker-compose run --rm -e XDEBUG=false --entrypoint bash app
+	$(app) bash
 	@$(MAKE) permissions > /dev/null
 restart-app:
 	docker-compose restart app
