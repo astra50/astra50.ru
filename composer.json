@@ -76,13 +76,7 @@
             "cache:warmup": "symfony-cmd",
             "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
             "requirements-checker": "script"
-        },
-        "post-install-cmd": [
-            "@symfony-scripts"
-        ],
-        "post-update-cmd": [
-            "@symfony-scripts"
-        ]
+        }
     },
     "extra": {
         "symfony-app-dir": "src",
