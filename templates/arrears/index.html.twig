@@ -55,8 +55,8 @@
     <script>
       const
           purposeSelect = $('#purpose-select'),
-          debtorSelect = $('#debtor-select'),
-          rows = $('.purpose-row-js');
+          debtorSelect = $('#debtor-select');
+      let rows = $('.purpose-row-js');
 
       const handle = () => {
         let purpose = purposeSelect.val().toString(),
@@ -77,6 +77,6 @@
       };
 
       purposeSelect.on('change', handle);
-      debtorSelect.on('click', handle);
+      debtorSelect.on('change', handle);
     </script>
 {% endblock %}
