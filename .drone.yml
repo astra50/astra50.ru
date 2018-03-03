@@ -27,22 +27,27 @@ pipeline:
                 --build-arg APP_BUILD_TIME="`date --rfc-2822`"
                 .
 
-    static php-cs-fixer:
-        group: static
+    validate php-cs-fixer:
+        group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - >-
+                /docker-entrypoint.sh
                 php-cs-fixer fix
                 --config=./.php_cs.dist
                 --verbose
                 --dry-run
                 --using-cache=no
+        environment:
+            APP_ENV: 'test'
+            APP_DEBUG: '0'
+            MIGRATIONS: 'false'
         when:
             branch:
-                exclude: master
+                exclude: [ master ]
 
-    static blank end line:
-        group: static
+    validate blank end line:
+        group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - >-
@@ -55,7 +60,7 @@ pipeline:
                 exclude: master
 
     validate phpstan:
-        group: static
+        group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
             - cd "$APP_DIR"
