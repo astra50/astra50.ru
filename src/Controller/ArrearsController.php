@@ -48,7 +48,7 @@ SQL
                 ],
                 'area' => [
                     'number' => $row['area_number'],
-                    'owners' => explode(',', $row['owners']),
+                    'owners' => explode(',', $row['owners'] ?? ''),
                 ],
                 'amount' => $row['payment_amount'],
             ];
