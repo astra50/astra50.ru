@@ -24,7 +24,7 @@ install: do-install up db-wait migration permissions
 update: pull pull-app cache restart
 do-fresh: pull pull-app build do-install up db-wait permissions cache restart
 fresh: do-fresh flush
-fresh-backup: do-fresh drop flush-solr backup-restore migration search-populate admin
+fresh-backup: do-fresh drop backup-restore migration
 refresh: down fresh
 refresh-backup: down fresh-backup
 
