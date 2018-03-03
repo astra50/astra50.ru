@@ -12,6 +12,7 @@ all: init docker-pull docker-build
 init:
 	cp -n docker-compose.yml.dist docker-compose.yml || true
 	cp -n ./.env.dist ./.env || true
+	cp -n -r ./contrib/* ./ || true
 	mkdir -p ./var/null && touch ./var/null/composer.null
 un-init:
 	rm -rf docker-compose.yml ./.env
@@ -20,9 +21,12 @@ re-init: un-init init
 do-install: install-app
 install: do-install up db-wait migration permissions
 
-update: pull build install
-fresh: pull build do-install up db-wait permissions cache flush
-fresh-backup: pull build do-install up db-wait permissions cache drop backup-restore migration
+update: pull pull-app cache restart
+do-fresh: pull pull-app build do-install up db-wait permissions cache restart
+fresh: do-fresh flush
+fresh-backup: do-fresh drop flush-solr backup-restore migration search-populate admin
+refresh: down fresh
+refresh-backup: down fresh-backup
 
 permissions:
 	docker run --rm -v `pwd`:/app -w /app alpine sh -c "chown $(shell id -u):$(shell id -g) -R ./ && chmod 777 -R ./var || true"
@@ -78,6 +82,7 @@ logs:
 
 ###> APP ###
 app = docker-compose run --rm -e XDEBUG=false -e WAIT_HOSTS=false -e COMPOSER_DISABLE=true app
+app-xdebug = docker-compose run --rm -e WAIT_HOSTS=false -e COMPOSER_DISABLE=true app
 app-test = docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=1 -e XDEBUG=false -e WAIT_HOSTS=false -e COMPOSER_DISABLE=true app
 php = docker-compose run --rm --entrypoint php app -d memory_limit=-1
 php-xdebug = docker-compose run --rm --entrypoint docker-entrypoint-xdebug.sh app php -d memory_limit=-1
@@ -85,6 +90,9 @@ sh = docker-compose run --rm --entrypoint sh app -c
 
 cli-app:
 	$(app) bash
+	@$(MAKE) permissions > /dev/null
+cli-app-xdebug:
+	$(app-xdebug) bash
 	@$(MAKE) permissions > /dev/null
 restart-app:
 	docker-compose restart app
@@ -134,13 +142,16 @@ migration-diff-dry:
 schema-update:
 	$(app) console doctrine:schema:update --force
 
+app-test:
+	$(app) console test
+
 product-translate:
 	$(app) console product:translate
 
 test-command:
 	docker-compose run --rm -e SKIP_ENTRYPOINT=true app console test -vvv
 
-check: cs-check phpstan cache-test schema-check phpunit-check
+check: cs-check cache-test phpstan schema-check phpunit-check
 
 php-cs-fixer = docker-compose run --rm --no-deps --entrypoint php-cs-fixer -e PHP_CS_FIXER_FUTURE_MODE=1 app
 

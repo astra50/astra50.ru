@@ -8,8 +8,7 @@ fi
 
 APP_ENV=${APP_ENV:=prod}
 case "$APP_ENV" in
-   prod) export APCU=true ;; # APCU is required in prod env
-   dev|test) ;;
+   prod|dev|test) ;;
    *) >&2 echo env "APP_ENV" must be in \"prod, dev, test\" && exit 1;;
 esac
 export APP_ENV

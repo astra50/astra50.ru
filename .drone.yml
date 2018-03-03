@@ -72,27 +72,27 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - /docker-entrypoint.sh symfony_requirements
+            - /docker-entrypoint.sh requirements-checker
         environment:
             APP_ENV: 'test'
             APP_DEBUG: '0'
             MIGRATIONS: 'false'
         when:
             branch:
-                exclude: master
+                exclude: [ master ]
 
-    validate yaml lint:
+    validate symfony security:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - /docker-entrypoint.sh console lint:yaml "$$APP_DIR/config"
+            - /docker-entrypoint.sh security-checker security:check $APP_DIR/composer.lock
         environment:
             APP_ENV: 'test'
             APP_DEBUG: '0'
             MIGRATIONS: 'false'
         when:
             branch:
-                exclude: master
+                exclude: [ master ]
 
     validate doctrine: &validate-doctrine
         group: validate
