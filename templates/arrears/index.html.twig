@@ -1,0 +1,82 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <label>По целям</label>
+            <select id="purpose-select" class="form-control">
+                <option value="0">Все</option>
+
+                {% for id,name in purposes %}
+                    <option value="{{ id }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label>По задолженности</label>
+            <select id="debtor-select" class="form-control">
+                <option value="0">Все</option>
+                <option value="1">Должники</option>
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Номер Участка</th>
+                <th>1000+Номер участка</th>
+                <th>ФИО</th>
+                <th>Адрес</th>
+                <th>Сумма долна</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr class="purpose-row-js" data-purpose="{{ row.purpose.id }}" data-debtor="{{ row.amount < 0 ? 1 : 0 }}">
+                    <td>{{ row.area.number }}</td>
+                    <td>{{ row.area.number + 1000 }}</td>
+                    <td>{{ row.area.owners|join }}</td>
+                    <td>СНТ Астра, участок {{ row.area.number }}</td>
+                    <td>{{ row.amount|abs / 100 }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+      const
+          purposeSelect = $('#purpose-select'),
+          debtorSelect = $('#debtor-select'),
+          rows = $('.purpose-row-js');
+
+      const handle = () => {
+        let purpose = purposeSelect.val().toString(),
+            debtor = debtorSelect.val().toString();
+
+        rows.each(function() {
+          let row = $(this);
+
+          if (
+              ('0' === purpose || row.data('purpose').toString() === purpose)
+              && ('0' === debtor || row.data('debtor').toString() === debtor)
+          ) {
+            row.show();
+          } else {
+            row.hide();
+          }
+        });
+      };
+
+      purposeSelect.on('change', handle);
+      debtorSelect.on('click', handle);
+    </script>
+{% endblock %}

@@ -73,6 +73,10 @@ class Builder
 
             ->addChild('Suggestions', ['label' => 'Предложения', 'route' => 'suggestions_index'])
             ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->getParent()
+
+            ->addChild('Arrears', ['label' => 'Задолженности', 'route' => 'arrears'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
             ->getParent();
 
         return $menu;
