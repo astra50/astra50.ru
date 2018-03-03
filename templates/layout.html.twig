@@ -28,9 +28,9 @@
                             <a href="{{ path('account') }}">{{ app.user.realname }}</a>
                         |
                         </span>
-                        <a href="{{ path('fos_user_security_logout') }}">Выход</a>
+                        <a href="{{ path('logout') }}">Выход</a>
                     {% else %}
-                        <a href="{{ path('fos_user_security_login') }}">Вход</a>
+                        <a href="{{ path('login') }}">Вход</a>
                     {% endif %}
                 </div>
             </div>

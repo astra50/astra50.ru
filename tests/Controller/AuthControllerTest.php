@@ -21,18 +21,18 @@ class AuthControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $buttonCrawlerNode = $client->request('GET', '/register/')->selectButton('submit');
+        $buttonCrawlerNode = $client->request('GET', '/registration')->selectButton('submit');
         $form = $buttonCrawlerNode->form();
 
         $client->submit($form, [
-            'fos_user_registration_form[realname]' => $name,
-            'fos_user_registration_form[email]' => $email,
-            'fos_user_registration_form[phone]' => $phone,
-            'fos_user_registration_form[plainPassword]' => $password,
+            'form[realname]' => $name,
+            'form[email]' => $email,
+            'form[phone]' => $phone,
+            'form[password]' => $password,
         ]);
 
-        $user = $client->getContainer()->get('doctrine')->getConnection()->executeQuery('SELECT id FROM users WHERE email = :email', [
-            'email' => $email,
+        $user = $client->getContainer()->get('doctrine')->getConnection()->executeQuery('SELECT id FROM users WHERE username = :username', [
+            'username' => $email,
         ])->fetch();
 
         if ($success) {

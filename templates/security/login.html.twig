@@ -1,7 +1,5 @@
 {% extends "layout.html.twig" %}
 
-{% trans_default_domain 'FOSUserBundle' %}
-
 {% block content %}
     <h1>Авторизация</h1>
 
@@ -14,28 +12,27 @@
             </div>
         {% endif %}
 
-        <form class="form-horizontal" action="{{ path("fos_user_security_check") }}" method="post">
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+        <form class="form-horizontal" action="{{ path("login_check") }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
 
             <div class="form-group">
                 <label class="col-md-3 control-label required" for="username">Email</label>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="_username" value="{{ last_username }}"
-                           required="required"/>
+                    <input type="text" class="form-control" name="_username" required="required" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 control-label required" for="password">Пароль</label>
                 <div class="col-md-4">
-                    <input type="password" class="form-control" name="_password" required="required"/>
+                    <input type="password" class="form-control" name="_password" required="required" />
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-md-3 control-label required" for="_remember_me">Запомнить меня?</label>
                 <div class="col-md-4">
-                    <input type="checkbox" name="_remember_me" value="on"/>
+                    <input type="checkbox" name="_remember_me" value="on" />
                 </div>
             </div>
 
@@ -54,6 +51,6 @@
     <hr>
 
     <div class="text-center">
-        <a class="btn btn-default" href="{{ path('fos_user_registration_register') }}">Регистрация</a>
+        <a class="btn btn-default" href="{{ path('registration') }}">Регистрация</a>
     </div>
 {% endblock content %}
