@@ -137,9 +137,10 @@ final class AreaController extends Controller
         $form = $this->createForm(AreaType::class, $model, [
             'streets' => $this->em->getRepository(Street::class)->findAll(),
             'users' => $this->em->getRepository(User::class)->findAll(),
-        ]);
+        ])
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $area->setSize($model->size);
             if ($model->street) {
                 $area->setStreet($model->street);

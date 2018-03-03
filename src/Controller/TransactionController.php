@@ -64,9 +64,10 @@ final class TransactionController extends Controller
 
         $form = $this->createForm(PaymentType::class, $model, [
             'action' => $this->generateUrl('transaction_new'),
-        ]);
+        ])
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $area = $model->area;
             $purpose = $model->purpose;
             $user = $this->getUser();

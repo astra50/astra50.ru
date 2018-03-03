@@ -65,9 +65,10 @@ final class PurposeController extends Controller
         $model = new PurposeModel();
         $form = $this->createForm(PurposeType::class, $model, [
             'action' => $this->generateUrl('purpose_new'),
-        ]);
+        ])
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
 
             $this->em->persist($entity);

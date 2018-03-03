@@ -60,9 +60,9 @@ final class SecurityController extends Controller
                 'label' => 'Пароль',
                 'mapped' => false,
             ])
-            ->getForm();
+            ->getForm()
+            ->handleRequest($request);
 
-        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->changePassword($form->get('password')->getData(), $encoderFactory->getEncoder($user));
 

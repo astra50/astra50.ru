@@ -56,9 +56,9 @@ final class ReportController extends Controller
     {
         $report = new Report();
 
-        $form = $this->createForm(\App\Form\Type\ReportType::class, $report);
+        $form = $this->createForm(\App\Form\Type\ReportType::class, $report)
+            ->handleRequest($request);
 
-        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($report);
             $this->em->flush();
@@ -82,9 +82,9 @@ final class ReportController extends Controller
      */
     public function editAction(Report $report, Request $request)
     {
-        $form = $this->createForm(\App\Form\Type\ReportType::class, $report);
+        $form = $this->createForm(\App\Form\Type\ReportType::class, $report)
+            ->handleRequest($request);
 
-        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 

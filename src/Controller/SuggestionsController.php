@@ -67,8 +67,8 @@ final class SuggestionsController extends Controller
     {
         $model = new SuggestionModel();
 
-        $form = $this->createForm(SuggestionType::class, $model);
-        $form->handleRequest($request);
+        $form = $this->createForm(SuggestionType::class, $model)
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist(new Suggestion($model));

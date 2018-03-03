@@ -48,9 +48,10 @@ class StreetController extends Controller
     public function newAction(Request $request)
     {
         $streetModel = new StreetModel();
-        $form = $this->createForm(StreetType::class, $streetModel);
+        $form = $this->createForm(StreetType::class, $streetModel)
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $street = new Street($streetModel->name);
 
             $this->em->persist($street);

@@ -71,9 +71,10 @@ class NewsController extends Controller
         $model = new NewsModel();
         $form = $this->createForm(NewsType::class, $model, [
             'action' => $this->generateUrl('news_new'),
-        ]);
+        ])
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $entity = new News($this->getUser(), $model->title, $model->content, $model->internal);
             if ($model->published) {
                 $entity->publish();
@@ -110,9 +111,10 @@ class NewsController extends Controller
         $model = NewsModel::fromEntity($news);
         $form = $this->createForm(NewsType::class, $model, [
             'action' => $this->generateUrl('news_edit', ['slug' => $news->getSlug()]),
-        ]);
+        ])
+            ->handleRequest($request);
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $news->update($model->title, $model->content, $model->internal);
 
             if ($model->published) {
