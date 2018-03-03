@@ -69,7 +69,6 @@ pipeline:
             APP_ENV: 'test'
             APP_DEBUG: '1'
             MIGRATIONS: 'false'
-            XDEBUG: 'true'
         when:
             branch:
                 exclude: master
@@ -110,7 +109,6 @@ pipeline:
             APP_DEBUG: '0'
             MIGRATIONS: 'true'
             WAIT_HOSTS: 'mysql:3306'
-            XDEBUG: 'true'
 
     test phpunit: &test-phpunit
         group: test
