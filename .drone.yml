@@ -1,7 +1,7 @@
 clone:
     git:
         image: plugins/git
-        depth: 1
+        depth: 20
 
 _docker: &docker
     image: docker
