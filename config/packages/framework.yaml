@@ -1,9 +1,6 @@
 framework:
     #esi:             ~
-    translator:      { fallbacks: ["%locale%"] }
     secret:          "%env(SECRET)%"
-    router:
-        strict_requirements: ~
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
