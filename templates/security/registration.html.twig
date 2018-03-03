@@ -1,0 +1,35 @@
+{% extends "layout.html.twig" %}
+
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+
+{% block content %}
+    <h1>Регистрация</h1>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-offset-4 col-sm-4">
+            {{ form_start(form) }}
+            {{ form_row(form.realname) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.phone) }}
+            {{ form_row(form.password) }}
+
+            <div class="form-group">
+                <button class="btn btn-success" name="submit" type="submit">Зарегистрироваться</button>
+
+                <div class="pull-right">
+                    {% include 'blocks/social_auth.html.twig' %}
+                </div>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="text-center">
+        <a class="btn btn-default" href="{{ path('login') }}">Авторизация</a>
+    </div>
+{% endblock content %}

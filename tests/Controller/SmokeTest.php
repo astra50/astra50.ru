@@ -33,7 +33,7 @@ class SmokeTest extends WebTestCase
         yield ['/suggestions'];
         //yield ['/area'];
         yield ['/login'];
-        yield ['/register/'];
+        yield ['/registration'];
         yield ['/reports'];
         //yield ['/reports/new'];
         //yield ['/reports/1'];

@@ -6,12 +6,11 @@ namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as SymfonyKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
-class Kernel extends SymfonyKernel implements CompilerPassInterface
+class Kernel extends SymfonyKernel
 {
     use MicroKernelTrait;
 
@@ -41,12 +40,6 @@ class Kernel extends SymfonyKernel implements CompilerPassInterface
     public function getConfDir(): string
     {
         return $this->getProjectDir().'/config';
-    }
-
-    public function process(ContainerBuilder $container): void
-    {
-        $container->getDefinition('fos_user.registration.form.factory')->setPublic(true);
-        $container->getAlias('fos_user.user_manager')->setPublic(true);
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes): void

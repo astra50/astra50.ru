@@ -2,7 +2,56 @@
 # http://symfony.com/doc/current/book/security.html
 security:
     encoders:
-        FOS\UserBundle\Model\UserInterface: bcrypt
+        App\Entity\User: bcrypt
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        user_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+        oauth2_provider:
+            id: App\Security\Oauth2UserProvider
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            form_login:
+                provider: user_provider
+                login_path: login
+                check_path: login_check
+                failure_path: login
+                require_previous_session: true
+                username_parameter: _username
+                password_parameter: _password
+                csrf_parameter:         _csrf_token
+                csrf_token_id:          authenticate
+                csrf_token_generator:   security.csrf.token_manager
+            logout:
+                path:   logout
+                target: login
+            anonymous:    true
+            oauth:
+                provider: user_provider
+                resource_owners:
+                    google:             "/login/check-google"
+                    vkontakte:          "/login/check-vkontakte"
+                login_path:        login
+                use_forward:       false
+                failure_path:      login
+                oauth_user_provider:
+                    service: App\Security\Oauth2UserProvider
+            logout_on_user_change: true
+
+    access_control:
+        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
 
     role_hierarchy:
         ROLE_COMMUNITY:     ROLE_USER
@@ -20,39 +69,3 @@ security:
             - ROLE_CHAIRMAN
             - ROLE_REPORTS
         ROLE_SUPER_ADMIN:   ROLE_ADMIN
-
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
-    providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username_email
-
-    firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-
-        main:
-            pattern: ^/
-            form_login:
-                provider: fos_userbundle
-                csrf_token_generator: security.csrf.token_manager
-            logout:
-                path:   /logout
-                target: /login
-            anonymous:    true
-            oauth:
-                resource_owners:
-                    google:             "/login/check-google"
-                    vkontakte:          "/login/check-vkontakte"
-                login_path:        /login
-                use_forward:       false
-                failure_path:      /login
-                oauth_user_provider:
-                    service: app.user.user_provider
-            logout_on_user_change: true
-
-    access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
