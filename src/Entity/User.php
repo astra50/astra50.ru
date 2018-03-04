@@ -260,8 +260,10 @@ class User implements UserInterface, EquatableInterface, Serializable
         [
             $this->id,
             $this->username,
-            $this->roles ?? []
+            $roles
         ] = unserialize($serialized, ['allowed_classes' => false]);
+
+        $this->roles = $roles ?? [];
     }
 
     private function getCredential(string $type): ?Credential
