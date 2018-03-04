@@ -61,7 +61,7 @@ final class PayAction
             $area = $em->getRepository(Area::class)->find($areaId);
             $purpose = $em->getRepository(Purpose::class)->find($purposeId);
 
-            $em->persist(new Payment($area, $purpose, $user, (int) $amount * 100, '# Оплата через moneta.ru'));
+            $em->persist(new Payment($area, $purpose, $user, (int) ($amount * 100), '# Оплата через moneta.ru'));
             $em->flush();
 
             return new Response('SUCCESS');
