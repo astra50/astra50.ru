@@ -139,7 +139,13 @@ class Purpose
      */
     public function getAreas(): array
     {
-        return $this->areas->toArray();
+        $areas = $this->areas->toArray();
+
+        usort($areas, function (Area $lft, Area $rgt) {
+            return $lft->getNumber() >= $rgt->getNumber();
+        });
+
+        return $areas;
     }
 
     public function archive(): void
