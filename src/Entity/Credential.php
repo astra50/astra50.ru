@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="credential_search_idx", columns={"identifier", "expired_at"})
+ * })
  */
 class Credential
 {
