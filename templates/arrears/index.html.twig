@@ -39,7 +39,11 @@
             <tbody>
             {% for row in rows %}
                 <tr class="purpose-row-js" data-purpose="{{ row.purpose.id }}" data-debtor="{{ row.amount < 0 ? 1 : 0 }}">
-                    <td>{{ row.area.number }}</td>
+                    <td>
+                        <a href="{{ path('area_show', {'number': row.area.number}) }}">
+                            {{ row.area.number }}
+                        </a>
+                    </td>
                     <td>{{ row.area.number + 1000 }}</td>
                     <td>{{ row.area.owners|join }}</td>
                     <td>СНТ Астра, участок {{ row.area.number }}</td>
