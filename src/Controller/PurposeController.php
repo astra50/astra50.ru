@@ -91,7 +91,7 @@ final class PurposeController extends Controller
     public function editAction(Request $request, Purpose $purpose)
     {
         if (!$purpose->isEditable()) {
-            $this->addFlash('danger', sprintf('Цель %s более редактировать нельзя!', $purpose->getName()));
+            $this->addFlash('error', sprintf('Цель %s более редактировать нельзя!', $purpose->getName()));
 
             return $this->redirectToRoute('purpose_index');
         }
@@ -158,7 +158,7 @@ final class PurposeController extends Controller
     public function archiveAction(Purpose $purpose, Request $request)
     {
         if (null !== $purpose->getArchivedAt()) {
-            $this->addFlash('danger', sprintf('Цель "%s" уже архивная!', $purpose->getName()));
+            $this->addFlash('error', sprintf('Цель "%s" уже архивная!', $purpose->getName()));
         }
 
         $form = $this->createFormBuilder()->getForm()->handleRequest($request);

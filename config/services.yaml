@@ -26,6 +26,10 @@ services:
         resource: '%kernel.project_dir%/src'
         exclude: '%kernel.project_dir%/src/{DataFixtures,Entity,Migrations}'
 
+    Grachev\TokenBundle\:
+        resource: '%kernel.project_dir%/TokenBundle'
+        exclude: '%kernel.project_dir%/TokenBundle/Entity'
+
     App\Controller\:
         resource: '%kernel.project_dir%/src/Controller'
         public: true
