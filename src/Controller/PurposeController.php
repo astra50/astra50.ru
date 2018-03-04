@@ -16,6 +16,7 @@ use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -118,9 +119,20 @@ final class PurposeController extends Controller
      */
     public function paymentAction(Purpose $purpose, Request $request)
     {
-        $payments = $this->createPayments($purpose, $this->getUser());
+        $comment = $request->isMethod('POST')
+            ? $request->request->get('form')['comment']
+            : sprintf('# %s', $purpose->getName());
 
-        $form = $this->createFormBuilder()->getForm()->handleRequest($request);
+        $payments = $this->createPayments($purpose, $this->getUser(), $comment);
+
+        $form = $this->createFormBuilder()
+            ->add('comment', TextType::class, [
+                'label' => 'Комментарий',
+                'mapped' => false,
+                'data' => $comment,
+            ])
+            ->getForm()
+            ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
@@ -166,7 +178,7 @@ final class PurposeController extends Controller
         ]);
     }
 
-    private function createPayments(Purpose $purpose, User $user): array
+    private function createPayments(Purpose $purpose, User $user, string $comment): array
     {
         $calculation = $purpose->getCalculation();
 
@@ -202,8 +214,6 @@ final class PurposeController extends Controller
             if (0 === $amount) {
                 continue;
             }
-
-            $comment = sprintf('# %s', $purpose->getName());
 
             $this->em->persist($payments[] = new Payment($area, $purpose, $user, (int) $amount, $comment));
         }

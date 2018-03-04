@@ -4,6 +4,11 @@
     <h3>Создать платежи по цели <strong>{{ purpose.name }}</strong></h3>
 
     <hr>
+    {{ form_start(form) }}
+
+    {{ form_row(form.comment) }}
+
+    <hr>
 
     <div class="table-responsive">
         <table class="table table-hover">
@@ -20,7 +25,7 @@
             <tr>
                 <td>{{ payment.area.number }}</td>
                 <td>{{ payment.amount / 100 }}</td>
-                <td>{{ payment.comment }}</td>
+                <td class="comment-js">{{ payment.comment }}</td>
             </tr>
             </tbody>
             {% endfor %}
@@ -29,7 +34,18 @@
 
     <hr>
 
-    {{ form_start(form) }}
-        <button type="submit" class="btn btn-primary">Создать платежи</button>
+    <button type="submit" class="btn btn-primary">Создать платежи</button>
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+      $('#{{ form.comment.vars.id }}').on('keyup', function() {
+        const comment = $(this).val();
+
+        $('.comment-js').each(function() {
+          $(this).html(comment);
+        });
+      });
+    </script>
 {% endblock %}
