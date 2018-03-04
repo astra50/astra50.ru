@@ -9,6 +9,8 @@ use Grachevko\Enum\Enum;
 /**
  * @method static self once()
  * @method static self monthly()
+ * @method bool   isOnce()
+ * @method bool   isMonthly()
  *
  * @author Konstantin Grachev <me@grachevko.ru>
  */

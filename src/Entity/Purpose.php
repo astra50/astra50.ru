@@ -11,6 +11,7 @@ use App\Entity\Enum\Schedule;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -23,12 +24,16 @@ class Purpose
     /**
      * @var string
      *
+     * @Assert\NotBlank
+     *
      * @ORM\Column
      */
     private $name;
 
     /**
      * @var int
+     *
+     * @Assert\NotBlank
      *
      * @ORM\Column(type="integer")
      */
@@ -37,12 +42,18 @@ class Purpose
     /**
      * @var Schedule
      *
+     * @Assert\Type("App\Entity\Enum\Schedule")
+     * @Assert\NotBlank
+     *
      * @ORM\Column(type="schedule_enum")
      */
     private $schedule;
 
     /**
      * @var Calculation
+     *
+     * @Assert\Type("App\Entity\Enum\Calculation")
+     * @Assert\NotBlank
      *
      * @ORM\Column(type="calculation_enum")
      */
@@ -138,5 +149,10 @@ class Purpose
     public function getArchivedAt(): ?DateTimeImmutable
     {
         return $this->archivedAt;
+    }
+
+    public function isEditable(): bool
+    {
+        return !$this->schedule->isOnce();
     }
 }

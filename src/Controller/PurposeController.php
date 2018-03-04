@@ -9,6 +9,7 @@ use App\Entity\Payment;
 use App\Entity\Purpose;
 use App\Entity\User;
 use App\Form\Type\PurposeType;
+use App\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -74,6 +75,41 @@ final class PurposeController extends Controller
             $this->em->flush();
 
             $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $purpose->getName()));
+
+            return $this->redirectToRoute('purpose_index');
+        }
+
+        return $this->render('purpose/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="purpose_edit")
+     */
+    public function editAction(Request $request, Purpose $purpose)
+    {
+        if (null !== $purpose->getArchivedAt()) {
+            $this->addFlash('danger', 'Нельзя редактировать архивную цель!');
+
+            return $this->redirectToRoute('purpose_index');
+        }
+
+        if (!$purpose->isEditable()) {
+            $this->addFlash('danger', 'Нельзя редактировать разовую цель!');
+
+            return $this->redirectToRoute('purpose_index');
+        }
+
+        $form = $this->createForm(PurposeType::class, $purpose, [
+            'name_disabled' => !$this->isGranted(Roles::ADMIN),
+        ])
+            ->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->flush();
+
+            $this->addFlash('success', sprintf('Цель "%s" изменена!', $purpose->getName()));
 
             return $this->redirectToRoute('purpose_index');
         }

@@ -30,6 +30,7 @@ class PurposeType extends AbstractType
             ->add('name', Type\TextType::class, [
                 'label' => 'Наименование',
                 'translation_domain' => false,
+                'disabled' => $options['name_disabled'],
             ])
             ->add($builder->create('amount', Type\MoneyType::class, [
                 'label' => 'Сумма',
@@ -88,6 +89,7 @@ class PurposeType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => Purpose::class,
+                'name_disabled' => false,
             ]);
     }
 }

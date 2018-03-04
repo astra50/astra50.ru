@@ -20,10 +20,12 @@
                     <th>Начисление</th>
                     <th>Дата создания</th>
                     <th>Дата архивации</th>
+                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for purpose in purposes %}
+                    {# @var purpose \App\Entity\Purpose #}
                     <tr>
                         <td>{{ purpose.name }}</td>
                         <td>{{ (purpose.amount / 100)|number_format }}</td>
@@ -31,6 +33,13 @@
                         <td>{{ purpose.calculation.getColumnName() }}</td>
                         <td>{{ purpose.createdAt|localizeddate }}</td>
                         <td>{{ purpose.archivedAt ? purpose.archivedAt|localizeddate : '-' }}</td>
+                        <td>
+                            {% if purpose.editable %}
+                                <a href="{{ path('purpose_edit', {'id': purpose.id}) }}">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
