@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Area;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,15 +39,17 @@ SQL
 
         /** @var Area[] $areas */
         $areas = $em->createQueryBuilder()
-            ->select('area')
+            ->select('GROUP_CONCAT(user.realname) as owners')
+            ->addSelect('area.number')
             ->from(Area::class, 'area', 'area.number')
+            ->leftJoin(User::class, 'user', Join::WITH, 'user MEMBER OF area.users')
+            ->groupBy('area.id')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
 
         $purposes = [];
         $rows = array_map(function ($row) use (&$purposes, $areas) {
             $purposes[$row['purpose_id']] = $row['purpose_name'];
-            $owners = $areas[$row['area_number']]->getUsers();
 
             return [
                 'purpose' => [
@@ -55,9 +58,7 @@ SQL
                 ],
                 'area' => [
                     'number' => $row['area_number'],
-                    'owners' => $owners ? implode(', ', array_map(function (User $user) {
-                        return $user->getRealname();
-                    }, $owners)) : null,
+                    'owners' => $areas[$row['area_number']]['owners'],
                 ],
                 'amount' => $row['payment_amount'],
             ];
