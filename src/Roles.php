@@ -38,4 +38,9 @@ final class Roles
      * Доступ к публикации/редактированию отчётов.
      */
     public const REPORTS = 'ROLE_REPORTS';
+
+    /**
+     * Администратор
+     */
+    public const ADMIN = 'ROLE_ADMIN';
 }

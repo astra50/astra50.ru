@@ -99,6 +99,7 @@ final class AreaController extends Controller
             ->from(Purpose::class, 'purpose')
             ->leftJoin(Payment::class, 'payment', Join::WITH, 'purpose = payment.purpose')
             ->where('payment.area = :area')
+            ->andWhere('purpose.archivedAt IS NULL')
             ->setParameter('area', $area)
             ->groupBy('purpose')
             ->orderBy('purpose.id', 'DESC')

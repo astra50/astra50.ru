@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Form\Type;
 
 use App\Entity\Area;
+use App\Entity\Enum\Calculation;
+use App\Entity\Enum\Schedule;
 use App\Entity\Purpose;
-use App\Form\Model\PurposeModel;
 use App\Form\Transformer\MoneyTransformer;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -29,6 +30,7 @@ class PurposeType extends AbstractType
             ->add('name', Type\TextType::class, [
                 'label' => 'Наименование',
                 'translation_domain' => false,
+                'disabled' => $options['name_disabled'],
             ])
             ->add($builder->create('amount', Type\MoneyType::class, [
                 'label' => 'Сумма',
@@ -40,23 +42,18 @@ class PurposeType extends AbstractType
             )
             ->add('schedule', Type\ChoiceType::class, [
                 'label' => 'Расписание',
-                'choices' => [
-                    'Разово' => Purpose::SCHEDULE_ONCE,
-                    'Ежемесячно' => Purpose::SCHEDULE_MONTHLY,
-                ],
-                'data' => Purpose::SCHEDULE_ONCE,
+                'choices' => Schedule::all(),
+                'choice_label' => 'name',
+                'choice_value' => 'id',
                 'multiple' => false,
                 'expanded' => true,
                 'translation_domain' => false,
             ])
             ->add('calculation', Type\ChoiceType::class, [
                 'label' => 'Начисление',
-                'choices' => [
-                    'На участок' => Purpose::CALCULATION_AREA,
-                    'На Сотку' => Purpose::CALCULATION_SIZE,
-                    'Разделить между участками' => Purpose::CALCULATION_SHARE,
-                ],
-                'data' => Purpose::CALCULATION_AREA,
+                'choices' => Calculation::all(),
+                'choice_label' => 'name',
+                'choice_value' => 'id',
                 'multiple' => false,
                 'expanded' => true,
                 'translation_domain' => false,
@@ -91,7 +88,8 @@ class PurposeType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => PurposeModel::class,
+                'data_class' => Purpose::class,
+                'name_disabled' => false,
             ]);
     }
 }

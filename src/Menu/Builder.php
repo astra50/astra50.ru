@@ -64,7 +64,10 @@ class Builder
             ->getParent()
 
             ->addChild('Area', ['label' => 'Участки', 'route' => 'area_index'])
-            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->setDisplay(
+                $this->authorizationChecker->isGranted(Roles::CHAIRMAN)
+                || $this->authorizationChecker->isGranted(Roles::CASHIER)
+            )
             ->getParent()
 
             ->addChild('Street', ['label' => 'Улицы', 'route' => 'street_index'])
@@ -76,7 +79,10 @@ class Builder
             ->getParent()
 
             ->addChild('Arrears', ['label' => 'Задолженности', 'route' => 'arrears'])
-            ->setDisplay($this->authorizationChecker->isGranted(Roles::CHAIRMAN))
+            ->setDisplay(
+                $this->authorizationChecker->isGranted(Roles::CHAIRMAN)
+                || $this->authorizationChecker->isGranted(Roles::CASHIER)
+            )
             ->getParent();
 
         return $menu;

@@ -6,9 +6,13 @@ namespace App\Entity;
 
 use App\Doctrine\ORM\Mapping\Traits\CreatedAt;
 use App\Doctrine\ORM\Mapping\Traits\Identity;
-use DateTime;
+use App\Entity\Enum\Calculation;
+use App\Entity\Enum\Schedule;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DomainException;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -18,15 +22,10 @@ class Purpose
     use Identity;
     use CreatedAt;
 
-    public const SCHEDULE_ONCE = 1;
-    public const SCHEDULE_MONTHLY = 2;
-
-    public const CALCULATION_AREA = 1;
-    public const CALCULATION_SIZE = 2;
-    public const CALCULATION_SHARE = 3;
-
     /**
      * @var string
+     *
+     * @Assert\NotBlank
      *
      * @ORM\Column
      */
@@ -35,23 +34,38 @@ class Purpose
     /**
      * @var int
      *
+     * @Assert\NotBlank
+     *
      * @ORM\Column(type="integer")
      */
     private $amount;
 
     /**
-     * @var int
+     * @var Schedule
      *
-     * @ORM\Column(type="smallint")
+     * @Assert\Type("App\Entity\Enum\Schedule")
+     * @Assert\NotBlank
+     *
+     * @ORM\Column(type="schedule_enum")
      */
     private $schedule;
 
     /**
-     * @var int
+     * @var Calculation
      *
-     * @ORM\Column(type="smallint")
+     * @Assert\Type("App\Entity\Enum\Calculation")
+     * @Assert\NotBlank
+     *
+     * @ORM\Column(type="calculation_enum")
      */
     private $calculation;
+
+    /**
+     * @var Area[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Area")
+     */
+    private $areas;
 
     /**
      * @var DateTimeImmutable
@@ -60,46 +74,101 @@ class Purpose
      */
     private $archivedAt;
 
-    public function __construct(string $name, int $amount, int $schedule, int $calculation)
+    public function __construct()
     {
-        $this->name = $name;
-        $this->amount = $amount;
-        $this->schedule = $schedule;
-        $this->calculation = $calculation;
+        $this->schedule = Schedule::once();
+        $this->calculation = Calculation::area();
+        $this->areas = new ArrayCollection();
     }
 
-    public function archive(): void
-    {
-        $this->archivedAt = new DateTimeImmutable();
-    }
-
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getAmount(): int
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function getSchedule(): int
+    public function setAmount(int $amount): void
+    {
+        $this->amount = $amount;
+    }
+
+    public function getSchedule(): Schedule
     {
         return $this->schedule;
     }
 
-    public function getCalculation(): int
+    public function setSchedule(Schedule $schedule): void
+    {
+        $this->schedule = $schedule;
+    }
+
+    public function getCalculation(): Calculation
     {
         return $this->calculation;
     }
 
-    public function getCreatedAt(): DateTime
+    public function setCalculation(Calculation $calculation): void
     {
-        return $this->createdAt;
+        $this->calculation = $calculation;
+    }
+
+    public function setAreas(?array $areas): void
+    {
+        $this->areas->clear();
+
+        if (null === $areas) {
+            return;
+        }
+
+        foreach ($areas as $area) {
+            $this->areas[] = $area;
+        }
+    }
+
+    /**
+     * @return Area[]
+     */
+    public function getAreas(): array
+    {
+        $areas = $this->areas->toArray();
+
+        usort($areas, function (Area $lft, Area $rgt) {
+            return $lft->getNumber() >= $rgt->getNumber();
+        });
+
+        return $areas;
+    }
+
+    public function archive(): void
+    {
+        if (null !== $this->archivedAt) {
+            throw new DomainException('Purpose already archived');
+        }
+
+        $this->archivedAt = new DateTimeImmutable();
     }
 
     public function getArchivedAt(): ?DateTimeImmutable
     {
         return $this->archivedAt;
+    }
+
+    public function isEditable(): bool
+    {
+        return null === $this->getArchivedAt();
+    }
+
+    public function isPayable(): bool
+    {
+        return null === $this->getArchivedAt();
     }
 }
