@@ -102,6 +102,15 @@ class User implements UserInterface, EquatableInterface, Serializable
         $this->roles[] = $role;
     }
 
+    public function removeRole(string $role): void
+    {
+        $key = array_search($role, $this->roles, true);
+
+        if (false !== $key) {
+            unset($this->roles[$key]);
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
