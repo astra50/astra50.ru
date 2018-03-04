@@ -60,27 +60,6 @@ class PurposeType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
                 'translation_domain' => false,
-            ])
-            ->add('areas', EntityType::class, [
-                'label' => 'Участки',
-                'class' => Area::class,
-                'query_builder' => function (EntityRepository $repository) {
-                    return $repository->createQueryBuilder('entity')
-                        ->orderBy('entity.number + 0', 'ASC');
-                },
-                'choice_label' => 'number',
-                'choice_value' => 'id',
-                'choice_attr' => function (Area $area) {
-                    return ['data-select-rule' => '0' === $area->getNumber() ? 'exclude' : 'include'];
-                },
-                'group_by' => function (Area $area) {
-                    $street = $area->getStreet();
-
-                    return $street ? $street->getName() : 'Без улицы';
-                },
-                'multiple' => true,
-                'expanded' => true,
-                'translation_domain' => false,
             ]);
     }
 

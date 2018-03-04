@@ -7,19 +7,22 @@ namespace App\Controller;
 use App\Entity\Area;
 use App\Entity\Payment;
 use App\Entity\Purpose;
-use App\Entity\User;
 use App\Form\Model\PurposeModel;
 use App\Form\Type\PurposeType;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/payment/type")
+ * @Route("/purposes")
  */
 final class PurposeController extends Controller
 {
@@ -60,7 +63,7 @@ final class PurposeController extends Controller
      *
      * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request): Response
     {
         $model = new PurposeModel();
         $form = $this->createForm(PurposeType::class, $model, [
@@ -72,7 +75,6 @@ final class PurposeController extends Controller
             $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
 
             $this->em->persist($entity);
-            $this->createPayments($entity, $model, $this->getUser());
 
             $this->em->flush();
 
@@ -86,7 +88,47 @@ final class PurposeController extends Controller
         ]);
     }
 
-    public function createPayments(Purpose $purpose, PurposeModel $model, User $user): void
+    /**
+     * @Route("/{id}/payments/create", name="purpose_payments_create")
+     *
+     * @Security("is_granted('ROLE_ADMIN')")
+     */
+    public function paymentsCreateAction(Request $request, Purpose $purpose): Response
+    {
+        $form = $this->createFormBuilder()
+            ->add('comment', TextType::class, [
+                'label' => 'Комментарий',
+            ])
+            ->add('areas', EntityType::class, [
+                'label' => 'Участки',
+                'class' => Area::class,
+                'query_builder' => function (EntityRepository $repository) {
+                    return $repository->createQueryBuilder('entity')
+                        ->orderBy('entity.number + 0', 'ASC');
+                },
+                'choice_label' => 'number',
+                'choice_value' => 'id',
+                'choice_attr' => function (Area $area) {
+                    return ['data-select-rule' => '0' === $area->getNumber() ? 'exclude' : 'include'];
+                },
+                'group_by' => function (Area $area) {
+                    $street = $area->getStreet();
+
+                    return $street ? $street->getName() : 'Без улицы';
+                },
+                'multiple' => true,
+                'expanded' => true,
+                'translation_domain' => false,
+            ])
+            ->getForm();
+
+        return $this->render('purpose/paymets_create.html.twig', [
+            'form' => $form->createView(),
+            'purpose' => $purpose,
+        ]);
+    }
+
+    public function createPayments(Purpose $purpose, PurposeModel $model): void
     {
         switch (true) {
             case Purpose::CALCULATION_SIZE === $model->calculation:
@@ -120,7 +162,7 @@ final class PurposeController extends Controller
                 continue;
             }
 
-            $this->em->persist(new Payment($area, $purpose, $user, $amount));
+            $this->em->persist(new Payment($area, $purpose, $this->getUser(), $amount));
         }
     }
 }

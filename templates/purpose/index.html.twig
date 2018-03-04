@@ -1,5 +1,7 @@
 {% extends 'layout.html.twig' %}
 
+{# @var purpose \App\Entity\Purpose #}
+
 {% block content %}
     {% if is_granted(constant('App\\Roles::CHAIRMAN')) %}
         <a href="{{ path('purpose_new') }}" class="btn btn-success">
@@ -20,6 +22,7 @@
                     <th>Начисление</th>
                     <th>Дата создания</th>
                     <th>Дата архивации</th>
+                    <th>Действия</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -31,6 +34,13 @@
                         <td>{{ purpose.calculation|payment_calculation }}</td>
                         <td>{{ purpose.createdAt|localizeddate }}</td>
                         <td>{{ purpose.archivedAt ? purpose.archivedAt|localizeddate : '-' }}</td>
+                        <td>
+                            {% if purpose.archivedAt is empty %}
+                                <a class="btn" href="{{ path('purpose_payments_create', {'id': purpose.id}) }}">
+                                    Создать платежи
+                                </a>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
