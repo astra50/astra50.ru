@@ -3,6 +3,8 @@ doctrine:
         types:
             report_type_enum: App\Doctrine\DBAL\Types\ReportTypeType
             financing_enum: App\Doctrine\DBAL\Types\FinancingType
+            schedule_enum: App\Doctrine\DBAL\Types\ScheduleType
+            calculation_enum: App\Doctrine\DBAL\Types\CalculationType
         driver:   pdo_mysql
         host:     "%env(DATABASE_HOST)%"
         port:     "%env(DATABASE_PORT)%"

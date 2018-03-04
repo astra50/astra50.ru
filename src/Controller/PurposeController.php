@@ -8,7 +8,6 @@ use App\Entity\Area;
 use App\Entity\Payment;
 use App\Entity\Purpose;
 use App\Entity\User;
-use App\Form\Model\PurposeModel;
 use App\Form\Type\PurposeType;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -19,7 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/payment/type")
+ * @Route("/purpose")
  */
 final class PurposeController extends Controller
 {
@@ -62,21 +61,19 @@ final class PurposeController extends Controller
      */
     public function newAction(Request $request)
     {
-        $model = new PurposeModel();
-        $form = $this->createForm(PurposeType::class, $model, [
+        $purpose = new Purpose();
+        $form = $this->createForm(PurposeType::class, $purpose, [
             'action' => $this->generateUrl('purpose_new'),
         ])
             ->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = new Purpose($model->name, $model->amount, $model->schedule, $model->calculation);
-
-            $this->em->persist($entity);
-            $this->createPayments($entity, $model, $this->getUser());
+            $this->em->persist($purpose);
+            $this->createPayments($purpose, $this->getUser());
 
             $this->em->flush();
 
-            $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $model->name));
+            $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $purpose->getName()));
 
             return $this->redirectToRoute('purpose_index');
         }
@@ -86,31 +83,33 @@ final class PurposeController extends Controller
         ]);
     }
 
-    public function createPayments(Purpose $purpose, PurposeModel $model, User $user): void
+    private function createPayments(Purpose $purpose, User $user): void
     {
+        $calculation = $purpose->getCalculation();
+
         switch (true) {
-            case Purpose::CALCULATION_SIZE === $model->calculation:
-                $calc = function (Area $area, PurposeModel $model) {
-                    return $area->getSize() / 100 * $model->amount;
+            case $calculation->isSize():
+                $calc = function (Area $area, Purpose $purpose) {
+                    return $area->getSize() / 100 * $purpose->getAmount();
                 };
                 break;
-            case Purpose::CALCULATION_AREA === $model->calculation:
-                $calc = function (Area $area, PurposeModel $model) {
-                    return $model->amount;
+            case $calculation->isArea():
+                $calc = function (Area $area, Purpose $purpose) {
+                    return $purpose->getAmount();
                 };
                 break;
-            case Purpose::CALCULATION_SHARE === $model->calculation:
+            case $calculation->isShare():
                 $shared = null;
-                $calc = function (Area $area, PurposeModel $model) use (&$shared) {
-                    return $shared ?: $shared = (int) ceil($model->amount / count($model->areas));
+                $calc = function (Area $area, Purpose $purpose) use (&$shared) {
+                    return $shared ?: $shared = (int) ceil($purpose->getAmount() / count($purpose->getAreas()));
                 };
                 break;
             default:
-                throw new \DomainException(sprintf('Unknown calculation: "%s"', $model->calculation));
+                throw new \DomainException(sprintf('Unknown calculation: "%s"', $calculation->getName()));
         }
 
-        foreach ($model->areas as $area) {
-            $amount = $calc($area, $model);
+        foreach ($purpose->getAreas() as $area) {
+            $amount = $calc($area, $purpose);
 
             if (0 < $amount) {
                 $amount *= -1;
