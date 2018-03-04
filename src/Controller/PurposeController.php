@@ -119,7 +119,9 @@ final class PurposeController extends Controller
                 continue;
             }
 
-            $this->em->persist(new Payment($area, $purpose, $user, $amount));
+            $comment = sprintf('# %s', $purpose->getName());
+
+            $this->em->persist(new Payment($area, $purpose, $user, $amount, $comment));
         }
     }
 }
