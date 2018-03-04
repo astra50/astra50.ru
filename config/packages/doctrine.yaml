@@ -23,6 +23,9 @@ doctrine:
                 prefix: App\Entity
                 dir: '%kernel.project_dir%/src/Entity'
                 is_bundle: false
+            GrachevkoTokenBundle:
+                type: annotation
+                is_bundle: true
 
 doctrine_migrations:
     namespace: App\Migrations
