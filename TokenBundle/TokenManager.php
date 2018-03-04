@@ -15,7 +15,7 @@ use Grachev\TokenBundle\Exception\TokenAlreadyExpiredException;
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-final class PayloadsGenerator implements TokenGeneratorInterface, PayloadsProviderInterface
+final class TokenManager implements TokenGeneratorInterface, PayloadsProviderInterface
 {
     private const RANDOM_BYTES_LENGTH = 36;
 
