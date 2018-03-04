@@ -161,9 +161,6 @@
     "nikic/php-parser": {
         "version": "v3.1.5"
     },
-    "npm-asset/bootstrap-markdown": {
-        "version": "2.10.0-dev"
-    },
     "ocramius/proxy-manager": {
         "version": "2.2.0"
     },
@@ -320,9 +317,6 @@
     "sebastian/version": {
         "version": "2.0.1"
     },
-    "sensio/distribution-bundle": {
-        "version": "v5.0.21"
-    },
     "sensio/framework-extra-bundle": {
         "version": "4.0",
         "recipe": {
@@ -373,9 +367,6 @@
     },
     "symfony/cache": {
         "version": "v4.0.5"
-    },
-    "symfony/class-loader": {
-        "version": "v3.4.5"
     },
     "symfony/config": {
         "version": "v3.4.5"
