@@ -12,37 +12,38 @@
     {% endif %}
 
     {% if 0 < payments.count %}
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Участок</th>
-                <th>Наименование</th>
-                <th>Сумма (руб.)</th>
-                <th>Дата создания</th>
-                <th>Создал</th>
-                <th>Комментарий</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for payment in payments %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
                 <tr>
-                    <td>
-                        <a href="{{ path('area_show', {'number': payment.area.number}) }}">{{ payment.area.number }}</a>
-                    </td>
-                    <td>{{ payment.purpose.name }}</td>
-                    <td>{{ payment.amount / 100 }}</td>
-                    <td>{{ payment.createdAt|localizeddate }}</td>
-                    <td>
-                        {% if payment.user is not empty %}
-                            {{ payment.user.realname }}
-                        {% endif %}
-                    </td>
-                    <td>{{ payment.comment }}</td>
+                    <th>Участок</th>
+                    <th>Наименование</th>
+                    <th>Сумма (руб.)</th>
+                    <th>Дата создания</th>
+                    <th>Создал</th>
+                    <th>Комментарий</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
+                </thead>
+                <tbody>
+                {% for payment in payments %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('area_show', {'number': payment.area.number}) }}">{{ payment.area.number }}</a>
+                        </td>
+                        <td>{{ payment.purpose.name }}</td>
+                        <td>{{ payment.amount / 100 }}</td>
+                        <td>{{ payment.createdAt|localizeddate }}</td>
+                        <td>
+                            {% if payment.user is not empty %}
+                                {{ payment.user.realname }}
+                            {% endif %}
+                        </td>
+                        <td>{{ payment.comment }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% if payments.haveToPaginate %}
             <div class="text-center">
                 {{ pagerfanta(payments, 'twitter_bootstrap3_translated', { routeName: 'transaction_index_paginated' }) }}
