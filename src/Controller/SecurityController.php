@@ -153,7 +153,7 @@ final class SecurityController extends Controller
         }
 
         if (null === $payloads) {
-            $this->addFlash('danger', 'Ссылка устарела, попробуйте восстановить пароль заново!');
+            $this->addFlash('error', 'Ссылка устарела, попробуйте восстановить пароль ещё раз!');
 
             return $this->redirectToRoute('password_forgot');
         }

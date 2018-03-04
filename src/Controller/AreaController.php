@@ -82,7 +82,7 @@ final class AreaController extends Controller
                     $this->addFlash('success', 'Платёж успешно проведён платежной системой!');
                     break;
                 case self::PAYMENT_STATUS_FAILURE:
-                    $this->addFlash('danger', 'В процессе оплаты произошла ошибка!');
+                    $this->addFlash('error', 'В процессе оплаты произошла ошибка!');
                     break;
             }
 
