@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h3>Архивировать цель <strong>{{ purpose.name }}</strong> от {{ purpose.createdAt|localizeddate }}?</h3>
+
+    <hr>
+
+    {{ form_start(form) }}
+        <button type="submit" class="btn btn-danger">Архивировать</button>
+    {{ form_end(form) }}
+{% endblock %}

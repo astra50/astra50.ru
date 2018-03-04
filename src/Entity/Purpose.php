@@ -11,6 +11,7 @@ use App\Entity\Enum\Schedule;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DomainException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -143,6 +144,10 @@ class Purpose
 
     public function archive(): void
     {
+        if (null !== $this->archivedAt) {
+            throw new DomainException('Purpose already archived');
+        }
+
         $this->archivedAt = new DateTimeImmutable();
     }
 

@@ -34,17 +34,29 @@
                         <td>{{ purpose.createdAt|localizeddate }}</td>
                         <td>{{ purpose.archivedAt ? purpose.archivedAt|localizeddate : '-' }}</td>
                         <td>
-                            {% if purpose.editable %}
-                                <a href="{{ path('purpose_edit', {'id': purpose.id}) }}">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                            {% endif %}
+                            <div class="col-xs-2">
+                                {% if purpose.payable %}
+                                    <a href="{{ path('purpose_payment', {'id': purpose.id}) }}">
+                                        <i class="fa fa-dollar"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
 
-                            {% if purpose.payable %}
-                                <a href="{{ path('purpose_payment', {'id': purpose.id}) }}">
-                                    <i class="fa fa-dollar"></i>
-                                </a>
-                            {% endif %}
+                            <div class="col-xs-2">
+                                {% if purpose.editable %}
+                                    <a href="{{ path('purpose_edit', {'id': purpose.id}) }}">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-xs-2">
+                                {% if purpose.archivedAt is empty %}
+                                    <a href="{{ path('purpose_archive', {'id': purpose.id}) }}">
+                                        <i class="fa fa-archive"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                 {% endfor %}

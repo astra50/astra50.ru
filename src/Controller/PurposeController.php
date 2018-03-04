@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/purpose")
+ *
+ * @Security("is_granted(constant('App\\Roles::CHAIRMAN'))")
  */
 final class PurposeController extends Controller
 {
@@ -136,6 +138,32 @@ final class PurposeController extends Controller
         return $this->render('purpose/payment.html.twig', [
             'purpose' => $purpose,
             'payments' => $payments,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/archive", name="purpose_archive")
+     */
+    public function archiveAction(Purpose $purpose, Request $request)
+    {
+        if (null !== $purpose->getArchivedAt()) {
+            $this->addFlash('danger', sprintf('Цель "%s" уже архивная!', $purpose->getName()));
+        }
+
+        $form = $this->createFormBuilder()->getForm()->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $purpose->archive();
+            $this->em->flush();
+
+            $this->addFlash('success', sprintf('Цель "%s" заархивирована!', $purpose->getName()));
+
+            return $this->redirectToRoute('purpose_index');
+        }
+
+        return $this->render('purpose/archive.html.twig', [
+            'purpose' => $purpose,
             'form' => $form->createView(),
         ]);
     }
