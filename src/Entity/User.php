@@ -9,6 +9,7 @@ use App\Doctrine\ORM\Mapping\Traits\Identity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -21,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @UniqueEntity(fields={"username"})
  */
-class User implements UserInterface, EquatableInterface
+class User implements UserInterface, EquatableInterface, Serializable
 {
     use Identity;
     use CreatedAt;
@@ -237,6 +238,30 @@ class User implements UserInterface, EquatableInterface
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function serialize(): string
+    {
+        return serialize([
+            $this->id,
+            $this->username,
+            $this->roles,
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function unserialize($serialized): void
+    {
+        [
+            $this->id,
+            $this->username,
+            $this->roles
+        ] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
     private function getCredential(string $type): ?Credential
