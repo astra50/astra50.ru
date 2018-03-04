@@ -75,7 +75,7 @@ final class SuggestionsController extends Controller
             $this->em->flush();
 
             $message = (new \Swift_Message())
-                ->setFrom('no-reply@astra50.ru')
+                ->setFrom(['no-reply@astra50.ru' => 'СНТ Астра'])
                 ->setReplyTo($model->email)
                 ->setTo(['kirillsidorov@gmail.com', '9266681152@mail.ru', 'preemiere@ya.ru'])
                 ->setSubject(sprintf('Новое обращение: %s от %s', $model->type->getName(), $model->name))

@@ -120,7 +120,7 @@ final class SecurityController extends Controller
 
             $message = (new Swift_Message('Восстановление пароля', $body, 'text/html'))
                 ->setTo($email)
-                ->setFrom('no-reply@astra50.ru');
+                ->setFrom(['no-reply@astra50.ru' => 'СНТ Астра']);
 
             $mailer->send($message);
 
