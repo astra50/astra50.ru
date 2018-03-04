@@ -89,14 +89,8 @@ final class PurposeController extends Controller
      */
     public function editAction(Request $request, Purpose $purpose)
     {
-        if (null !== $purpose->getArchivedAt()) {
-            $this->addFlash('danger', 'Нельзя редактировать архивную цель!');
-
-            return $this->redirectToRoute('purpose_index');
-        }
-
         if (!$purpose->isEditable()) {
-            $this->addFlash('danger', 'Нельзя редактировать разовую цель!');
+            $this->addFlash('danger', sprintf('Цель %s более редактировать нельзя!', $purpose->getName()));
 
             return $this->redirectToRoute('purpose_index');
         }
@@ -119,7 +113,34 @@ final class PurposeController extends Controller
         ]);
     }
 
-    private function createPayments(Purpose $purpose, User $user): void
+    /**
+     * @Route("/{id}/payment", name="purpose_payment")
+     */
+    public function paymentAction(Purpose $purpose, Request $request)
+    {
+        $payments = $this->createPayments($purpose, $this->getUser());
+
+        $form = $this->createFormBuilder()->getForm()->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->flush();
+
+            $this->addFlash(
+                'success',
+                sprintf('"%s" платежей по цени "%s" созданы!', count($payments), $purpose->getName())
+            );
+
+            return $this->redirectToRoute('transaction_index');
+        }
+
+        return $this->render('purpose/payment.html.twig', [
+            'purpose' => $purpose,
+            'payments' => $payments,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function createPayments(Purpose $purpose, User $user): array
     {
         $calculation = $purpose->getCalculation();
 
@@ -137,18 +158,19 @@ final class PurposeController extends Controller
             case $calculation->isShare():
                 $shared = null;
                 $calc = function (Area $area, Purpose $purpose) use (&$shared) {
-                    return $shared ?: $shared = (int) ceil($purpose->getAmount() / count($purpose->getAreas()));
+                    return $shared ?: $shared = ceil($purpose->getAmount() / count($purpose->getAreas()));
                 };
                 break;
             default:
                 throw new \DomainException(sprintf('Unknown calculation: "%s"', $calculation->getName()));
         }
 
+        $payments = [];
         foreach ($purpose->getAreas() as $area) {
             $amount = $calc($area, $purpose);
 
             if (0 < $amount) {
-                $amount *= -1;
+                $amount = -$amount;
             }
 
             if (0 === $amount) {
@@ -157,7 +179,9 @@ final class PurposeController extends Controller
 
             $comment = sprintf('# %s', $purpose->getName());
 
-            $this->em->persist(new Payment($area, $purpose, $user, $amount, $comment));
+            $this->em->persist($payments[] = new Payment($area, $purpose, $user, (int) $amount, $comment));
         }
+
+        return $payments;
     }
 }

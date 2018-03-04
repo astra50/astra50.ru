@@ -54,20 +54,12 @@ class Payment
      */
     private $amount;
 
-    public function __construct(Area $area, Purpose $purpose, User $user, $amount, string $comment = null)
+    public function __construct(Area $area, Purpose $purpose, User $user, int $amount, string $comment = null)
     {
         $this->area = $area;
         $this->purpose = $purpose;
         $this->user = $user;
         $this->amount = $amount;
-        $this->comment = $comment;
-    }
-
-    /**
-     * @param string $comment
-     */
-    public function setComment(string $comment): void
-    {
         $this->comment = $comment;
     }
 
@@ -109,13 +101,5 @@ class Payment
     public function getAmount(): int
     {
         return $this->amount;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
     }
 }

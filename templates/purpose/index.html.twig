@@ -39,6 +39,12 @@
                                     <i class="fa fa-pencil"></i>
                                 </a>
                             {% endif %}
+
+                            {% if purpose.payable %}
+                                <a href="{{ path('purpose_payment', {'id': purpose.id}) }}">
+                                    <i class="fa fa-dollar"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

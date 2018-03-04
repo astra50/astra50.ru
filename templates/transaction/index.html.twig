@@ -30,7 +30,7 @@
                         <a href="{{ path('area_show', {'number': payment.area.number}) }}">{{ payment.area.number }}</a>
                     </td>
                     <td>{{ payment.purpose.name }}</td>
-                    <td>{{ (payment.amount / 100)|number_format }}</td>
+                    <td>{{ payment.amount / 100 }}</td>
                     <td>{{ payment.createdAt|localizeddate }}</td>
                     <td>
                         {% if payment.user is not empty %}
