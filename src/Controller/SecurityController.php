@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -118,7 +119,8 @@ final class SecurityController extends Controller
             $body = sprintf('Восстановить пароль: <a href="%s">ссылка</a>', $resetUrl);
 
             $message = (new Swift_Message('Восстановление пароля', $body, 'text/html'))
-                ->setTo($email);
+                ->setTo($email)
+                ->setFrom('no-reply@astra50.ru');
 
             $mailer->send($message);
 
@@ -159,6 +161,9 @@ final class SecurityController extends Controller
         $form = $this->createFormBuilder()
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'constraints' => [
+                    new Length(['min' => 3]),
+                ],
                 'first_options' => [
                     'label' => 'Новый пароль',
                 ],
