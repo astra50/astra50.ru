@@ -72,8 +72,6 @@ final class PurposeController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($purpose);
-            $this->createPayments($purpose, $this->getUser());
-
             $this->em->flush();
 
             $this->addFlash('success', sprintf('Платежная цель "%s" создана!', $purpose->getName()));
