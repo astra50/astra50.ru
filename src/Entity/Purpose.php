@@ -164,7 +164,7 @@ class Purpose
 
     public function isEditable(): bool
     {
-        return !$this->schedule->isOnce() && null === $this->getArchivedAt();
+        return null === $this->getArchivedAt();
     }
 
     public function isPayable(): bool
