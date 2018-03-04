@@ -260,7 +260,7 @@ class User implements UserInterface, EquatableInterface, Serializable
         [
             $this->id,
             $this->username,
-            $this->roles
+            $this->roles ?? []
         ] = unserialize($serialized, ['allowed_classes' => false]);
     }
 
