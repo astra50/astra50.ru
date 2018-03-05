@@ -11,8 +11,8 @@ use Grachevko\Enum\Enum;
  */
 final class SuggestionType extends Enum
 {
-    const SUGGESTION = 1;
-    const CLAIM = 2;
+    private const SUGGESTION = 1;
+    private const CLAIM = 2;
     private const REPORT_COMMENT = 3;
     private const RECEIPT_REQUEST = 4;
 
