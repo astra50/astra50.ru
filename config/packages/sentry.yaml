@@ -1,5 +1,6 @@
 parameters:
     env(SENTRY_DSN): null
+    env(APP_DIR): '%kernel.project_dir%'
 
 sentry:
     dsn: "%env(SENTRY_DSN)%"
