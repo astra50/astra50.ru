@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Doctrine\ORM\Mapping\Traits;
 
-use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -15,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait UpdatedAt
 {
     /**
-     * @var DateTime
+     * @var DateTimeImmutable
      *
      * @Gedmo\Timestampable(on="update")
      *
@@ -23,7 +23,7 @@ trait UpdatedAt
      */
     private $updatedAt;
 
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): DateTimeInterface
     {
         return $this->updatedAt;
     }
