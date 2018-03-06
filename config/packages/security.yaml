@@ -21,6 +21,10 @@ security:
 
         main:
             pattern: ^/
+            provider: user_provider
+            switch_user:
+                role: ROLE_SUPER_ADMIN
+                parameter: _switch_user
             form_login:
                 provider: user_provider
                 login_path: login

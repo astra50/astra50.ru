@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <h3>Список пользователей</h3>
+
+    <hr>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>E-mail</th>
+                <th>ФИО</th>
+                <th>Телефон</th>
+                <th>Участки</th>
+                <th>Роли</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                {# @var user \App\Entity\User #}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.realname }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>
+                        {% for area in user.areas %}
+                            {# @var area \App\Entity\Area #}
+                            <a href="{{ path('area_show', {'number': area.number}) }}">{{ area.number }}</a>
+                            {%- if not loop.last -%}
+                                ,
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for role in user.assignedRoles %}
+                            {{ role|trans }}
+                            {%- if not loop.last -%}
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <div class="col-xs-3">
+                            <a href="{{ path('user_edit', {'id': user.id}) }}">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </div>
+                        <div class="col-xs-3">
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <a href="{{ path('homepage', {'_switch_user': user.username}) }}">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="col-xs-3">
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

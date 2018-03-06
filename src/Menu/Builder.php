@@ -83,6 +83,10 @@ class Builder
                 $this->authorizationChecker->isGranted(Roles::CHAIRMAN)
                 || $this->authorizationChecker->isGranted(Roles::CASHIER)
             )
+            ->getParent()
+
+            ->addChild('Users', ['label' => 'Пользователи', 'route' => 'user_index'])
+            ->setDisplay($this->authorizationChecker->isGranted(Roles::ADMIN))
             ->getParent();
 
         return $menu;

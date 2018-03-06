@@ -1,0 +1,8 @@
+ROLE_SUPER_ADMIN: Администратор
+ROLE_ADMIN: Администратор
+ROLE_COMMUNITY: Член СНТ
+ROLE_NEWS_WRITER: Редактор новостей
+ROLE_CASHIER: Кассир
+ROLE_CHAIRMAN: Председатель
+ROLE_EMPLOYEE: Сотрудник
+ROLE_REPORTS: Редактор отчётов

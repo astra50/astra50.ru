@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Doctrine\ORM\Mapping\Traits\CreatedAt;
 use App\Doctrine\ORM\Mapping\Traits\Identity;
+use App\Roles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -120,6 +121,17 @@ class User implements UserInterface, EquatableInterface, Serializable
         $roles[] = 'ROLE_USER';
 
         return $roles;
+    }
+
+    /**
+     * @return array Роли назначенные вручную, а не автоматически
+     */
+    public function getAssignedRoles(): array
+    {
+        return array_diff($this->roles, [
+            Roles::EMPLOYEE,
+            Roles::COMMUNITY,
+        ]);
     }
 
     public function changePassword(string $password, PasswordEncoderInterface $encoder): void
@@ -269,7 +281,7 @@ class User implements UserInterface, EquatableInterface, Serializable
         [
             $this->id,
             $this->username,
-            $roles
+            $roles,
         ] = unserialize($serialized, ['allowed_classes' => false]);
 
         $this->roles = $roles ?? [];
