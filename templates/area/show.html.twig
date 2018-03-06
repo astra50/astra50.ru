@@ -36,7 +36,6 @@
                 <th>К оплате</th>
                 <th>Оплачено</th>
                 <th>Недоплата / Переплата</th>
-                <th>Дата создания</th>
                 {% if hasDebt %}
                     <th>Оплата</th>
                 {% endif %}
@@ -59,7 +58,6 @@
                     <td>{{ (item.bill|abs / 100) }}</td>
                     <td>{{ (item.paid / 100) }}</td>
                     <td><strong>{{ pay }}</strong></td>
-                    <td>{{ purpose.createdAt|localizeddate }}</td>
                     {% if not paid %}
                         <td>
                             <form method="post" action="https://www.payanyway.ru/assistant.htm">
