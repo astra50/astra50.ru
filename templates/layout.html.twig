@@ -28,7 +28,12 @@
                             <a href="{{ path('account') }}">{{ app.user.realname }}</a>
                         |
                         </span>
-                        <a href="{{ path('logout') }}">Выход</a>
+
+                        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                            <a href="{{ path('homepage', {'_switch_user': '_exit'}) }}">Выход</a>
+                        {% else %}
+                            <a href="{{ path('logout') }}">Выход</a>
+                        {% endif %}
                     {% else %}
                         <a href="{{ path('login') }}">Вход</a>
                     {% endif %}
