@@ -14,8 +14,6 @@ use App\Form\Type\AreaType;
 use App\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
-use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,8 +27,6 @@ final class AreaController extends Controller
 {
     public const PAYMENT_STATUS_SUCCESS = 1;
     public const PAYMENT_STATUS_FAILURE = 2;
-
-    private const PURPOSES_PER_PAGE = 30;
 
     /**
      * @var EntityManagerInterface
@@ -63,12 +59,12 @@ final class AreaController extends Controller
     }
 
     /**
-     * @Route("/{number}", name="area_show", defaults={"page": 1}, requirements={"page": "\d"})
-     * @Route("/{number}/{status}", defaults={"page": 1}, name="area_show_payment_return", requirements={"status": "1|2"})
+     * @Route("/{number}", name="area_show")
+     * @Route("/{number}/{status}", name="area_show_payment_return", requirements={"status": "1|2"})
      *
      * @Security("is_granted(constant('App\\Roles::COMMUNITY'))")
      */
-    public function showAction(Area $area, int $page, int $status = null)
+    public function showAction(Area $area, int $status = null)
     {
         $user = $this->getUser();
 
@@ -88,11 +84,10 @@ final class AreaController extends Controller
 
             return $this->redirectToRoute('area_show', [
                 'number' => $area->getNumber(),
-                'page' => $page,
             ]);
         }
 
-        $qb = $this->em->createQueryBuilder()
+        $items = $this->em->createQueryBuilder()
             ->select('purpose')
             ->addSelect('SUM(CASE WHEN payment.amount < 0 THEN payment.amount ELSE 0 END) AS bill')
             ->addSelect('SUM(CASE WHEN payment.amount > 0 THEN payment.amount ELSE 0 END) AS paid')
@@ -103,11 +98,8 @@ final class AreaController extends Controller
             ->setParameter('area', $area)
             ->groupBy('purpose')
             ->orderBy('purpose.id', 'DESC')
-            ->getQuery();
-
-        $paginator = new Pagerfanta(new DoctrineORMAdapter($qb, false));
-        $paginator->setMaxPerPage(self::PURPOSES_PER_PAGE);
-        $paginator->setCurrentPage($page);
+            ->getQuery()
+            ->getArrayResult();
 
         $balance = $this->em->createQueryBuilder()
             ->select('SUM(p.amount)')
@@ -119,10 +111,32 @@ final class AreaController extends Controller
             ->getQuery()
             ->getSingleScalarResult();
 
+        /** @var Payment[] $data */
+        $data = $this->em->createQueryBuilder()
+            ->select('payment')
+            ->from(Payment::class, 'payment')
+            ->where('payment.area = :area')
+            ->andWhere('payment.purpose IN (:purposes)')
+            ->orderBy('payment.createdAt', 'DESC')
+            ->setParameters([
+                'area' => $area,
+                'purposes' => array_map(function (array $item) {
+                    return $item[0]['id'];
+                }, $items),
+            ])
+            ->getQuery()
+            ->getResult();
+
+        $payments = [];
+        foreach ($data as $payment) {
+            $payments[$payment->getPurpose()->getId()][] = $payment;
+        }
+
         return $this->render('area/show.html.twig', [
             'area' => $area,
-            'pagerfanta' => $paginator,
+            'items' => $items,
             'balance' => $balance,
+            'payments' => $payments,
         ]);
     }
 
