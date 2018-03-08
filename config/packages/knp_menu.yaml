@@ -4,3 +4,7 @@ knp_menu:
 
 services:
     Knp\Menu\FactoryInterface: '@knp_menu.factory'
+
+parameters:
+    knp_menu.renderer.twig.options:
+        currentClass: active

@@ -1,7 +1,5 @@
 parameters:
     locale: ru
-    knp_menu.renderer.twig.options:
-        currentClass: active
     env(APP_VERSION): null
     env(MONETA_CODE): null
 
