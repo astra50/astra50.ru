@@ -1,4 +1,4 @@
-FROM php:7.2.0-apache-stretch
+FROM php:7.2.3-apache-stretch
 
 LABEL MAINTAINER="Konstantin Grachev <me@grachevko.ru>"
 
@@ -15,6 +15,7 @@ WORKDIR ${APP_DIR}
 ENV PHP_CPPFLAGS="$PHP_CPPFLAGS -std=c++11"
 
 RUN set -ex \
+    && a2enmod rewrite \
     && apt-get update && apt-get install -y --no-install-recommends \
         git \
         openssh-client \
@@ -34,8 +35,6 @@ RUN set -ex \
     && docker-php-ext-enable memcached apcu \
     \
     && rm -r /var/lib/apt/lists/*
-
-RUN a2enmod rewrite
 
 ENV COMPOSER_VERSION 1.6.3
 COPY docker/composer.sh ./composer.sh
