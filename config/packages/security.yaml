@@ -72,4 +72,5 @@ security:
             - ROLE_CASHIER
             - ROLE_CHAIRMAN
             - ROLE_REPORTS
+            - ROLE_COMMUNITY
         ROLE_SUPER_ADMIN:   ROLE_ADMIN
