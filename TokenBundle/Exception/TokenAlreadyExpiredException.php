@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Grachev\TokenBundle\Exception;
+namespace Grachevko\TokenBundle\Exception;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

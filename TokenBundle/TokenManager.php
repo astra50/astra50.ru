@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Grachev\TokenBundle;
+namespace Grachevko\TokenBundle;
 
 use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
-use Grachev\TokenBundle\Entity\Token;
-use Grachev\TokenBundle\Exception\TokenAlreadyExpiredException;
+use Grachevko\TokenBundle\Entity\Token;
+use Grachevko\TokenBundle\Exception\TokenAlreadyExpiredException;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>

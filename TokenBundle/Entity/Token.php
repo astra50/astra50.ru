@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Grachev\TokenBundle\Entity;
+namespace Grachevko\TokenBundle\Entity;
 
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Grachev\TokenBundle\Exception\TokenAlreadyExpiredException;
+use Grachevko\TokenBundle\Exception\TokenAlreadyExpiredException;
 
 /**
  * @ORM\Entity

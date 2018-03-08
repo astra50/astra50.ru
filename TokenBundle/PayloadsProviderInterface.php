@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Grachev\TokenBundle;
+namespace Grachevko\TokenBundle;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
