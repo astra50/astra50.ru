@@ -45,7 +45,7 @@ final class Roles
     public const ADMIN = 'ROLE_ADMIN';
 
     /**
-     * Разработчик
+     * Разработчик.
      */
     public const SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 }
