@@ -1,7 +1,5 @@
 {% extends 'layout.html.twig' %}
 
-{% set hasDebt = 0 > balance %}
-
 {% block content %}
     <h1>Участок №{{ area.number }}</h1>
 
@@ -26,24 +24,87 @@
         </dd>
     </dl>
 
-    <h2>Платежи</h2>
+    <hr>
 
-    {% if 0 < items|length %}
+    {% if 0 < purpose_groups|length %}
+        {% for group in purpose_groups if group.children is not empty %}
+            <h3>{{ group.label }}</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Наименование</th>
+                        <th>К оплате</th>
+                        <th>Оплачено</th>
+                        <th>Долг</th>
+                        <th>Оплата</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in group.children %}
+                        {# @var purpose \App\Entity\Purpose #}
+                        {% set purpose = item|first %}
+                        {% set sum = item.bill + item.paid %}
+                        {% set paid = sum >= 0 %}
+                        {% set pay = ((item.bill + item.paid) / 100) %}
+
+                        <tr>
+                            <td>
+                                {#<a href="#" data-purpose-id="{{ purpose.id }}" class="purpose-button-js">#}
+                                {{ purpose.name }}
+                                {#</a>#}
+                            </td>
+                            <td>{{ (item.bill|abs / 100) }}</td>
+                            <td>{{ (item.paid / 100) }}</td>
+                            <td><strong>{{ pay }}</strong></td>
+                            {% if not paid %}
+                                <td>
+                                    <form method="post" action="https://www.payanyway.ru/assistant.htm">
+                                        <input type="hidden" name="MNT_ID" value="87482468">
+                                        <input type="hidden" name="MNT_TEST_MODE" value="0">
+
+                                        <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
+                                        <input type="hidden" name="MNT_AMOUNT" value="{{ pay|abs }}">
+
+                                        <input type="hidden" name="MNT_SUCCESS_URL" value="{{ url('area_show_payment_return', {
+                                            'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_SUCCESS'),
+                                            'number': area.number
+                                        }) }}">
+                                        <input type="hidden" name="MNT_FAIL_URL" value="{{ url('area_show_payment_return', {
+                                            'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_FAILURE'),
+                                            'number': area.number
+                                        }) }}">
+
+                                        <input type="hidden" name="MNT_RETURN_URL" value="{{ app.request.uri }}">
+                                        <input type="hidden" name="MNT_AREA" value="{{ area.id }}">
+                                        <input type="hidden" name="MNT_PURPOSE" value="{{ purpose.id }}">
+                                        <input type="hidden" name="MNT_USER" value="{{ app.user.id }}">
+
+                                        <button class="btn btn-success" type="submit">Оплатить</button>
+                                    </form>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if 0 < archived|length %}
+        <h3>Архивные взносы</h3>
         <div class="table-responsive">
             <table class="table">
                 <thead>
                 <tr>
                     <th>Наименование</th>
-                    <th>К оплате</th>
                     <th>Оплачено</th>
-                    <th>Недоплата / Переплата</th>
-                    {% if hasDebt %}
-                        <th>Оплата</th>
-                    {% endif %}
+                    <th>Долг</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for item in items %}
+                {% for item in archived %}
                     {# @var purpose \App\Entity\Purpose #}
                     {% set purpose = item|first %}
                     {% set sum = item.bill + item.paid %}
@@ -52,80 +113,20 @@
 
                     <tr>
                         <td>
-                            <a href="#" data-purpose-id="{{ purpose.id }}" class="purpose-button-js">
-                                {{ purpose.name }}
-                            </a>
+                            {#<a href="#" data-purpose-id="{{ purpose.id }}" class="purpose-button-js">#}
+                            {{ purpose.name }}
+                            {#</a>#}
                         </td>
-                        <td>{{ (item.bill|abs / 100) }}</td>
                         <td>{{ (item.paid / 100) }}</td>
                         <td><strong>{{ pay }}</strong></td>
-                        {% if not paid %}
-                            <td>
-                                <form method="post" action="https://www.payanyway.ru/assistant.htm">
-                                    <input type="hidden" name="MNT_ID" value="87482468">
-                                    <input type="hidden" name="MNT_TEST_MODE" value="0">
-
-                                    <input type="hidden" name="MNT_CURRENCY_CODE" value="RUB">
-                                    <input type="hidden" name="MNT_AMOUNT" value="{{ pay|abs }}">
-
-                                    <input type="hidden" name="MNT_SUCCESS_URL" value="{{ url('area_show_payment_return', {
-                                        'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_SUCCESS'),
-                                        'number': area.number
-                                    }) }}">
-                                    <input type="hidden" name="MNT_FAIL_URL" value="{{ url('area_show_payment_return', {
-                                        'status': constant('App\\Controller\\AreaController::PAYMENT_STATUS_FAILURE'),
-                                        'number': area.number
-                                    }) }}">
-
-                                    <input type="hidden" name="MNT_RETURN_URL" value="{{ app.request.uri }}">
-                                    <input type="hidden" name="MNT_AREA" value="{{ area.id }}">
-                                    <input type="hidden" name="MNT_PURPOSE" value="{{ purpose.id }}">
-                                    <input type="hidden" name="MNT_USER" value="{{ app.user.id }}">
-
-                                    <button class="btn btn-success" type="submit">Оплатить</button>
-                                </form>
-                            </td>
-                        {% endif %}
                     </tr>
-
-                    {% set purposePayments = payments[purpose.id] %}
-
-                    {% if 0 < purposePayments|length %}
-                        <tr data-purpose-id="{{ purpose.id }}" style="display: none" class="purpose-payments-js">
-                            <td colspan="5">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Сумма</th>
-                                        <th>Дата</th>
-                                        <th>Комментарий</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    {% for payment in purposePayments %}
-                                    {# @var payment \App\Entity\Payment #}
-                                    <tr>
-                                        <td>{{ payment.amount / 100 }}</td>
-                                        <td>{{ payment.createdAt|localizeddate }}</td>
-                                        <td>{{ payment.comment }}</td>
-                                    </tr>
-                                    </tbody>
-                                    {% endfor %}
-                                </table>
-                            </td>
-                        </tr>
-                    {% endif %}
                 {% endfor %}
-
-                <tr class="{{ hasDebt ? 'danger' }}">
-                    <td colspan="3">Баланс</td>
-                    <td colspan="2">{{ (balance / 100) }}</td>
-                </tr>
                 </tbody>
             </table>
         </div>
-    {% else %}
+    {% endif %}
+
+    {% if 0 ==purpose_groups|length and 0 == archived|length %}
         <div class="jumbotron">
             <h2>Записей нет</h2>
         </div>
