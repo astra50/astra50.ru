@@ -34,15 +34,19 @@ final class Oauth2UserProvider implements OAuthAwareUserProviderInterface, Accou
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $email = $response->getEmail();
-        $username = (string) $response->{'getUsername'}(); // Oauth2 UID
+        $identifier = $response->{'getUsername'}();
+
+        if (null === $identifier) {
+            throw new AuthenticationServiceException('OAuth2 server return null username');
+        }
 
         $user = $this->em->createQueryBuilder()
             ->select('user')
             ->from(User::class, 'user')
             ->join('user.credentials', 'credential')
-            ->where('credential.identifier = :username')
+            ->where('credential.identifier = :identifier')
             ->andWhere('credential.expiredAt IS NULL')
-            ->setParameter('username', $username)
+            ->setParameter('identifier', $identifier)
             ->getQuery()->getOneOrNullResult();
 
         if (!$user) {
@@ -69,7 +73,7 @@ final class Oauth2UserProvider implements OAuthAwareUserProviderInterface, Accou
         $oauthToken = $response->getOAuthToken();
         $resourceOwner = $response->getResourceOwner();
 
-        $user->authenticate($resourceOwner->getName(), $username, $oauthToken->getRawToken());
+        $user->authenticate($resourceOwner->getName(), (string) $identifier, $oauthToken->getRawToken());
 
         $this->em->flush();
 

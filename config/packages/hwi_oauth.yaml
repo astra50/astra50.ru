@@ -10,6 +10,10 @@ hwi_oauth:
             type:                vkontakte
             client_id:           '%env(VKONTAKTE_OAUTH_ID)%'
             client_secret:       '%env(VKONTAKTE_OAUTH_SECRET)%'
+            authorization_url:   'https://oauth.vk.com/authorize?v=3.0'
+            access_token_url:    'https://oauth.vk.com/access_token?v=3.0'
+            infos_url:           'https://api.vk.com/method/users.get?v=3.0'
+
     connect:
         confirmation: false
 
