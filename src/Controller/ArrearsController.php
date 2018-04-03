@@ -60,7 +60,7 @@ SQL
                     'number' => $row['area_number'],
                     'owners' => $areas[$row['area_number']]['owners'],
                 ],
-                'amount' => 0 > $row['payment_amount'] ? $row['payment_amount'] : 0,
+                'amount' => $row['payment_amount'],
             ];
         }, $data);
 
