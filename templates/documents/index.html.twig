@@ -31,23 +31,36 @@
     </div>
 
 
-    <h2>Файлы</h2>
+    <div class="row">
+        <div class="col-md-5">
+            <h2>Файлы</h2>
 
-    <ul>
-        <li>
-            <a href="{{ asset('files/ogrn.pdf') }}">ОГРН</a>
-        </li>
-        <li>
-            <a href="{{ asset('files/inn.pdf') }}">ИНН</a>
-        </li>
-        <li>
-            <a href="{{ asset('files/ustav.pdf') }}">Устав</a>
-        </li>
-        <li>
-            <a href="{{ asset('files/protocol.pdf') }}">Протокол создания</a>
-        </li>
-        <li>
-            <a href="{{ asset('files/predsedatel.pdf') }}">Назначение председателя и правления</a>
-        </li>
-    </ul>
+            <ul>
+                <li>
+                    <a href="{{ asset('files/ogrn.pdf') }}">ОГРН</a>
+                </li>
+                <li>
+                    <a href="{{ asset('files/inn.pdf') }}">ИНН</a>
+                </li>
+                <li>
+                    <a href="{{ asset('files/ustav.pdf') }}">Устав</a>
+                </li>
+                <li>
+                    <a href="{{ asset('files/protocol.pdf') }}">Протокол создания</a>
+                </li>
+                <li>
+                    <a href="{{ asset('files/predsedatel.pdf') }}">Назначение председателя и правления</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-5">
+            <h2>Законодательство</h2>
+
+            <ul>
+                <li>
+                    <a href="{{ asset('files/regulations_of_groundwater_publication.pdf') }}">Регламент пользования недрами</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
