@@ -45,6 +45,7 @@ final class TokenManager implements TokenGeneratorInterface, PayloadsProviderInt
         return $this->createToken($payloads, true, $expiredAt);
     }
 
+
     /**
      * {@inheritdoc}
      */
@@ -54,6 +55,7 @@ final class TokenManager implements TokenGeneratorInterface, PayloadsProviderInt
 
         $token = $this->em->createQueryBuilder()
             ->select('entity')
+
             ->from(Token::class, 'entity')
             ->where('entity.token = :token')
             ->andWhere($expr->orX(
