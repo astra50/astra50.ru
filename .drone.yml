@@ -31,7 +31,6 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - git diff-tree -r --name-only ${DRONE_PREV_COMMIT_SHA} master | grep -q -e "^.+\.php$" || exit 0
             - >-
                 /docker-entrypoint.sh
                 php-cs-fixer fix
@@ -64,7 +63,6 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - git diff-tree -r --name-only ${DRONE_PREV_COMMIT_SHA} | grep -q -e "^.+\.php$" || exit 0
             - cd "$APP_DIR"
             - /docker-entrypoint.sh php -d memory_limit=-1 vendor/bin/phpstan analyse --level 6 --configuration phpstan.neon --no-progress src tests
         environment:
@@ -92,7 +90,6 @@ pipeline:
         group: validate
         image: astra50/astra50:${DRONE_BUILD_NUMBER}
         commands:
-            - git diff-tree -r --name-only ${DRONE_PREV_COMMIT_SHA} | grep -q composer.lock || exit 0
             - /docker-entrypoint.sh security-checker security:check $APP_DIR/composer.lock
         environment:
             APP_ENV: 'test'
