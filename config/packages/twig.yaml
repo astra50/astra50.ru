@@ -4,8 +4,7 @@ twig:
     paths:
         '%kernel.project_dir%/templates': null
     form_themes:
-         - 'bootstrap_3_horizontal_layout.html.twig'
-#        - 'bootstrap_3_layout.html.twig'
+         - 'bootstrap_4_horizontal_layout.html.twig'
 
 services:
     twig.extension.intl:

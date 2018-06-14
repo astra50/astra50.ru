@@ -11,29 +11,31 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-md-12">
+            <div class="container col-md-12">
                 <div class="pull-left">
-                    <div class="row">
-                        <a href="{{ path('homepage') }}">
+                    <div style="display: flex; align-items: center;">
+                        <a class="mr-3" href="{{ path('homepage') }}">
                             <img src="{{ asset('assets/img/astra_logo.jpg') }}"
                                  height="80" alt="СНТ Астра">
                         </a>
-                        <span class="hidden-xs">Подольский район, Московская область</span>
+                        <span class="d-none d-md-block">Подольский район, Московская область</span>
                     </div>
                 </div>
 
-                <div class="pull-right" style="min-height: 80px;padding-top: 30px">
+                <div class="pull-right" style="min-height: 80px;padding-top: 28px">
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                        <span class="hidden-xs">
-                            <a href="{{ path('account') }}">{{ app.user.realname }}</a>
-                        |
-                        </span>
+                        <div style="display: flex; align-items: center;">
+                             <span class="d-none d-sm-block">
+                                <a href="{{ path('account') }}">{{ app.user.realname }}</a>
+                            |
+                            </span>
 
-                        {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
-                            <a href="{{ path('homepage', {'_switch_user': '_exit'}) }}">Выход</a>
-                        {% else %}
-                            <a href="{{ path('logout') }}">Выход</a>
-                        {% endif %}
+                            {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                                <a class="ml-1" href="{{ path('homepage', {'_switch_user': '_exit'}) }}"> Выход</a>
+                            {% else %}
+                                <a class="ml-1" href="{{ path('logout') }}">Выход</a>
+                            {% endif %}
+                        </div>
                     {% else %}
                         <a href="{{ path('login') }}">Вход</a>
                     {% endif %}
@@ -41,48 +43,38 @@
             </div>
         </div>
 
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                            aria-expanded="false"
-                            aria-controls="navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        {% set brand = 'Адинистратор' %}
-                    {% elseif is_granted(constant('App\\Roles::CASHIER')) %}
-                        {% set brand = 'Кассир' %}
-                    {% elseif is_granted(constant('App\\Roles::CHAIRMAN')) %}
-                        {% set brand = 'Председатель' %}
-                    {% else %}
-                        {% set brand = 'Менеджер' %}
-                    {% endif %}
-                    {#<a class="navbar-brand">{{ brand }}</a>#}
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    {{ knp_menu_render('main') }}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            {% if is_granted('ROLE_ADMIN') %}
+                {% set brand = 'Адинистратор' %}
+            {% elseif is_granted(constant('App\\Roles::CASHIER')) %}
+                {% set brand = 'Кассир' %}
+            {% elseif is_granted(constant('App\\Roles::CHAIRMAN')) %}
+                {% set brand = 'Председатель' %}
+            {% else %}
+                {% set brand = 'Менеджер' %}
+            {% endif %}
+            {#<a class="navbar-brand" href="#">{{ brand }}</a>#}
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                {{ knp_menu_render('main') }}
 
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        <ul class="nav navbar-nav navbar-right">
-                            {% include 'blocks/my_area.html.twig' with {} only %}
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <ul class="navbar-nav">
+                        {% include 'blocks/my_area.html.twig' with {} only %}
 
-                            {% if is_granted(constant('App\\Roles::EMPLOYEE')) %}
-
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-haspopup="true" aria-expanded="false">
-                                        Управление <span class="caret"></span>
-                                    </a>
-                                    {{ knp_menu_render('manager', {'attr': {'class': 'dropdown-menu'}}) }}
-                                </li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                </div>
+                        {% if is_granted(constant('App\\Roles::EMPLOYEE')) %}
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    Управление <span class="caret"></span>
+                                </a>
+                                {{ knp_menu_render('manager', {'attr': {'class': 'dropdown-menu'}}) }}
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
             </div>
         </nav>
 
@@ -112,7 +104,7 @@
         {% block content %}{% endblock %}
 
         <footer class="footer">
-            <div class="pull-right hidden-xs">
+            <div class="pull-right d-none d-sm-block">
                 Сборка <b>{{ build() }}</b> от {{ build_time()|localizeddate('medium', 'short', null, 'GMT+3') }}
             </div>
             © СНТ Астра
