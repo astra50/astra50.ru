@@ -2,6 +2,8 @@ parameters:
     locale: ru
     env(APP_VERSION): null
     env(MONETA_CODE): null
+    env(LICENSE_EXPIRED): false
+    license_expired: '%env(bool:LICENSE_EXPIRED)%'
 
 services:
     _defaults:
