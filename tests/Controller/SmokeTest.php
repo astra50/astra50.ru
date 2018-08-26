@@ -22,7 +22,7 @@ class SmokeTest extends WebTestCase
         $client->request('GET', $uri);
         $response = $client->getResponse();
 
-        $this->assertTrue($response->isSuccessful());
+        static::assertTrue($response->isSuccessful());
     }
 
     public function pages(): Generator

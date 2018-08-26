@@ -22,7 +22,7 @@ final class AreaModel
     public $size;
 
     /**
-     * @var Street
+     * @var Street|null
      *
      * @Assert\Type("App\Entity\Street")
      */

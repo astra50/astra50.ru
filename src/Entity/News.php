@@ -105,7 +105,7 @@ class News
     {
         $this->published = true;
 
-        if (!$this->publishedAt) {
+        if (null === $this->publishedAt) {
             $this->publishedAt = new DateTimeImmutable();
         }
     }

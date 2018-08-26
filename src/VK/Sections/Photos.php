@@ -26,10 +26,6 @@ final class Photos
     }
 
     /**
-     * @param int   $owner
-     * @param array $albums
-     * @param array $options
-     *
      * @return Generator|Album[]
      */
     public function getAlbums(int $owner, array $albums, array $options = []): Generator
@@ -47,10 +43,6 @@ final class Photos
     }
 
     /**
-     * @param string $owner
-     * @param string $album
-     * @param array  $options
-     *
      * @return Generator|Photo[]
      */
     public function get(string $owner, string $album, array $options = []): Generator

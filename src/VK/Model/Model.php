@@ -9,9 +9,6 @@ namespace App\VK\Model;
  */
 abstract class Model
 {
-    /**
-     * @param array $parameters
-     */
     public function __construct(array $parameters)
     {
         foreach ($parameters as $key => $value) {

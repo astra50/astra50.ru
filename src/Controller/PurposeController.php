@@ -139,7 +139,7 @@ final class PurposeController extends Controller
 
             $this->addFlash(
                 'success',
-                sprintf('"%s" платежей по цени "%s" созданы!', count($payments), $purpose->getName())
+                sprintf('"%s" платежей по цени "%s" созданы!', \count($payments), $purpose->getName())
             );
 
             return $this->redirectToRoute('transaction_index');
@@ -196,7 +196,11 @@ final class PurposeController extends Controller
             case $calculation->isShare():
                 $shared = null;
                 $calc = function (Area $area, Purpose $purpose) use (&$shared) {
-                    return $shared ?: $shared = ceil($purpose->getAmount() / count($purpose->getAreas()));
+                    if (null === $shared) {
+                        return $shared = ceil($purpose->getAmount() / \count($purpose->getAreas()));
+                    }
+
+                    return $shared;
                 };
                 break;
             default:

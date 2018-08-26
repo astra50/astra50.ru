@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\VK\Sections\Photos;
+use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/gallery")
@@ -26,9 +28,16 @@ final class GalleryController extends Controller
     /**
      * @Route(name="gallery_index")
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
-        $photos = $this->photos->get(getenv('VK_GALLERY_OWNER'), getenv('VK_GALLERY_ALBUM'));
+        $owner = getenv('VK_GALLERY_OWNER');
+        $album = getenv('VK_GALLERY_ALBUM');
+
+        if (false === $owner || false === $album) {
+            throw new LogicException('Gallery credentials not defined.');
+        }
+
+        $photos = $this->photos->get($owner, $album);
 
         return $this->render('gallery/index.html.twig', [
             'photos' => $photos,

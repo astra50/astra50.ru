@@ -12,9 +12,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20160828132030 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -25,9 +22,6 @@ class Version20160828132030 extends AbstractMigration
         $this->addSql('ALTER TABLE news ADD CONSTRAINT FK_1DD39950F675F31B FOREIGN KEY (author_id) REFERENCES user (id)');
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs

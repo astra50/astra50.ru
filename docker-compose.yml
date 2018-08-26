@@ -6,7 +6,7 @@ services:
 #            context: .
 #            args:
 #                SOURCE_DIR: ./var/null
-        image: astra50/astra50:dev
+        image: astra50/app:dev
         hostname: astra50.local
         volumes:
             - ./:/usr/local/app

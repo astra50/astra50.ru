@@ -1,8 +1,8 @@
 includes:
+	- vendor/grachevko/enum/extension.neon
 	- vendor/phpstan/phpstan-doctrine/extension.neon
 	- vendor/phpstan/phpstan-phpunit/extension.neon
-	- vendor/grachevko/enum/extension.neon
-	- vendor/lookyman/phpstan-symfony/extension.neon
+	- vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
 	symfony:

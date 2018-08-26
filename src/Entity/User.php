@@ -96,7 +96,7 @@ class User implements UserInterface, EquatableInterface, Serializable
 
     public function addRole(string $role): void
     {
-        if (in_array($role, $this->roles, true)) {
+        if (\in_array($role, $this->roles, true)) {
             return;
         }
 

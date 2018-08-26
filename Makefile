@@ -7,7 +7,8 @@ endif
 DOCKER_COMPOSE_VERSION=1.18.0
 DOCKER_UBUNTU_VERSION=18.01.0~ce-0~ubuntu
 
-all: init docker-pull docker-build
+app_dir=.
+app_image=astra50/app:dev
 
 init:
 	cp -n docker-compose.yml.dist docker-compose.yml || true
@@ -37,15 +38,6 @@ docker-hosts-updater:
 vendor-phar-remove:
 	rm -rf vendor/twig/twig/test/Twig/Tests/Loader/Fixtures/phar/phar-sample.phar app/vendor/symfony/symfony/src/Symfony/Component/DependencyInjection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar app/vendor/phpunit/phpunit/tests/_files/phpunit-example-extension/tools/phpunit.d/phpunit-example-extension-1.0.1.phar app/vendor/phar-io/manifest/tests/_fixture/test.phar || true
 
-###> GIT ###
-pull:
-	git fetch origin
-	if git branch -a | fgrep remotes/origin/$(shell git rev-parse --abbrev-ref HEAD); then git pull origin $(shell git rev-parse --abbrev-ref HEAD); fi
-empty-commit:
-	git commit --allow-empty -m "Empty commit."
-	git push
-###< GIT ###
-
 ###> DOCKER
 docker-install: docker-install-engine docker-install-compose
 docker-install-engine:
@@ -60,14 +52,10 @@ docker-upgrade: docker-upgrade-engine docker-install-compose
 docker-upgrade-engine:
 	sudo apt-get remove -y docker-ce && sudo apt-get install docker-ce=$(DOCKER_UBUNTU_VERSION)
 
-build: docker-build
-docker-build:
-	docker-compose build
-docker-pull:
+pull:
 	docker-compose pull
 up:
-	docker-compose up -d
-serve: up
+	docker-compose up --detach --remove-orphans
 status:
 	watch docker-compose ps
 cli: cli-app
@@ -87,6 +75,11 @@ app-test = docker-compose run --rm -e APP_ENV=test -e APP_DEBUG=1 -e XDEBUG=fals
 php = docker-compose run --rm --entrypoint php app -d memory_limit=-1
 php-xdebug = docker-compose run --rm --entrypoint docker-entrypoint-xdebug.sh app php -d memory_limit=-1
 sh = docker-compose run --rm --entrypoint sh app -c
+
+build-app:
+	docker build --tag "$(app_image)" --target app --build-arg SOURCE_DIR=var/null --build-arg APP_VERSION=dev --build-arg APP_BUILD_TIME="`date --rfc-2822`" $(app_dir)
+push-app:
+	docker push $(app_image)
 
 cli-app:
 	$(app) bash

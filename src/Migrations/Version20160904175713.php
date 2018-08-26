@@ -12,9 +12,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20160904175713 extends AbstractMigration
 {
-    /**
-     * @param Schema $schema
-     */
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
@@ -23,9 +20,6 @@ class Version20160904175713 extends AbstractMigration
         $this->addSql('ALTER TABLE area CHANGE number number VARCHAR(255) NOT NULL');
     }
 
-    /**
-     * @param Schema $schema
-     */
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs

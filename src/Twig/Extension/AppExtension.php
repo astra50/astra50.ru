@@ -5,13 +5,26 @@ declare(strict_types=1);
 namespace App\Twig\Extension;
 
 use DateTimeImmutable;
+use LogicException;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
  * @author Konstantin Grachev <me@grachevko.ru>
  */
-class AppExtension extends \Twig_Extension
+class AppExtension extends AbstractExtension
 {
+    /**
+     * @var ParameterBagInterface
+     */
+    private $parameterBag;
+
+    public function __construct(ParameterBagInterface $parameterBag)
+    {
+        $this->parameterBag = $parameterBag;
+    }
+
     public function getFunctions(): array
     {
         return [
@@ -27,15 +40,20 @@ class AppExtension extends \Twig_Extension
 
     public function build(): string
     {
-        return getenv('APP_VERSION');
+        return $this->parameterBag->get('app_version');
     }
 
     public function buildTime(): DateTimeImmutable
     {
-        if ($time = getenv('APP_BUILD_TIME')) {
-            return DateTimeImmutable::createFromFormat(DATE_RFC2822, $time);
+        $string = $this->parameterBag->get('app_build_time');
+        $object = DateTimeImmutable::createFromFormat(DATE_RFC2822, $string);
+
+        if (!$object instanceof DateTimeImmutable) {
+            throw new LogicException(
+                sprintf('Can\'t create "%s" from string "%s"', DateTimeImmutable::class, $string)
+            );
         }
 
-        return new DateTimeImmutable();
+        return $object;
     }
 }

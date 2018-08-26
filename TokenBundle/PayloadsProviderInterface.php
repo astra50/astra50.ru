@@ -9,10 +9,5 @@ namespace Grachevko\TokenBundle;
  */
 interface PayloadsProviderInterface
 {
-    /**
-     * @param string $token
-     *
-     * @return array|null
-     */
     public function payloads(string $token): ?array;
 }

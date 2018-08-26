@@ -87,7 +87,7 @@ final class Oauth2UserProvider implements OAuthAwareUserProviderInterface, Accou
     {
         if (!$user instanceof User) {
             throw new UnsupportedUserException(
-                sprintf('Expected an instance of %s, but got "%s".', User::class, get_class($user))
+                sprintf('Expected an instance of %s, but got "%s".', User::class, \get_class($user))
             );
         }
 

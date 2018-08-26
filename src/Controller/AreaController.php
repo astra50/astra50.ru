@@ -157,7 +157,7 @@ final class AreaController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $area->setSize($model->size);
-            if ($model->street) {
+            if ($model->street instanceof Street) {
                 $area->setStreet($model->street);
             }
 

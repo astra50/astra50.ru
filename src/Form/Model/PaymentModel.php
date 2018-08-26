@@ -53,8 +53,6 @@ final class PaymentModel
     public $comment;
 
     /**
-     * @param Payment $entity
-     *
      * @return PaymentModel
      */
     public static function fromEntity(Payment $entity): self
@@ -62,7 +60,7 @@ final class PaymentModel
         $model = new static();
         $model->area = $entity->getArea();
         $model->purpose = $entity->getPurpose();
-        $model->amount = abs($entity->getAmount());
+        $model->amount = (string) abs($entity->getAmount());
         $model->isPositive = $entity->getAmount() > 0;
         $model->comment = $entity->getComment();
 

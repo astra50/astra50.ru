@@ -58,9 +58,6 @@ class Suggestion
      */
     private $createdAt;
 
-    /**
-     * @param Model|null $model
-     */
     public function __construct(Model $model = null)
     {
         $this->name = $model->name;
@@ -71,25 +68,16 @@ class Suggestion
         $this->createdAt = new \DateTime();
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getPhone(): string
     {
         return $this->phone;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
@@ -100,9 +88,6 @@ class Suggestion
         return new SuggestionType($this->type);
     }
 
-    /**
-     * @return string
-     */
     public function getText(): string
     {
         return $this->text;

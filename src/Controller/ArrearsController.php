@@ -37,7 +37,6 @@ final class ArrearsController extends Controller
 SQL
         );
 
-        /** @var Area[] $areas */
         $areas = $em->createQueryBuilder()
             ->select('GROUP_CONCAT(user.realname) as owners')
             ->addSelect('area.number')

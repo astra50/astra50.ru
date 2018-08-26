@@ -63,41 +63,26 @@ class Payment
         $this->comment = $comment;
     }
 
-    /**
-     * @return Area
-     */
     public function getArea(): Area
     {
         return $this->area;
     }
 
-    /**
-     * @return Purpose
-     */
     public function getPurpose(): Purpose
     {
         return $this->purpose;
     }
 
-    /**
-     * @return User
-     */
     public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * @return string
-     */
     public function getComment(): ?string
     {
         return $this->comment;
     }
 
-    /**
-     * @return int
-     */
     public function getAmount(): int
     {
         return $this->amount;

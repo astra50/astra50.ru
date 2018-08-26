@@ -41,8 +41,6 @@ final class NewsModel
     public $internal;
 
     /**
-     * @param News $news
-     *
      * @return static
      */
     public static function fromEntity(News $news)

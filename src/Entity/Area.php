@@ -80,7 +80,7 @@ class Area
 
     public function replaceUsers($users): void
     {
-        if (!is_array($users) && !$users instanceof \Traversable) {
+        if (!\is_array($users) && !$users instanceof \Traversable) {
             throw new \InvalidArgumentException('Users must be iterable type');
         }
 
@@ -101,7 +101,7 @@ class Area
 
     public function isOwner(User $user): bool
     {
-        return in_array($user, $this->users->toArray(), true);
+        return \in_array($user, $this->users->toArray(), true);
     }
 
     private function addUser(User $user): void
