@@ -171,4 +171,9 @@ class Purpose
     {
         return null === $this->getArchivedAt();
     }
+
+    public function isArchived(): bool
+    {
+        return null !== $this->getArchivedAt();
+    }
 }

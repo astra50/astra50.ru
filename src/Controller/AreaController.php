@@ -14,6 +14,7 @@ use App\Form\Type\AreaType;
 use App\Roles;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
+use LogicException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -87,56 +88,45 @@ final class AreaController extends Controller
             ]);
         }
 
-        $items = $this->em->createQueryBuilder()
+        $items = (array) $this->em->createQueryBuilder()
             ->select('purpose')
             ->addSelect('SUM(CASE WHEN payment.amount < 0 THEN payment.amount ELSE 0 END) AS bill')
             ->addSelect('SUM(CASE WHEN payment.amount > 0 THEN payment.amount ELSE 0 END) AS paid')
             ->from(Purpose::class, 'purpose')
             ->leftJoin(Payment::class, 'payment', Join::WITH, 'purpose = payment.purpose')
             ->where('payment.area = :area')
-            ->andWhere('purpose.archivedAt IS NULL')
             ->setParameter('area', $area)
             ->groupBy('purpose')
             ->orderBy('purpose.id', 'DESC')
             ->getQuery()
-            ->getArrayResult();
-
-        $balance = $this->em->createQueryBuilder()
-            ->select('SUM(p.amount)')
-            ->from(Payment::class, 'p')
-            ->join('p.purpose', 'purpose')
-            ->where('p.area = :area')
-            ->andWhere('purpose.archivedAt IS NULL')
-            ->setParameter('area', $area)
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        /** @var Payment[] $data */
-        $data = $this->em->createQueryBuilder()
-            ->select('payment')
-            ->from(Payment::class, 'payment')
-            ->where('payment.area = :area')
-            ->andWhere('payment.purpose IN (:purposes)')
-            ->orderBy('payment.createdAt', 'DESC')
-            ->setParameters([
-                'area' => $area,
-                'purposes' => array_map(function (array $item) {
-                    return $item[0]['id'];
-                }, $items),
-            ])
-            ->getQuery()
             ->getResult();
 
-        $payments = [];
-        foreach ($data as $payment) {
-            $payments[$payment->getPurpose()->getId()][] = $payment;
+        $once = [];
+        $monthly = [];
+        $archived = [];
+        foreach ($items as $item) {
+            /** @var Purpose $purpose */
+            $purpose = $item[0];
+            $schedule = $purpose->getSchedule();
+
+            if ($purpose->isArchived()) {
+                $archived[] = $item;
+            } elseif ($schedule->isOnce()) {
+                $once[] = $item;
+            } elseif ($schedule->isMonthly()) {
+                $monthly[] = $item;
+            } else {
+                throw new LogicException(sprintf('Unexpected schedule "%s"', $schedule->getName()));
+            }
         }
 
         return $this->render('area/show.html.twig', [
             'area' => $area,
-            'items' => $items,
-            'balance' => $balance,
-            'payments' => $payments,
+            'purpose_groups' => [
+                ['label' => 'Регулярные платежи', 'children' => $monthly],
+                ['label' => 'Целевые взносы', 'children' => $once],
+            ],
+            'archived' => $archived,
         ]);
     }
 
